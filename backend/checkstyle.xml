@@ -253,7 +253,7 @@
       <property name="caseIndent" value="4"/>
       <property name="throwsIndent" value="4"/>
       <property name="lineWrappingIndentation" value="4"/>
-      <property name="arrayInitIndent" value="4"/>
+      <property name="arrayInitIndent" value="8"/><!-- I was having an exception when formation annotation with array parameters so I increased from 4 to 8 -->
     </module>
     <module name="AbbreviationAsWordInName">
       <property name="ignoreFinal" value="false"/>
