@@ -1,0 +1,23 @@
+<h1>Plush Toys</h1>
+<div *ngFor="let plushToy of plushtoys; let i = index" class="row">
+    <div class="col-md-3 col-sm-6">
+        <h5>{{ plushToy.name }}</h5>
+        <p>{{ plushToy.description }}</p>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+        <p>Price: {{ plushToy.price | currency:'USD':true }}</p>
+        <p *ngIf="plushToy.averageRating">Average Rating: {{ plushToy.averageRating }}</p>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <img [src]="plushToy.image" alt="{{ plushToy.name }}" />
+    </div>
+    <div class="col-md-3 col-sm-6 text-end">
+        <a class="btn btn-sm responsive-warning-button" aria-label="Edit">
+            <i class="fas fa-pencil"></i>
+        </a>
+        <button type="button" class="btn btn-small btn-danger" data-test="deleteButton" (click)="onDelete(plushToy.id)">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</div>

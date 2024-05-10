@@ -41,7 +41,7 @@ e2e-test:
     - npm run start &
     - cd ../backend
     - mvn -B clean install -DskipTests
-    - java -jar target/*.jar &
+    - java -Dspring.profiles.active=generateData -jar target/*.jar &
     - sleep 30
     - cd ../e2e
     - npm ci --legacy-peer-deps
@@ -54,7 +54,7 @@ e2e-test:
         - '**/cypress/results/*.xml'
     paths:
       - '**/cypress/videos/*.mp4'
-      - '**/cypress/screenshots/*.png'
+      - '**/cypress/screenshots/**/*.png'
       - '**/cypress/reports/html/**'
 
 gitinspector:
