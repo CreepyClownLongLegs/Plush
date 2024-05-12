@@ -6,6 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 import java.util.function.Supplier;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,10 +19,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.http.MediaType;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
@@ -28,12 +36,16 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class AdminEndpointTest implements PlushToyTestData, TestData {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -56,11 +68,12 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
         plushy.setSize(Size.valueOf(TEST_PLUSHTOY_SIZE));
         return plushy;
     };
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void beforeEach() {
         plushToyRepository.deleteAll();
-
     }
 
     @Test
@@ -89,4 +102,64 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    @Test
+    public void givenValidPlushToyAllFields_whenCreating_thenPlushToyPersisted() throws Exception {
+        String requestBody = """
+            {
+                "name": "%s",
+                "description": "%s",
+                "size": "%s",
+                "color": "%s",
+                "price": %f,
+                "taxClass": %f,
+                "weight": %f
+            }
+            """;
+        requestBody = String.format(requestBody, TEST_PLUSHTOY_NAME, TEST_PLUSHTOY_DESCRIPTION, TEST_PLUSHTOY_SIZE, TEST_PLUSHTOY_COLOR, TEST_PLUSHTOY_PRICE, TEST_PLUSHTOY_TAX_CLASS, TEST_PLUSHTOY_WEIGHT);
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product")
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        PlushToyDetailsDto plushToyDetailsDto = objectMapper.readValue(response.getContentAsString(), PlushToyDetailsDto.class);
+        assertThat(plushToyDetailsDto)
+                .isNotNull()
+                .hasFieldOrProperty("id")
+                .hasFieldOrPropertyWithValue("name", TEST_PLUSHTOY_NAME)
+                .hasFieldOrPropertyWithValue("description", TEST_PLUSHTOY_DESCRIPTION)
+                .hasFieldOrPropertyWithValue("price", TEST_PLUSHTOY_PRICE)
+                .hasFieldOrPropertyWithValue("taxClass", TEST_PLUSHTOY_TAX_CLASS)
+                .hasFieldOrPropertyWithValue("weight", TEST_PLUSHTOY_WEIGHT);
+
+        assertEquals(plushToyDetailsDto.getColor().toString(), TEST_PLUSHTOY_COLOR);
+        assertEquals(plushToyDetailsDto.getSize().toString(), TEST_PLUSHTOY_SIZE);
+        assertThat(plushToyDetailsDto.getId()).isGreaterThan(0L);
+    }
+
+    @Test
+    public void givenMalformedInput_WhenCreating_thenBadRequest() throws Exception {
+        String requestBody = """
+            {}
+            """;
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product")
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        //assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+    }
 }

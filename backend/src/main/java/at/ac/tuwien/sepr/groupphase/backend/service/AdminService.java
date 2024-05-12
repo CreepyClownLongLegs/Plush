@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.lang.NonNull;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
@@ -23,5 +24,13 @@ public interface AdminService {
      * @return a list of all plushtoys
      */
     List<PlushToy> getAllPlushToys();
+
+    /**
+     * Add a new product.
+     *
+     * @param plushToy the product to add
+     * @return the ID of the added product
+     */
+    PlushToyDetailsDto addPlushToy(@NonNull PlushToy plushToy);
 
 }

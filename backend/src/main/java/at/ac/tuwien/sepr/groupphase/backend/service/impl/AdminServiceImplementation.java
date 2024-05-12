@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
@@ -15,12 +17,14 @@ import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 
 @Service
 public class AdminServiceImplementation implements AdminService {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PlushToyRepository plushToyRepository;
-
-    public AdminServiceImplementation(PlushToyRepository plushToyRepository) {
+    private final PlushToyMapper plushToyMapper;
+    
+    public AdminServiceImplementation(PlushToyRepository plushToyRepository, PlushToyMapper plushToyMapper) {
         this.plushToyRepository = plushToyRepository;
+        this.plushToyMapper = plushToyMapper;
     }
 
     @Override
@@ -36,5 +40,14 @@ public class AdminServiceImplementation implements AdminService {
     public List<PlushToy> getAllPlushToys() {
         LOGGER.info("getAllPlushToys");
         return plushToyRepository.findAll();
+    }
+
+    @Override
+    public PlushToyDetailsDto addPlushToy(PlushToy toCreate) {
+        LOGGER.info("addPlushToy");
+
+        PlushToy created = plushToyRepository.save(toCreate);
+        LOGGER.trace("Generated PlushToy: " + created.getId());
+        return plushToyMapper.entityToDetailsDto(created);        
     }
 }
