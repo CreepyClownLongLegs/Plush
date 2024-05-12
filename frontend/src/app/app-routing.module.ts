@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MessageComponent } from './components/message/message.component';
 import { AdminPlushtoyOverviewComponent } from './components/admin/plushtoy/overview/overview.component';
+import { AdminPlushtoyCreateComponent as AdminPlushtoyCreateComponent } from './components/admin/plushtoy/create/create.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent, data: { role: 'ADMIN' } },
   {
     path: 'admin', canActivate: [AuthGuard], data: { role: 'ADMIN' }, children: [
-      { path: '**', component: AdminPlushtoyOverviewComponent, data: { role: 'ADMIN' } }
+      { path: '', component: AdminPlushtoyOverviewComponent, data: { role: 'ADMIN' } },
+      { path: 'new', component: AdminPlushtoyCreateComponent, data: { role: 'ADMIN' } }
 
     ]
   }

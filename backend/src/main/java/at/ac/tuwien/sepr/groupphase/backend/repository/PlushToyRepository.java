@@ -7,5 +7,5 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 
 @Repository
 public interface PlushToyRepository extends JpaRepository<PlushToy, Long> {
-
+    
 }

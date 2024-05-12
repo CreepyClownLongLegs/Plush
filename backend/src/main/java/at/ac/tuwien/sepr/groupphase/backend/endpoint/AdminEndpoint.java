@@ -11,10 +11,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCreationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
@@ -22,11 +26,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin")
 public class AdminEndpoint {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final AdminService adminService;
@@ -55,6 +59,15 @@ public class AdminEndpoint {
     public List<PlushToyListDto> getAllPlushtoys() {
         LOGGER.info("GET /api/v1/admin/products");
         return plushToyMapper.entityToListDto(adminService.getAllPlushToys());
+    }
+
+    @Secured("ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/product")
+    @Operation(summary = "Create a new product", security = @SecurityRequirement(name = "apiKey"))
+    public PlushToyDetailsDto create(@Valid @RequestBody PlushToyCreationDto plushToyCreationDto) {
+        LOGGER.info("Creating new product. body: {}", plushToyCreationDto);
+        return adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
     }
 
 }

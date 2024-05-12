@@ -1,0 +1,55 @@
+<h1>Add a new plush toy</h1>
+<form #createForm="ngForm" (ngSubmit)="submitForm()" class="container">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="plushToy.name" class="form-control">
+        <div *ngIf="createForm.controls.name?.invalid && createForm.controls.name?.touched" class="error-message">
+            Name is required and must be less than 255 characters.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required min="0" [(ngModel)]="plushToy.price" class="form-control">
+        <div *ngIf="createForm.controls.price?.invalid && createForm.controls.price?.touched" class="error-message">
+            Price is required and must be a positive number.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" maxlength="1024" [(ngModel)]="plushToy.description" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="taxClass">Tax Class:</label>
+        <input type="number" id="taxClass" name="taxClass" required [(ngModel)]="plushToy.taxClass" class="form-control">
+        <div *ngIf="createForm.controls.taxClass?.invalid && createForm.controls.taxClass?.touched" class="error-message">
+            Tax Class is required.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="weight">Weight:</label>
+        <input type="number" id="weight" name="weight" required [(ngModel)]="plushToy.weight" class="form-control">
+        <div *ngIf="createForm.controls.weight?.invalid && createForm.controls.weight?.touched" class="error-message">
+            Weight is required.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="color">Color:</label>
+        <select id="color" name="color" required [(ngModel)]="plushToy.color" class="form-control">
+            <option *ngFor="let color of colors" [value]="color">{{ toTitleCase(color) }}</option>
+        </select>
+        <div *ngIf="createForm.controls.color?.invalid && createForm.controls.color?.touched" class="error-message">
+            Color is required.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="size">Size:</label>
+        <select id="size" name="size" required [(ngModel)]="plushToy.size" class="form-control">
+            <option *ngFor="let size of sizes" [value]="size">{{ toTitleCase(size) }}</option>
+        </select>
+        <div *ngIf="createForm.controls.size?.invalid && createForm.controls.size?.touched" class="error-message">
+            Size is required.
+        </div>
+    </div>
+    <br/>
+    <button type="submit" [disabled]="createForm.invalid" class="btn btn-primary">Create</button>
+</form>
