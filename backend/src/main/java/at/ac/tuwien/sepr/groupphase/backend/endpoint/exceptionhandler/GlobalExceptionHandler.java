@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +16,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -46,16 +46,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
         HttpHeaders headers,
         HttpStatusCode status, WebRequest request) {
+        // Return a JSON object with all validation errors
         Map<String, Object> body = new LinkedHashMap<>();
-        //Get all errors
-        List<String> errors = ex.getBindingResult()
+        body.put("timestamp", System.currentTimeMillis());
+        body.put("status", status.value());
+        body.put("errors", ex.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(err -> err.getField() + " " + err.getDefaultMessage())
-            .collect(Collectors.toList());
-        body.put("Validation errors", errors);
-
-        return new ResponseEntity<>(body.toString(), headers, status);
+            .collect(Collectors.groupingBy(
+                fieldError -> fieldError.getField(),
+                Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())
+            )));
+        body.put("all_errors", ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(fieldError -> fieldError.getDefaultMessage())
+            .collect(Collectors.toList()));
+        return handleExceptionInternal(ex, body, headers, status, request);
 
     }
 }

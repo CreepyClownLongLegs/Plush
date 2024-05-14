@@ -160,6 +160,6 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        //assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
     }
 }
