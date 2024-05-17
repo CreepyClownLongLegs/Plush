@@ -2,7 +2,8 @@
 <form #createForm="ngForm" (ngSubmit)="submitForm()" class="container">
     <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="plushToy.name" class="form-control">
+        <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="plushToy.name"
+            class="form-control">
         <div *ngIf="createForm.controls.name?.invalid && createForm.controls.name?.touched" class="error-message">
             Name is required and must be less than 255 characters.
         </div>
@@ -16,12 +17,15 @@
     </div>
     <div class="form-group">
         <label for="description">Description:</label>
-        <textarea id="description" name="description" maxlength="1024" [(ngModel)]="plushToy.description" class="form-control"></textarea>
+        <textarea id="description" name="description" maxlength="1024" [(ngModel)]="plushToy.description"
+            class="form-control"></textarea>
     </div>
     <div class="form-group">
         <label for="taxClass">Tax Class:</label>
-        <input type="number" id="taxClass" name="taxClass" required [(ngModel)]="plushToy.taxClass" class="form-control">
-        <div *ngIf="createForm.controls.taxClass?.invalid && createForm.controls.taxClass?.touched" class="error-message">
+        <input type="number" id="taxClass" name="taxClass" required [(ngModel)]="plushToy.taxClass"
+            class="form-control">
+        <div *ngIf="createForm.controls.taxClass?.invalid && createForm.controls.taxClass?.touched"
+            class="error-message">
             Tax Class is required.
         </div>
     </div>
@@ -50,6 +54,25 @@
             Size is required.
         </div>
     </div>
-    <br/>
+    <div class="row">
+        <div class="form-group col-sm-3">
+            <label for="hp">HP:</label>
+            <input type="number" id="hp" name="hp" min="10" step="5" required [(ngModel)]="plushToy.hp"
+                class="form-control">
+            <div *ngIf="createForm.controls.hp?.invalid && createForm.controls.hp?.touched" class="error-message">
+                HP is required.
+            </div>
+        </div>
+        <div class="form-group col-sm-3 ">
+            <label for="strength">Strength:</label>
+            <input type="number" id="strength" name="strength" required [(ngModel)]="plushToy.strength"
+                class="form-control">
+            <div *ngIf="createForm.controls.strength?.invalid && createForm.controls.strength?.touched"
+                class="error-message">
+                Strength is required.
+            </div>
+        </div>
+    </div>
+    <br />
     <button type="submit" [disabled]="createForm.invalid" class="btn btn-primary">Create</button>
 </form>

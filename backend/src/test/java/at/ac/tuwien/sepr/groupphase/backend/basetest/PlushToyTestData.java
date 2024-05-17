@@ -10,5 +10,7 @@ public interface PlushToyTestData {
     String TEST_PLUSHTOY_DESCRIPTION = "A TIGER PLUSH TOY";
     String TEST_PLUSHTOY_COLOR = "BLACK";
     String TEST_PLUSHTOY_SIZE = "MEDIUM";
+    int TEST_PLUSHTOY_HP = 100;
+    float TEST_PLUSHTOY_STRENGTH = 1;
 
 }

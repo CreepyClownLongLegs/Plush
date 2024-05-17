@@ -11,7 +11,9 @@ export class PlushToyListDto {
   price: number;
   averageRating: number;
   description: string;
-  image: any;
+  imageUrl: string;
+  hp: number;
+  strength: number;
 }
 export class PlushToyCreationDto {
   name: string;
@@ -21,6 +23,9 @@ export class PlushToyCreationDto {
   weight: number;
   color: PlushToyColor;
   size: PlushToySize;
+  hp: number;
+  strength: number;
+  imageUrl: string;
 }
 
 export class PlushToyDetailsDto {

@@ -41,6 +41,8 @@ public class PlushToyDataGenerator {
                 plushy.setWeight(i);
                 plushy.setColor(Color.BLACK);
                 plushy.setSize(Size.MEDIUM);
+                plushy.setHp(100);
+                plushy.setStrength(i % 5);
                 LOGGER.debug("saving plushToy {}", plushy);
                 plushToyRepository.save(plushy);
                 LOGGER.info("created plushToy with ID: {} , {}", plushy.getId(), plushy);

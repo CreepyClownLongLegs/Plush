@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import java.sql.Blob;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -53,9 +51,14 @@ public class PlushToy {
     @Column(nullable = false)
     private Size size;
 
-    @Lob
-    @Column(nullable = true)
-    private Blob image;
+    @Column(nullable = true, length = 255)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private int hp;
+
+    @Column(nullable = false)
+    private float strength;
 
     @ManyToMany(mappedBy = "plushToys")
     private List<ProductCategory> productCategories;
@@ -148,12 +151,28 @@ public class PlushToy {
         this.size = size;
     }
 
-    public Blob getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(Blob image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public float getStrength() {
+        return strength;
+    }
+
+    public void setStrength(float strength) {
+        this.strength = strength;
     }
 
     public List<ProductCategory> getProductCategories() {
