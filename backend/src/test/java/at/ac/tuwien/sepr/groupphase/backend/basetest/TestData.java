@@ -13,7 +13,6 @@ public interface TestData {
     LocalDateTime TEST_NEWS_PUBLISHED_AT = LocalDateTime.of(2019, 11, 13, 12, 15, 0, 0);
 
     String BASE_URI = "/api/v1";
-    String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String ADMIN_BASE_URI = BASE_URI + "/admin";
     String ADMIN_DELETE_PLUSH_TOY_URI = ADMIN_BASE_URI + "/product/{id}";
 
