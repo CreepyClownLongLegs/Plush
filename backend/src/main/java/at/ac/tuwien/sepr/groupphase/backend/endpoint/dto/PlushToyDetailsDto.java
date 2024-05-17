@@ -12,6 +12,9 @@ public class PlushToyDetailsDto {
     private double weight;
     private Size size;
     private Color color;
+    private int hp;
+    private String imageUrl;
+    private float strength;
 
     public PlushToyDetailsDto() {
     }
@@ -80,5 +83,28 @@ public class PlushToyDetailsDto {
         this.color = color;
     }
 
-    
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public float getStrength() {
+        return strength;
+    }
+
+    public void setStrength(float strength) {
+        this.strength = strength;
+    }
+
 }

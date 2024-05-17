@@ -27,17 +27,24 @@ public class PlushToyCreationDto {
     public Color color;
     @NotNull(message = "Size must not be null")
     public Size size;
-    
+    @NotNull(message = "HP must not be null")
+    public int hp;
+    @Length(max = 255, message = "ImageUrl must not be longer than 255 characters")
+    public String imageUrl;
+    @Range(min = 0, message = "Strength must not be negative")
+    public float strength;
+
     @Override
     public String toString() {
         return "PlushToyCreationDto [name=" + name + ", price=" + price + ", description=" + description + ", taxClass="
-                + taxClass + ", weight=" + weight + ", color=" + color + ", size=" + size + "]";
+                + taxClass + ", weight=" + weight + ", color=" + color + ", size=" + size + ", hp=" + hp + ", imageUrl="
+                + imageUrl + ", strength=" + strength + "]";
     }
 
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
@@ -85,8 +92,32 @@ public class PlushToyCreationDto {
     public Size getSize() {
         return size;
     }
-    
+
     public void setSize(Size size) {
         this.size = size;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public float getStrength() {
+        return strength;
+    }
+
+    public void setStrength(float strength) {
+        this.strength = strength;
     }
 }

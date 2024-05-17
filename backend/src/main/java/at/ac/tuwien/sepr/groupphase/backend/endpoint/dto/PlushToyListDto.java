@@ -6,6 +6,8 @@ public class PlushToyListDto {
     private String description;
     private double price;
     private Double averageRating;
+    private int hp;
+    private String imageUrl;
 
     public PlushToyListDto() {
     }
@@ -48,6 +50,22 @@ public class PlushToyListDto {
 
     public void setAverageRating(Double averageRating) {
         this.averageRating = averageRating;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }
