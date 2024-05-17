@@ -6,6 +6,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { MessageComponent } from './components/message/message.component';
 import { AdminPlushtoyOverviewComponent } from './components/admin/plushtoy/overview/overview.component';
 import { AdminPlushtoyCreateComponent as AdminPlushtoyCreateComponent } from './components/admin/plushtoy/create/create.component';
+import { AdminCategoryCreateComponent } from './components/admin/categories/create/create.component';
+import { AdminCategoryOverviewComponent } from './components/admin/categories/overview/overview.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,8 +16,9 @@ const routes: Routes = [
   {
     path: 'admin', canActivate: [AuthGuard], data: { role: 'ADMIN' }, children: [
       { path: '', component: AdminPlushtoyOverviewComponent, data: { role: 'ADMIN' } },
-      { path: 'new', component: AdminPlushtoyCreateComponent, data: { role: 'ADMIN' } }
-
+      { path: 'new', component: AdminPlushtoyCreateComponent, data: { role: 'ADMIN' } },
+      { path: 'categories', component: AdminCategoryOverviewComponent, data: { role: 'ADMIN' } },
+      { path: 'categories/new', component: AdminCategoryCreateComponent, data: { role: 'ADMIN' } }
     ]
   }
 ];

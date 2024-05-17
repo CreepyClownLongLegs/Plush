@@ -60,7 +60,7 @@ public class PlushToy {
     @Column(nullable = false)
     private float strength;
 
-    @ManyToMany(mappedBy = "plushToys")
+    @ManyToMany(mappedBy = "plushToys", fetch = FetchType.EAGER)
     private List<ProductCategory> productCategories;
 
     @OneToMany(mappedBy = "plushToy")
@@ -181,12 +181,12 @@ public class PlushToy {
 
     public void addProductCategory(ProductCategory productCategory) {
         productCategories.add(productCategory);
-        productCategory.addPlushToy(this);
+        productCategory.getPlushToys().add(this);
     }
 
     public void removeProductCategory(ProductCategory productCategory) {
         productCategories.remove(productCategory);
-        productCategory.removePlushToy(this);
+        productCategory.getPlushToys().remove(this);
     }
 
     public void addNft(Nft nft) {

@@ -26,6 +26,7 @@ export class PlushToyCreationDto {
   hp: number;
   strength: number;
   imageUrl: string;
+  categories: number[];
 }
 
 export class PlushToyDetailsDto {
@@ -37,4 +38,13 @@ export class PlushToyDetailsDto {
   weight: number;
   size: PlushToySize;
   color: PlushToyColor;
+}
+
+export class ProductCategoryCreationDto {
+  name: string;
+}
+
+export class ProductCategoryDto {
+  id: number;
+  name: string;
 }

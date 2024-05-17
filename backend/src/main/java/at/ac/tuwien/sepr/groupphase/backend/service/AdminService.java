@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
 public interface AdminService {
@@ -32,5 +34,30 @@ public interface AdminService {
      * @return the ID of the added product
      */
     PlushToyDetailsDto addPlushToy(@NonNull PlushToy plushToy);
+
+    /**
+     * Add a new product category.
+     *
+     * @param productCategory the product category to add
+     * @return the added product category
+     */
+    ProductCategoryDto addProductCategory(@NonNull ProductCategory productCategory);
+
+    /**
+     * Get all product categories.
+     *
+     * @return a list of all product categories
+     */
+    List<ProductCategory> getAllProductCategories();
+
+    /**
+     * Add product categories to a product.
+     *
+     * @param productId the id of the product
+     * @param productCategoryIds the ids of the product categories
+     * @return the updated product
+     * @throws NotFoundException if the product does not exist
+     */
+    PlushToyDetailsDto addCategoriesToProduct(@NonNull Long productId, @NonNull List<Long> productCategoryIds) throws NotFoundException;
 
 }

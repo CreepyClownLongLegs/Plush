@@ -33,6 +33,15 @@ public class PlushToyCreationDto {
     public String imageUrl;
     @Range(min = 0, message = "Strength must not be negative")
     public float strength;
+    public Long[] categories;
+
+    public Long[] getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Long[] categories) {
+        this.categories = categories;
+    }
 
     @Override
     public String toString() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,10 +20,14 @@ public class ProductCategory {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<PlushToy> plushToys;
 
     public ProductCategory() {
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -35,12 +40,12 @@ public class ProductCategory {
 
     public void addPlushToy(PlushToy plushToy) {
         plushToys.add(plushToy);
-        plushToy.addProductCategory(this);
+        plushToy.getProductCategories().add(this);
     }
 
     public void removePlushToy(PlushToy plushToy) {
         plushToys.remove(plushToy);
-        plushToy.removeProductCategory(this);
+        plushToy.getProductCategories().remove(this);
     }
 
     public List<PlushToy> getPlushToys() {

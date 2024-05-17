@@ -1,26 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PlushToyDetailsDto as PlushToyDetailsDto, PlushToyColor, PlushToyCreationDto, PlushToySize } from 'src/app/dtos/plushtoy';
+import { PlushToyDetailsDto as PlushToyDetailsDto, PlushToyColor, PlushToyCreationDto, PlushToySize, ProductCategoryDto } from 'src/app/dtos/plushtoy';
 import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
-  selector: 'app-create',
+  selector: 'app-admin-plushtoy-create',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
 })
-export class AdminPlushtoyCreateComponent {
+export class AdminPlushtoyCreateComponent implements OnInit {
   plushToy: PlushToyCreationDto;
   colors = Object.values(PlushToyColor).filter(value => typeof value === 'string') as string[];
   sizes = Object.values(PlushToySize).filter(value => typeof value === 'string') as string[];
+  categories: ProductCategoryDto[];
   
 
   constructor(private fb: FormBuilder, private service: AdminService, private router: Router) {
     this.plushToy = new PlushToyCreationDto();
   }
+  ngOnInit(): void {
+    this.service.getCategories().subscribe({
+      next: (categories: ProductCategoryDto[]) => {
+        this.categories = categories;
+      },
+      error: error => {
+        console.error('Error getting categories', error);
+      }
+    });
+  }
+
   submitForm() {
     console.log(this.plushToy);
     this.service.create(this.plushToy)
