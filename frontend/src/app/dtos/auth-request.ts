@@ -1,6 +1,6 @@
 export class AuthRequest {
   constructor(
-    public email: string,
-    public password: string
+    public publicKey: string,
+    public signature: string
   ) {}
 }

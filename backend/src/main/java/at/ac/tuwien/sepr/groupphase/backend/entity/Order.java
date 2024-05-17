@@ -41,7 +41,7 @@ public class Order {
     private List<OrderItem> orderItems;
 
     @ManyToOne
-    private Customer customer;
+    private User user;
 
     @ManyToOne
     private DeliveryStatus deliveryStatus;
@@ -87,12 +87,12 @@ public class Order {
         this.totalTax = totalTax;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public DeliveryStatus getDeliveryStatus() {

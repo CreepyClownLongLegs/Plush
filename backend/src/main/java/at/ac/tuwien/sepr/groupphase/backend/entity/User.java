@@ -12,12 +12,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "customer")
-public class Customer {
+@Table(name = "'user'")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 44)
+    private String publicKey;
 
     @Column(nullable = true, length = 255)
     private String firstname;
@@ -52,16 +55,20 @@ public class Customer {
     @Column(nullable = false)
     private boolean isAdmin = false;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ShoppingCartItem> shoppingCartItems;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    public Customer() {
+    public User() {
     }
 
-    public Customer(boolean isAdmin) {
+    public User(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public User(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
 
@@ -71,6 +78,14 @@ public class Customer {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
     }
 
     public String getFirstname() {
@@ -159,7 +174,7 @@ public class Customer {
 
     public void addShoppingCartItem(ShoppingCartItem shoppingCartItem) {
         shoppingCartItems.add(shoppingCartItem);
-        shoppingCartItem.setCustomer(this);
+        shoppingCartItem.setUser(this);
     }
 
     public void removeShoppingCartItem(ShoppingCartItem shoppingCartItem) {
@@ -168,7 +183,7 @@ public class Customer {
 
     public void addOrder(Order order) {
         orders.add(order);
-        order.setCustomer(this);
+        order.setUser(this);
     }
 
 }

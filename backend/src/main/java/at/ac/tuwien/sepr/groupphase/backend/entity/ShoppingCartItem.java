@@ -18,7 +18,7 @@ public class ShoppingCartItem {
     private int amount;
 
     @ManyToOne(optional = false)
-    private Customer customer;
+    private User user;
 
     @ManyToOne(optional = false)
     private PlushToy plushToy;
@@ -38,12 +38,12 @@ public class ShoppingCartItem {
         return amount;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
     public void setPlushToy(PlushToy plushToy) {

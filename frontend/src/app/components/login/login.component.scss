@@ -1,0 +1,31 @@
+.header-container {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.modal-header {
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 1em;
+  top: 0.5em;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+.modal-body {
+  .btn {
+    width: 100%;
+  }
+}
+
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+}

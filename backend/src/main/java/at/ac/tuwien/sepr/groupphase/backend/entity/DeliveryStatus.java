@@ -19,6 +19,10 @@ public class DeliveryStatus {
         this.status = status;
     }
 
+    public DeliveryStatus() {
+
+    }
+
     public int getCode() {
         return code;
     }
