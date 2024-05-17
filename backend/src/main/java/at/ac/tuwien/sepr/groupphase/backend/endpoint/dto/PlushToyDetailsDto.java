@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import java.util.List;
+
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
 
@@ -15,6 +17,7 @@ public class PlushToyDetailsDto {
     private int hp;
     private String imageUrl;
     private float strength;
+    private List<ProductCategoryDto> productCategories;
 
     public PlushToyDetailsDto() {
     }
@@ -107,4 +110,13 @@ public class PlushToyDetailsDto {
         this.strength = strength;
     }
 
+    public List<ProductCategoryDto> getProductCategories() {
+        return productCategories;
+    }
+    
+    public void setProductCategories(List<ProductCategoryDto> productCategories) {
+        this.productCategories = productCategories;
+    }
+
+    
 }

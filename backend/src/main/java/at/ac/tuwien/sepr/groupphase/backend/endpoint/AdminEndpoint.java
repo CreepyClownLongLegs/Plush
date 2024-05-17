@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,7 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCreationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
 import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,11 +39,13 @@ public class AdminEndpoint {
 
     private final AdminService adminService;
     private final PlushToyMapper plushToyMapper;
+    private final ProductCategoryMapper productCategoryMapper;
 
     @Autowired
-    public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper) {
+    public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper, ProductCategoryMapper productCategoryMapper) {
         this.adminService = adminService;
         this.plushToyMapper = plushToyMapper;
+        this.productCategoryMapper = productCategoryMapper;
     }
 
     @Secured("ROLE_ADMIN")
@@ -67,7 +73,40 @@ public class AdminEndpoint {
     @Operation(summary = "Create a new product", security = @SecurityRequirement(name = "apiKey"))
     public PlushToyDetailsDto create(@Valid @RequestBody PlushToyCreationDto plushToyCreationDto) {
         LOGGER.info("Creating new product. body: {}", plushToyCreationDto);
-        return adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
+        PlushToyDetailsDto res = adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
+
+        if (plushToyCreationDto.getCategories() != null) {
+            return adminService.addCategoriesToProduct(res.getId(), Arrays.asList(plushToyCreationDto.getCategories()));
+        } else {
+            return res;
+        }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/categories")
+    @Operation(summary = "Create a new category", security = @SecurityRequirement(name = "apiKey"))
+    public ProductCategoryDto createCategory(@Valid @RequestBody ProductCategoryCreationDto category) {
+        LOGGER.info("Creating new category. body: {}", category);
+        return adminService.addProductCategory(productCategoryMapper.creationDtoToEntity(category));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/categories")
+    @Operation(summary = "Get all categories", security = @SecurityRequirement(name = "apiKey"))
+    public List<ProductCategoryDto> getAllCategories() {
+        LOGGER.info("GET /api/v1/admin/categories");
+        return productCategoryMapper.entityListToDtoList(adminService.getAllProductCategories());
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/product/{id}/categories")
+    @Operation(summary = "Add categories to a product", security = @SecurityRequirement(name = "apiKey"), parameters = {
+            @Parameter(name = "id", description = "The id of the product to update", required = true, in = ParameterIn.PATH)
+    })
+    public PlushToyDetailsDto setCategories(@PathVariable("id") Long productId, @RequestBody List<Long> categoryIds) {
+        LOGGER.info("Adding categories to product with id {}. body: {}", productId, categoryIds);
+        return adminService.addCategoriesToProduct(productId, categoryIds);
     }
 
 }

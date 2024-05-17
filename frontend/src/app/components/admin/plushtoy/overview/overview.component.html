@@ -1,5 +1,6 @@
 <h1>Plush Toys</h1>
-<button class="btn btn-primary my-3" routerLink="new">Add a plush toy</button>
+<button class="btn btn-primary me-1 my-3" routerLink="new">Add a plush toy</button>
+<button class="btn btn-secondary" routerLink="categories">Manage Categories</button>
 <div *ngFor="let plushToy of plushtoys; let i = index" class="row">
     <div class="col-md-3 col-sm-6">
         <h5>{{ plushToy.name }}</h5>
