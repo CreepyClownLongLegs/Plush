@@ -1,8 +1,21 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.JwtDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.NonceDto;
+import java.lang.invoke.MethodHandles;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sol4k.Base58;
+import org.sol4k.PublicKey;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Service;
+
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.NonceDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AuthRepository;
@@ -10,21 +23,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.AuthService;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sol4k.Base58;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Service;
-
-import java.lang.invoke.MethodHandles;
-
-import org.sol4k.PublicKey;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AuthServiceImplementation implements AuthService {
@@ -35,7 +33,8 @@ public class AuthServiceImplementation implements AuthService {
     private final JwtTokenizer jwtTokenizer;
 
     @Autowired
-    public AuthServiceImplementation(UserRepository userRepository, AuthRepository authRepository, JwtTokenizer jwtTokenizer) {
+    public AuthServiceImplementation(UserRepository userRepository, AuthRepository authRepository,
+            JwtTokenizer jwtTokenizer) {
         this.userRepository = userRepository;
         this.authRepository = authRepository;
         this.jwtTokenizer = jwtTokenizer;
@@ -58,10 +57,11 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     @Override
-    public JwtDto login(AuthRequestDto authRequestDto) throws BadCredentialsException {
+    public String login(AuthRequestDto authRequestDto) throws BadCredentialsException {
         LOGGER.info("login {}", authRequestDto);
         String publicKey = authRequestDto.getPublicKey();
-        AuthenticationCache authCache = authRepository.findAuthCacheByPublicKey(publicKey).orElseThrow(() -> new BadCredentialsException("No valid nonce found"));
+        AuthenticationCache authCache = authRepository.findAuthCacheByPublicKey(publicKey)
+                .orElseThrow(() -> new BadCredentialsException("No valid nonce found"));
         authRepository.deleteById(authCache.getId());
 
         if (isValidSignature(publicKey, authCache.getNonce(), authRequestDto.getSignature())) {
@@ -69,7 +69,7 @@ public class AuthServiceImplementation implements AuthService {
 
             if (!user.isLocked()) {
                 List<String> roles = user.isAdmin() ? List.of("ROLE_ADMIN", "ROLE_USER") : List.of("ROLE_USER");
-                return new JwtDto(jwtTokenizer.getAuthToken(publicKey, roles));
+                return jwtTokenizer.getAuthToken(publicKey, roles);
             } else {
                 throw new BadCredentialsException("Account is locked");
             }
