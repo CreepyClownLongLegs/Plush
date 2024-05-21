@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import java.util.List;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
@@ -18,7 +19,10 @@ public interface PlushToyMapper {
 
     @Named("plushToyCreationDtoToEntity")
     PlushToy creationDtoToEntity(PlushToyCreationDto plushToyCreationDto);
-    
+
     @Named("entityToDetailsDto")
     PlushToyDetailsDto entityToDetailsDto(PlushToy plushToy);
-} 
+
+    @Named("entityToDetailDto")
+    PlushToyDetailDto entityToDetailDto(PlushToy plushToy);
+}

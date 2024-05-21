@@ -48,3 +48,18 @@ export class ProductCategoryDto {
   id: number;
   name: string;
 }
+
+export class PlushToyDetailDto {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  taxClass: number;
+  weight: number;
+  size: PlushToySize;
+  color: PlushToyColor;
+  hp: number;
+  imageUrl: string;
+  strength: number;
+  productCategories: ProductCategoryDto[];
+}

@@ -1,0 +1,121 @@
+.container.main {
+  background-color:rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+  margin: 100px auto;
+  max-width: 800px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-main {
+  max-width: 100%;
+  height: auto;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.toy-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 2px white;
+}
+
+.toy-description {
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: black;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #768FC5;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.stats-column {
+  flex: 1;
+}
+
+.stat {
+  margin-bottom: 5px;
+}
+
+.price-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.toy-price {
+  font-size: 24px;
+  color: #333;
+  text-shadow: 3px 3px 3px white;
+  font-weight: bold;
+}
+
+.button-section {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid black; /* Ensure all buttons have a border */
+}
+
+.add-to-cart-btn {
+  background-color: #926986;
+  color: white;
+  border: 2px solid black; /* Reapply border for add-to-cart button */
+}
+
+.buy-now-btn {
+  background-color: #E34848;
+  color: #fff;
+  border: 2px solid black; /* Reapply border for buy-now button */
+}
+
+.button-section .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  text-align: center;
+  margin-top: 100px;
+  color: #ff5f5f;
+  font-size: 24px;
+}
+
+.error-message h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.label {
+  color: white;
+  font-weight: bold;
+}
+
+.health {
+  color: darkred;
+}
