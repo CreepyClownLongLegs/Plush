@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;
+        this.balance = await this.walletService.getBalance(publicKey);
       })
         .catch((error) => {
           this.resetWalletConnection();
