@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import java.util.Locale;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -112,7 +113,7 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
                     "strength": %f
                 }
                 """;
-        requestBody = String.format(requestBody, TEST_PLUSHTOY_NAME, TEST_PLUSHTOY_DESCRIPTION, TEST_PLUSHTOY_SIZE,
+        requestBody = String.format(Locale.ROOT, requestBody, TEST_PLUSHTOY_NAME, TEST_PLUSHTOY_DESCRIPTION, TEST_PLUSHTOY_SIZE,
                 TEST_PLUSHTOY_COLOR, TEST_PLUSHTOY_PRICE, TEST_PLUSHTOY_TAX_CLASS, TEST_PLUSHTOY_WEIGHT,
                 TEST_PLUSHTOY_HP, TEST_PLUSHTOY_STRENGTH);
 
