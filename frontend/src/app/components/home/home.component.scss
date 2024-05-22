@@ -1,3 +1,25 @@
-.jumbotron {
-  background: none
+.second {
+    margin-top: 0vh;
+}
+
+.dialogue-box {
+    height: 50vh;
+    width: 60%;
+    text-wrap: wrap;
+    background-image: url("../../../images/dialoguebox1.png");
+    background-size: contain;
+    padding: 30px;
+    margin-top: 10vh;
+    background-repeat: no-repeat;
+    color: aliceblue;
+    font-size: large;
+}
+
+.container-fluid {
+    margin-top: 0px;
+    padding-top: 5vh;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../../images/sepr-background.gif");
+    background-size: cover;
 }

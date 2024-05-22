@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
-import {PlushToyColor, PlushToyDetailDto, PlushToySize} from '../../dtos/plushtoy';
+import { NgForOf, NgIf } from '@angular/common';
+import { PlushToyColor, PlushToyDetailDto, PlushToySize } from '../../dtos/plushtoy';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlushtoyService } from '../../services/plushtoy.service';
 
@@ -33,7 +33,6 @@ export class DetailViewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    document.body.style.backgroundImage = `url('../../../assets/images/asset_background.png')`;
   }
 
   ngOnInit(): void {

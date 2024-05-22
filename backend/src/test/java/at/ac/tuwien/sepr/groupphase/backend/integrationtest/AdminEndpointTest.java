@@ -78,9 +78,9 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(delete(ADMIN_DELETE_PLUSH_TOY_URI, savePlushy.getId())
                 .header(securityProperties.getAuthHeader(),
-                        jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-                .andDo(print())
-                .andReturn();
+                    jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
@@ -90,9 +90,9 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
     public void deleteWorksWithNotfoundId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(delete(ADMIN_DELETE_PLUSH_TOY_URI, -12312314L)
                 .header(securityProperties.getAuthHeader(),
-                        jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-                .andDo(print())
-                .andReturn();
+                    jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
@@ -101,28 +101,28 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
     @Test
     public void givenValidPlushToyAllFields_whenCreating_thenPlushToyPersisted() throws Exception {
         String requestBody = """
-                {
-                    "name": "%s",
-                    "description": "%s",
-                    "size": "%s",
-                    "color": "%s",
-                    "price": %f,
-                    "taxClass": %f,
-                    "weight": %f,
-                    "hp": %d,
-                    "strength": %f
-                }
-                """;
+            {
+                "name": "%s",
+                "description": "%s",
+                "size": "%s",
+                "color": "%s",
+                "price": %f,
+                "taxClass": %f,
+                "weight": %f,
+                "hp": %d,
+                "strength": %f
+            }
+            """;
         requestBody = String.format(Locale.ROOT, requestBody, TEST_PLUSHTOY_NAME, TEST_PLUSHTOY_DESCRIPTION, TEST_PLUSHTOY_SIZE,
-                TEST_PLUSHTOY_COLOR, TEST_PLUSHTOY_PRICE, TEST_PLUSHTOY_TAX_CLASS, TEST_PLUSHTOY_WEIGHT,
-                TEST_PLUSHTOY_HP, TEST_PLUSHTOY_STRENGTH);
+            TEST_PLUSHTOY_COLOR, TEST_PLUSHTOY_PRICE, TEST_PLUSHTOY_TAX_CLASS, TEST_PLUSHTOY_WEIGHT,
+            TEST_PLUSHTOY_HP, TEST_PLUSHTOY_STRENGTH);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andDo(print())
-                .andReturn();
+            .andDo(print())
+            .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -130,17 +130,17 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         PlushToyDetailsDto plushToyDetailsDto = objectMapper.readValue(response.getContentAsString(),
-                PlushToyDetailsDto.class);
+            PlushToyDetailsDto.class);
         assertThat(plushToyDetailsDto)
-                .isNotNull()
-                .hasFieldOrProperty("id")
-                .hasFieldOrPropertyWithValue("name", TEST_PLUSHTOY_NAME)
-                .hasFieldOrPropertyWithValue("description", TEST_PLUSHTOY_DESCRIPTION)
-                .hasFieldOrPropertyWithValue("price", TEST_PLUSHTOY_PRICE)
-                .hasFieldOrPropertyWithValue("taxClass", TEST_PLUSHTOY_TAX_CLASS)
-                .hasFieldOrPropertyWithValue("weight", TEST_PLUSHTOY_WEIGHT)
-                .hasFieldOrPropertyWithValue("hp", TEST_PLUSHTOY_HP)
-                .hasFieldOrPropertyWithValue("strength", TEST_PLUSHTOY_STRENGTH);
+            .isNotNull()
+            .hasFieldOrProperty("id")
+            .hasFieldOrPropertyWithValue("name", TEST_PLUSHTOY_NAME)
+            .hasFieldOrPropertyWithValue("description", TEST_PLUSHTOY_DESCRIPTION)
+            .hasFieldOrPropertyWithValue("price", TEST_PLUSHTOY_PRICE)
+            .hasFieldOrPropertyWithValue("taxClass", TEST_PLUSHTOY_TAX_CLASS)
+            .hasFieldOrPropertyWithValue("weight", TEST_PLUSHTOY_WEIGHT)
+            .hasFieldOrPropertyWithValue("hp", TEST_PLUSHTOY_HP)
+            .hasFieldOrPropertyWithValue("strength", TEST_PLUSHTOY_STRENGTH);
 
         assertEquals(plushToyDetailsDto.getColor().toString(), TEST_PLUSHTOY_COLOR);
         assertEquals(plushToyDetailsDto.getSize().toString(), TEST_PLUSHTOY_SIZE);
@@ -150,15 +150,15 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
     @Test
     public void givenMalformedInput_WhenCreating_thenBadRequest() throws Exception {
         String requestBody = """
-                {}
-                """;
+            {}
+            """;
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andDo(print())
-                .andReturn();
+            .andDo(print())
+            .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 

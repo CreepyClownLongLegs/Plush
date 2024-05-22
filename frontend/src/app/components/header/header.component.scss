@@ -1,3 +1,13 @@
+.navbar-style {
+  background-color: none;
+  border-bottom: whitesmoke 1px solid;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  position: relative;
+  width: 100%;
+  box-shadow: 2px 2px 0px 5px rgba(0, 0, 0, 0.693);
+}
+
 .header-container {
   margin-left: 10px;
   margin-right: 10px;
@@ -8,4 +18,98 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+}
+
+.navbar {
+  background-color: rgba(19, 19, 50, 0.9);
+}
+
+.bear-icon {
+  background-image: url("../../../images/bearArtIcon.png");
+  background-size: cover;
+}
+
+.form-control:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  /* Remove any box shadow */
+  background: none !important;
+  color: whitesmoke !important;
+}
+
+.nav-link {
+  color: whitesmoke;
+  font-size: large;
+}
+
+input {
+  background: none;
+  border-radius: 10px;
+  color: whitesmoke;
+  border: 1px whitesmoke solid;
+}
+
+input::placeholder {
+  color: #999;
+  /* Placeholder text color */
+}
+
+.search-nav {
+  margin-right: 5px;
+  margin-left: auto;
+}
+
+input .focused {
+  outline: none;
+  border-color: transparent
+}
+
+#search input[type="text"]:focus {
+  width: 200px;
+  outline: none;
+}
+
+.dropdown-menu {
+  border-radius: 0px;
+  background-color: rgba(19, 19, 50, 0.9);
+  color: whitesmoke;
+}
+
+.dropdown-menu {
+  a {
+    color: whitesmoke;
+  }
+}
+
+.dropdown-menu {
+  a:hover {
+    color: black;
+  }
+}
+
+.login {
+  border-radius: 10px;
+  background-color: #4c3f5b95;
+  padding: 4px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.btn-secondary {
+  background-color: #8064A2 !important;
+  padding: 4px;
+}
+
+.bag-icon {
+  height: 30px;
+  width: 30px;
+  background-image: url("../../../images/shoppingBag.png");
+  background-size: contain;
+}
+
+.search-icon {
+  height: 30px;
+  width: 30px;
+  background-image: url("../../../images/searchIcon.png");
+  background-size: contain;
 }

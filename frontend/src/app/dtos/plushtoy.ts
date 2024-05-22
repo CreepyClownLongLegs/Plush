@@ -49,6 +49,11 @@ export class ProductCategoryDto {
   name: string;
 }
 
+export class PlushToySearchDto {
+  name: string;
+}
+
+
 export class PlushToyDetailDto {
   id: number;
   name: string;

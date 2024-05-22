@@ -1,5 +1,43 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
-  <a class="navbar-brand ml-lg-5 header-container" href="">SE PR Group Phase</a>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-style">
+  <a class="navbar-brand ml-lg-5 d-flex align-items-center" style="font-size: xx-large;" href="#">
+    <div class="bear-icon" style="width: 32px; height: 32px;"></div>
+    <span class="ml-2">Plush</span>
+  </a>
+  <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-  <app-login></app-login>
+  <div class="collapse navbar-collapse d-flex align-items-center" id="navbarSupportedContent">
+
+    <div class="dropdown">
+      <button class="btn btn-secondary" (click)="toggleDropdown()">Categories</button>
+      <div class="dropdown-menu" [ngClass]="{ 'show': isDropdownOpen }" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#">Big Ducks</a>
+        <a class="dropdown-item" href="#">Small Bears</a>
+        <a class="dropdown-item" href="#">Negative Nancys</a>
+      </div>
+    </div>
+
+
+    <ul class="navbar-nav mr-3 search-nav" style="background-color: transparent;">
+      <form class="form-inline position-relative" (submit)="onSearch()">
+        <input class="form-control" type="search" name="search" id="search-field" placeholder="Search"
+          aria-label="Search" [(ngModel)]="searchTerm" style="font-size: small; padding-left: 40px;">
+
+        <div class="search-icon" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%);"></div>
+        <!-- Placing searchIcon div inside input field -->
+      </form>
+    </ul>
+
+    <ul class="navbar-nav mr-3">
+      <app-login></app-login>
+    </ul>
+    <ul class="navbar-nav mr-3">
+      <a class="nav-link login" href="#">
+        <div class="bag-icon">
+        </div>
+      </a>
+    </ul>
+  </div>
 </nav>

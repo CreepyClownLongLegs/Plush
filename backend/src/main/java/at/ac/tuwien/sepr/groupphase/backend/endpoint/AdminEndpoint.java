@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCreationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
@@ -31,6 +31,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+
+import java.util.Arrays;
+import java.util.List;
+
+import jakarta.annotation.security.PermitAll;
+
 
 @RestController
 @RequestMapping(value = "/api/v1/admin")
@@ -52,19 +58,27 @@ public class AdminEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/product/{id}")
     @Operation(summary = "Delete a product", security = @SecurityRequirement(name = "apiKey"), parameters = {
-            @Parameter(name = "id", description = "The id of the product to delete", required = true, in = ParameterIn.PATH)
+        @Parameter(name = "id", description = "The id of the product to delete", required = true, in = ParameterIn.PATH)
     })
     public void delete(@PathVariable("id") Long productId) {
         LOGGER.info("DELETE /api/v1/admin/product/{}", productId);
         adminService.deletePlushToy(productId);
     }
 
-    @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/products")
-    @Operation(summary = "Get all products", security = @SecurityRequirement(name = "apiKey"))
+    @PermitAll
+    @GetMapping(value = "/allProducts")
+    @Operation(summary = "Get all products")
     public List<PlushToyListDto> getAllPlushtoys() {
-        LOGGER.info("GET /api/v1/admin/products");
+        LOGGER.info("GET /api/v1/admin/allProducts");
         return plushToyMapper.entityToListDto(adminService.getAllPlushToys());
+    }
+
+    @PermitAll
+    @PostMapping(value = "/products")
+    @Operation(summary = "Search for products")
+    public List<PlushToyListDto> search(@RequestBody SearchPlushToyDto searchParams) {
+        LOGGER.info("POST /api/v1/admin/products with body: {}", searchParams);
+        return plushToyMapper.entityToListDto(adminService.search(searchParams));
     }
 
     @Secured("ROLE_ADMIN")
@@ -102,7 +116,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     @PostMapping("/product/{id}/categories")
     @Operation(summary = "Add categories to a product", security = @SecurityRequirement(name = "apiKey"), parameters = {
-            @Parameter(name = "id", description = "The id of the product to update", required = true, in = ParameterIn.PATH)
+        @Parameter(name = "id", description = "The id of the product to update", required = true, in = ParameterIn.PATH)
     })
     public PlushToyDetailsDto setCategories(@PathVariable("id") Long productId, @RequestBody List<Long> categoryIds) {
         LOGGER.info("Adding categories to product with id {}. body: {}", productId, categoryIds);

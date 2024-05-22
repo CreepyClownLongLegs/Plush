@@ -14,6 +14,8 @@ import { LoginComponent } from './components/login/login.component';
 import { AdminPlushtoyOverviewComponent } from './components/admin/plushtoy/overview/overview.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { httpInterceptorProviders } from './interceptors';
+import { CardComponent } from './components/card/card.component';
+import { AdminPlushtoyCreateComponent } from './components/admin/plushtoy/create/create.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { httpInterceptorProviders } from './interceptors';
     HttpClientModule,
     NgbModule,
     FormsModule,
+    CardComponent,
+    AdminPlushtoyCreateComponent,
     //needed for Toastr
     BrowserAnimationsModule,
     ToastrModule.forRoot(),

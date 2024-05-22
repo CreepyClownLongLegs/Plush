@@ -1,10 +1,17 @@
 .container.main {
-  background-color:rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
-  margin: 100px auto;
+  margin: auto;
   max-width: 800px;
+}
+
+.container-fluid {
+  background-image: url("../../../images/asset_background.png");
+  background-size: cover;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 .image-container {
@@ -79,19 +86,22 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 2px solid black; /* Ensure all buttons have a border */
+  border: 2px solid black;
+  /* Ensure all buttons have a border */
 }
 
 .add-to-cart-btn {
   background-color: #926986;
   color: white;
-  border: 2px solid black; /* Reapply border for add-to-cart button */
+  border: 2px solid black;
+  /* Reapply border for add-to-cart button */
 }
 
 .buy-now-btn {
   background-color: #E34848;
   color: #fff;
-  border: 2px solid black; /* Reapply border for buy-now button */
+  border: 2px solid black;
+  /* Reapply border for buy-now button */
 }
 
 .button-section .btn:hover {

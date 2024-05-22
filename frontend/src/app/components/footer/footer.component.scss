@@ -1,0 +1,39 @@
+.container-fluid{
+    height: 60vh;
+    background-color: rgba(19, 19, 50, 0.95);
+    border-top: 2px dotted whitesmoke;
+}
+
+.logo{
+
+    height: 270px; 
+    width: 270px;
+    background-image: url("../../../images/bearArtIcon.png");
+    background-size: cover;
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.logo-text{
+    color: rgb(218, 222, 254);
+    margin-left: 40px;
+    font-size: 90px;
+}
+
+.row-of-text{
+    color: rgb(218, 222, 254);
+    margin-top: 40px;
+    font-size: x-large;
+}
+
+.row-of-text ul{
+    list-style: none;
+    margin: auto;
+    text-align: center;
+}
+
+.row-of-text a{
+    text-decoration: none;
+    color: rgba(218, 222, 254, 0.718);
+    font-size: medium;
+}
