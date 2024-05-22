@@ -1,0 +1,36 @@
+<div class="card-wrap d-flex align-items-center justify-content-center">
+    <div class="card card1" [style.backgroundImage]="'url(' + imageUrl + ')'">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="icon">
+                    <div class="icon-image"></div>
+                </div>
+                <h5 class="card-title m-0">{{ title }}</h5>
+            </div>
+            <div>
+                <span class="badge badge-primary">{{ hp }}</span>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="strength d-flex align-items-center">
+                <p class="card-text m-0">Strength:</p>
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+            </div>
+            <div class="card-price d-flex align-items-center">
+                <p class="card-text m-0">
+                <div class="price-text">PRICE:</div>
+                <div class="eth-price">{{ price }}</div>
+            </div>
+            <div class="card-description">
+                {{ description }}
+            </div>
+            <div>
+                <button>
+                    ADD TO BAG :3
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

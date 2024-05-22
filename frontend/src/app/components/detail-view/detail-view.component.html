@@ -1,38 +1,40 @@
-<div class="container main" *ngIf="!error; else errorTemplate">
-  <div class="row">
-    <div class="col-md-6 image-container">
-      <!-- Plush image -->
-      <img [src]="toy.imageUrl" alt="Big Image" class="image-main">
-    </div>
-    <div class="col-md-6 details-container">
-      <!-- Name and Id -->
-      <h1 class="toy-name">{{ toy.name }} Nr.{{ toy.id }}</h1>
-      <!-- Description-->
-      <p class="toy-description">{{ toy.description }}</p>
-
-      <!-- Stats in two columns -->
-      <div class="stats-container">
-        <div class="stats-column">
-          <div class="stat label">Size</div>
-          <div class="stat">{{ toy.weight }}kg</div>
-          <div class="stat label">Health</div>
-          <div class="stat health">{{ toy.hp }}HP</div>
-        </div>
-        <div class="stats-column">
-          <div class="stat label">Strength</div>
-          <div class="stat">{{ toy.strength }}</div>
-        </div>
+<div class="container-fluid">
+  <div class="container main" *ngIf="!error; else errorTemplate">
+    <div class="row">
+      <div class="col-md-6 image-container">
+        <!-- Plush image -->
+        <img [src]="toy.imageUrl" alt="Big Image" class="image-main">
       </div>
+      <div class="col-md-6 details-container">
+        <!-- Name and Id -->
+        <h1 class="toy-name">{{ toy.name }} Nr.{{ toy.id }}</h1>
+        <!-- Description-->
+        <p class="toy-description">{{ toy.description }}</p>
 
-      <!-- Price -->
-      <div class="price-section">
-        <h2 class="toy-price">{{ toy.price }} SOL</h2>
-      </div>
+        <!-- Stats in two columns -->
+        <div class="stats-container">
+          <div class="stats-column">
+            <div class="stat label">Size</div>
+            <div class="stat">{{ toy.weight }}kg</div>
+            <div class="stat label">Health</div>
+            <div class="stat health">{{ toy.hp }}HP</div>
+          </div>
+          <div class="stats-column">
+            <div class="stat label">Strength</div>
+            <div class="stat">{{ toy.strength }}</div>
+          </div>
+        </div>
 
-      <!-- Buttons -->
-      <div class="button-section">
-        <button class="btn btn-success buy-now-btn" (click)="buyNow()">BUY NOW!!!</button>
-        <button class="btn btn-primary add-to-cart-btn" (click)="addToCart()">ADD TO BAG</button>
+        <!-- Price -->
+        <div class="price-section">
+          <h2 class="toy-price">{{ toy.price }} SOL</h2>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-section">
+          <button class="btn btn-success buy-now-btn" (click)="buyNow()">BUY NOW!!!</button>
+          <button class="btn btn-primary add-to-cart-btn" (click)="addToCart()">ADD TO BAG</button>
+        </div>
       </div>
     </div>
   </div>

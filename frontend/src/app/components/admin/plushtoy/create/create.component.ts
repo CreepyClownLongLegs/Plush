@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppModule } from 'src/app/app.module';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 import { PlushToyDetailsDto as PlushToyDetailsDto, PlushToyColor, PlushToyCreationDto, PlushToySize, ProductCategoryDto } from 'src/app/dtos/plushtoy';
 import { AdminService } from 'src/app/services/admin.service';
 
@@ -17,7 +19,7 @@ export class AdminPlushtoyCreateComponent implements OnInit {
   colors = Object.values(PlushToyColor).filter(value => typeof value === 'string') as string[];
   sizes = Object.values(PlushToySize).filter(value => typeof value === 'string') as string[];
   categories: ProductCategoryDto[];
-  
+
 
   constructor(private fb: FormBuilder, private service: AdminService, private router: Router) {
     this.plushToy = new PlushToyCreationDto();

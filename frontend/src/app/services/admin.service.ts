@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 import { Globals } from '../global/globals';
-import { PlushToyCreationDto, PlushToyDetailsDto, PlushToyListDto, ProductCategoryCreationDto, ProductCategoryDto } from '../dtos/plushtoy';
+import { PlushToyCreationDto, PlushToyDetailsDto, PlushToyListDto, PlushToySearchDto, ProductCategoryCreationDto, ProductCategoryDto } from '../dtos/plushtoy';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,18 @@ import { PlushToyCreationDto, PlushToyDetailsDto, PlushToyListDto, ProductCatego
 export class AdminService {
 
   private adminBaseUri: string = this.globals.backendUri + '/admin';
+  private authToken: string;
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
+    this.authToken = '?E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v9';
   }
 
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authToken}` // Include authentication token with the correct prefix
+    });
+  }
 
   /**
    * Send a delete request to the backend to delete the plushtoy with the given id
@@ -30,7 +38,7 @@ export class AdminService {
    * @returns all plush toys
    */
   getAllPlushToys(): Observable<PlushToyListDto[]> {
-    return this.httpClient.get<PlushToyListDto[]>(this.adminBaseUri + "/products");
+    return this.httpClient.get<PlushToyListDto[]>(this.adminBaseUri + "/allProducts");
   }
 
   /**
@@ -41,6 +49,17 @@ export class AdminService {
   create(plushToy: PlushToyCreationDto): Observable<PlushToyDetailsDto> {
     return this.httpClient.post<PlushToyDetailsDto>(this.adminBaseUri + "/product", plushToy);
   }
+
+    /**
+   * Search for horses that match certain search parameters we transfer
+   *
+   * @param searchParams by which the list of existing horses will be filtered
+   * @returns a list of Observables that match the search criteria
+   */
+    search(searchParams: PlushToySearchDto): Observable<PlushToyListDto[]> {
+      return this.httpClient.post<PlushToyListDto[]>(this.adminBaseUri + "/products", searchParams);
+    }
+
 
   /**
    * Send a get request to the backend to get all categories

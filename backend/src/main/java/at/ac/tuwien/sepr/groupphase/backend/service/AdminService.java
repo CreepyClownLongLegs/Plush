@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
@@ -26,6 +27,13 @@ public interface AdminService {
      * @return a list of all plushtoys
      */
     List<PlushToy> getAllPlushToys();
+
+    /**
+     * Get all plushtoys.
+     *
+     * @return a list of all plushtoys
+     */
+    List<PlushToy> search(SearchPlushToyDto searchParams);
 
     /**
      * Add a new product.

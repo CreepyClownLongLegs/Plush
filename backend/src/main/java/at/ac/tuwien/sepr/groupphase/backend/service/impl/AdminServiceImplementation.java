@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
@@ -21,14 +22,17 @@ import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 
 @Service
 public class AdminServiceImplementation implements AdminService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PlushToyRepository plushToyRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final PlushToyMapper plushToyMapper;
     private final ProductCategoryMapper productCategoryMapper;
-    
-    public AdminServiceImplementation(PlushToyRepository plushToyRepository, PlushToyMapper plushToyMapper, ProductCategoryRepository productCategoryRepository, ProductCategoryMapper productCategoryMapper) {
+
+    public AdminServiceImplementation(PlushToyRepository plushToyRepository,
+                                      PlushToyMapper plushToyMapper,
+                                      ProductCategoryRepository productCategoryRepository,
+                                      ProductCategoryMapper productCategoryMapper) {
         this.plushToyRepository = plushToyRepository;
         this.productCategoryRepository = productCategoryRepository;
         this.plushToyMapper = plushToyMapper;
@@ -51,12 +55,24 @@ public class AdminServiceImplementation implements AdminService {
     }
 
     @Override
+    public List<PlushToy> search(SearchPlushToyDto searchParams) {
+        LOGGER.info("searchPlushToys");
+        String name = searchParams.getName();
+
+        if (name != null && name.isEmpty()) {
+            name = null;
+        }
+
+        return plushToyRepository.searchPlushToys(name);
+    }
+
+    @Override
     public PlushToyDetailsDto addPlushToy(PlushToy toCreate) {
         LOGGER.info("addPlushToy");
 
         PlushToy created = plushToyRepository.save(toCreate);
         LOGGER.trace("Generated PlushToy: " + created.getId());
-        return plushToyMapper.entityToDetailsDto(created);        
+        return plushToyMapper.entityToDetailsDto(created);
     }
 
     @Override
@@ -89,8 +105,7 @@ public class AdminServiceImplementation implements AdminService {
         }
 
         plushToyRepository.save(plushToy);
-        PlushToyDetailsDto result = plushToyMapper.entityToDetailsDto(plushToyRepository.findById(productId).get());
-        return result;
+        return plushToyMapper.entityToDetailsDto(plushToyRepository.findById(productId).get());
     }
-
 }
+

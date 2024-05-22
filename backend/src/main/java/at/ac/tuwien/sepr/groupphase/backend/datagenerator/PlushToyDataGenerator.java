@@ -33,11 +33,20 @@ public class PlushToyDataGenerator {
             LOGGER.debug("plushToy already generated");
         } else {
             LOGGER.debug("generating {} plushToy entries", NUMBER_TO_GENERATE);
+            //with name test tiger
             for (int i = 0; i < NUMBER_TO_GENERATE; i++) {
                 PlushToy plushy = new PlushToy();
                 plushy.setName(TEST_NAME + " " + i);
                 plushy.setPrice(10.0);
                 plushy.setTaxClass(10.0f);
+                if (i % 2 == 0) {
+                    plushy.setDescription("Feisty lil fella");
+                }
+                if (i % 3 == 0) {
+                    plushy.setDescription("Cute lil gent");
+                } else {
+                    plushy.setDescription("this one has seen better days");
+                }
                 plushy.setWeight(i);
                 plushy.setColor(Color.BLACK);
                 plushy.setSize(Size.MEDIUM);
@@ -47,6 +56,7 @@ public class PlushToyDataGenerator {
                 plushToyRepository.save(plushy);
                 LOGGER.info("created plushToy with ID: {} , {}", plushy.getId(), plushy);
             }
+
         }
     }
 
