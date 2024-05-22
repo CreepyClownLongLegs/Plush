@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCreationDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
@@ -85,9 +85,9 @@ public class AdminEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/product")
     @Operation(summary = "Create a new product", security = @SecurityRequirement(name = "apiKey"))
-    public PlushToyDetailsDto create(@Valid @RequestBody PlushToyCreationDto plushToyCreationDto) {
+    public PlushToyDetailDto create(@Valid @RequestBody PlushToyCreationDto plushToyCreationDto) {
         LOGGER.info("Creating new product. body: {}", plushToyCreationDto);
-        PlushToyDetailsDto res = adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
+        PlushToyDetailDto res = adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
 
         if (plushToyCreationDto.getCategories() != null) {
             return adminService.addCategoriesToProduct(res.getId(), Arrays.asList(plushToyCreationDto.getCategories()));
@@ -118,7 +118,7 @@ public class AdminEndpoint {
     @Operation(summary = "Add categories to a product", security = @SecurityRequirement(name = "apiKey"), parameters = {
         @Parameter(name = "id", description = "The id of the product to update", required = true, in = ParameterIn.PATH)
     })
-    public PlushToyDetailsDto setCategories(@PathVariable("id") Long productId, @RequestBody List<Long> categoryIds) {
+    public PlushToyDetailDto setCategories(@PathVariable("id") Long productId, @RequestBody List<Long> categoryIds) {
         LOGGER.info("Adding categories to product with id {}. body: {}", productId, categoryIds);
         return adminService.addCategoriesToProduct(productId, categoryIds);
     }

@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
@@ -129,8 +129,8 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        PlushToyDetailsDto plushToyDetailsDto = objectMapper.readValue(response.getContentAsString(),
-            PlushToyDetailsDto.class);
+        PlushToyDetailDto plushToyDetailsDto = objectMapper.readValue(response.getContentAsString(),
+                PlushToyDetailDto.class);
         assertThat(plushToyDetailsDto)
             .isNotNull()
             .hasFieldOrProperty("id")

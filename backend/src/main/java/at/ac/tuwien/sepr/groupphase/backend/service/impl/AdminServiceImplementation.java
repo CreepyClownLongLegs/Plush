@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
@@ -67,12 +67,12 @@ public class AdminServiceImplementation implements AdminService {
     }
 
     @Override
-    public PlushToyDetailsDto addPlushToy(PlushToy toCreate) {
+    public PlushToyDetailDto addPlushToy(PlushToy toCreate) {
         LOGGER.info("addPlushToy");
 
         PlushToy created = plushToyRepository.save(toCreate);
         LOGGER.trace("Generated PlushToy: " + created.getId());
-        return plushToyMapper.entityToDetailsDto(created);
+        return plushToyMapper.entityToDetailDto(created);        
     }
 
     @Override
@@ -90,7 +90,7 @@ public class AdminServiceImplementation implements AdminService {
     }
 
     @Override
-    public PlushToyDetailsDto addCategoriesToProduct(Long productId, List<Long> productCategoryIds) throws NotFoundException {
+    public PlushToyDetailDto addCategoriesToProduct(Long productId, List<Long> productCategoryIds) throws NotFoundException {
         LOGGER.info("addCategoriesToProduct");
         PlushToy plushToy = plushToyRepository.findById(productId).orElseThrow(() -> new NotFoundException("Plush toy not found"));
 
@@ -105,7 +105,7 @@ public class AdminServiceImplementation implements AdminService {
         }
 
         plushToyRepository.save(plushToy);
-        return plushToyMapper.entityToDetailsDto(plushToyRepository.findById(productId).get());
+        return plushToyMapper.entityToDetailDto(plushToyRepository.findById(productId).get());
     }
 }
 

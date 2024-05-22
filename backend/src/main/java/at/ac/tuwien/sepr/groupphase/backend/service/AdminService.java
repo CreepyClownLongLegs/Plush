@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.lang.NonNull;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
@@ -41,7 +41,7 @@ public interface AdminService {
      * @param plushToy the product to add
      * @return the ID of the added product
      */
-    PlushToyDetailsDto addPlushToy(@NonNull PlushToy plushToy);
+    PlushToyDetailDto addPlushToy(@NonNull PlushToy plushToy);
 
     /**
      * Add a new product category.
@@ -66,6 +66,6 @@ public interface AdminService {
      * @return the updated product
      * @throws NotFoundException if the product does not exist
      */
-    PlushToyDetailsDto addCategoriesToProduct(@NonNull Long productId, @NonNull List<Long> productCategoryIds) throws NotFoundException;
+    PlushToyDetailDto addCategoriesToProduct(@NonNull Long productId, @NonNull List<Long> productCategoryIds) throws NotFoundException;
 
 }
