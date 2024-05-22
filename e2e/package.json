@@ -5,12 +5,13 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
+    "bs58": "^5.0.0",
     "cypress": "13.7.3",
     "cypress-mochawesome-reporter": "3.8.2",
     "cypress-multi-reporters": "1.6.4",
-    "mocha-junit-reporter": "2.2.1"
+    "mocha-junit-reporter": "2.2.1",
+    "tweetnacl": "^1.0.3"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cypress": "cypress run"
