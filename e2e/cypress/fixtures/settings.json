@@ -2,5 +2,7 @@
   "adminUser": "admin@email.com",
   "adminPw": "password",
   "baseUrl": "localhost:4200",
-  "adminUrl": "localhost:4200/#/admin"
+  "adminUrl": "localhost:4200/#/admin",
+  "adminPublicKey": "EFWHJmGb4Ybgo7cueShmv42mDKZTkCrFNTeTPikhxitM",
+  "adminSecretKey": "28mhB4hjCrWdUhjmUcHjZtaKnoTg8dnowRZ4VKLPTriWev59zg6ziuyCw2FNSTmNyGHJ6SKCPkMmxJkPieXZSok1"
 }

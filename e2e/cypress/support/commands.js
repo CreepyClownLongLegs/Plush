@@ -1,12 +1,31 @@
-Cypress.Commands.add('loginAdmin', () => {
-    cy.fixture('settings').then(settings => {
-        cy.visit(settings.baseUrl);
-        cy.contains('a', 'Login').click();
-        cy.get('input[name="username"]').type(settings.adminUser);
-        cy.get('input[name="password"]').type(settings.adminPw);
-        cy.contains('button', 'Login').click();
-    })
-})
+import base58 from "bs58";
+import nacl from "tweetnacl";
+Cypress.Commands.add(
+    "loginAdmin",
+    (path, visitOptions) => {
+        cy.fixture('settings').then(settings => {
+            cy.visit('/', {
+                onBeforeLoad: (win) => {
+                    win.solana = {
+                        signMessage: cy.stub().callsFake(async (message) => {
+                            var string = new TextDecoder().decode(message);
+                            console.log("faking sign for", string);
+                            const messageBytes = new TextEncoder().encode(string)
+                            const signature = nacl.sign.detached(messageBytes, base58.decode(settings.adminSecretKey));
+                            return Promise.resolve({ signature: signature });
+                        }).as('solanaSignMessage'),
+                        disconnect: cy.stub().returns(Promise.resolve('mocked_signature')).as('solanaDisConnect'),
+                        connect: cy.stub().returns(Promise.resolve('mocked_signature')).as('solanaConnect'),
+                        publicKey: settings.adminPublicKey,
+                    }
+                },
+            });
+        })
+        cy.getBySel("logIn").click();
+        cy.getBySel("loggedIn").should('be.visible');
+
+    },
+);
 
 Cypress.Commands.add('createMessage', (msg) => {
     cy.fixture('settings').then(settings => {
@@ -26,6 +45,7 @@ Cypress.Commands.add('createMessage', (msg) => {
 Cypress.Commands.add('goToAdminOverview', (msg) => {
     cy.fixture('settings').then(settings => {
         cy.visit(settings.adminUrl);
+        cy.url().should('contain', settings.adminUrl)
     })
 })
 
