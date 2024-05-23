@@ -22,6 +22,7 @@ Cypress.Commands.add(
             });
         })
         cy.getBySel("connectWallet").click();
+        cy.getBySel("logIn").should('be.visible');
         cy.getBySel("logIn").click();
         cy.getBySel("loggedIn").should('be.visible');
 
