@@ -1,12 +1,17 @@
 <div class="container-fluid">
-  <div class="container">
+<div class="container">
 
+  <!-- temp button to check for login status -->
+  <button class="btn btn-primary btn-lg login-button-margin" (click)="checkUserStatus()">Status</button>
 
     <!--the cards-->
     <div class="row">
       <div class="col-lg-4" *ngFor="let plushie of plushies">
         <app-card
-          [plushie]=plushie
+          [title]="plushie.name"
+          [hp]="'120HP'"
+          [price]="plushie.price"
+          [description]="plushie.description"
           [imageUrl]="'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'"
         ></app-card>
       </div>
@@ -14,18 +19,16 @@
 
     <!--end of cards/ Hello traveller-->
     <div class="container second d-flex justify-content-between">
-      <div class=" dialogue-box">
+    <div class=" dialogue-box">
         <div class=" align-items-center">
-          <p>Hello Fellow Person
+        <p>Hello Fellow Person
             <span id="typewriter">{{ typewriterText }}</span>
-          </p>
+         </p>
         </div>
-      </div>
-      <iframe width="314" height="321" scrolling="no"
-              src="https://gifypet.neocities.org/pet/pet.html?name=&dob=1715711674&gender=f&element=Earth&pet=hamster.gif&map=night.gif&background=1995.png&tablecolor=black&textcolor=black"
-              frameborder="0"></iframe>
+        </div>
+        <iframe width="314" height="321" scrolling="no" src="https://gifypet.neocities.org/pet/pet.html?name=&dob=1715711674&gender=f&element=Earth&pet=hamster.gif&map=night.gif&background=1995.png&tablecolor=black&textcolor=black" frameborder="0"></iframe>
     </div>
-  </div>
+    </div>
 
 
 </div>

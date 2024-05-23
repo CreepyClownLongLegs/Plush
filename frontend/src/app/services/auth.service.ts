@@ -113,10 +113,6 @@ export class AuthService {
     return 'UNDEFINED';
   }
 
-  userIsAdmin(): boolean {
-    return this.getUserRole() === 'ADMIN';
-  }
-
   checkIfUserhasRequiredRole(requiredRole: string): boolean {
     switch (this.getUserRole()) {
       case 'ADMIN':
