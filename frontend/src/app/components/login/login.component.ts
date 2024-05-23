@@ -20,6 +20,7 @@ export enum ButtonType {
 
 export class LoginComponent implements OnInit {
   @ViewChild("walletModal") walletModal: TemplateRef<any>;
+  @ViewChild("connectModal") connectModal: TemplateRef<any>;
   @Input() buttonClass: string;
   @Input() type: ButtonType;
 
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private walletService: WalletService,
+    public walletService: WalletService,
     private modalService: NgbModal,
     private notification: ToastrService,
   ) {
@@ -48,6 +49,7 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;
+        this.balance = await this.walletService.getBalance(publicKey);
       })
         .catch((error) => {
           this.resetWalletConnection();
@@ -67,13 +69,20 @@ export class LoginComponent implements OnInit {
     return '';
   }
 
+  forwardToPhantom() {
+    window.open('https://phantom.app/', '_blank');
+    this.modalService.dismissAll();
+
+  }
+
   handleButtonClick() {
     if (this.authService.isLoggedIn()) {
       this.openWalletModal();
     } else {
-      this.loginUser();
+      this.openConnectModal();
     }
   }
+
 
   /**
    * Connects the wallet and tries to log in the user.
@@ -83,6 +92,8 @@ export class LoginComponent implements OnInit {
       this.publicKey = publicKey;
       this.getNonce(publicKey);
       this.balance = await this.walletService.getBalance(publicKey);
+      this.modalService.dismissAll();
+
     })
       .catch((error) => {
         this.resetWalletConnection();
@@ -184,6 +195,10 @@ export class LoginComponent implements OnInit {
 
   openWalletModal() {
     this.modalService.open(this.walletModal);
+  }
+
+  openConnectModal() {
+    this.modalService.open(this.connectModal);
   }
 
   closeModal() {
