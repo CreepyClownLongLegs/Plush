@@ -7,11 +7,10 @@
 
 
 <div class="header-container">
-  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="logIn"
-     (click)="loginUser()">{{ buttonLabel() }}
+  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button"
+     (click)="openConnectModal()">{{ buttonLabel() }}
     <div [class]="iconClass"></div>
   </a>
-  <!-- 'Connecting...' is slightly larger than the displayed pubKey, unwanted behavior at 358px -->
   <a *ngIf="authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="loggedIn"
      (click)="openWalletModal()">{{ buttonLabel() }}
     <div [class]="iconClass"></div>
@@ -30,7 +29,8 @@
       <button *ngIf="!walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2"
               (click)="forwardToPhantom()">Install Phantom Wallet
       </button>
-      <button *ngIf="walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2" (click)="loginUser()">
+      <button *ngIf="walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2" (click)="loginUser()"
+              data-test="logIn">
         Connect Phantom Wallet
       </button>
     </div>
