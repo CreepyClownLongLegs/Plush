@@ -6,12 +6,11 @@
 </div>
 
 <div class="header-container">
-  <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" role="button" data-test="logIn"
-    (click)="loginUser()">Connect
-    Wallet</a>
+  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="logIn"
+     (click)="loginUser()">{{ label }}</a>
   <!-- 'Connecting...' is slightly larger than the displayed pubKey, unwanted behavior at 358px -->
-  <a *ngIf="authService.isLoggedIn()" class="btn btn-primary btn-lg" role="button" data-test="loggedIn"
-    (click)="openWalletModal()">{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</a>
+  <a *ngIf="authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="loggedIn"
+     (click)="openWalletModal()">{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</a>
 </div>
 
 <div>
@@ -25,7 +24,7 @@
     <div class="modal-body">
       <div class="flex-row">
         <span>{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</span>
-        <span>{{ balance ? balance : 'Fetching Balance...'}} SOL</span>
+        <span>{{ balance ? balance : 'Fetching Balance...' }} SOL</span>
       </div>
       <button class="btn btn-primary btn-block mb-2">Settings</button>
       <button class="btn btn-primary btn-block mb-2" (click)="logoutUser()">Disconnect</button>

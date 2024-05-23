@@ -4,7 +4,7 @@
     <span class="ml-2">Plush</span>
   </a>
   <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
@@ -23,7 +23,7 @@
     <ul class="navbar-nav mr-3 search-nav" style="background-color: transparent;">
       <form class="form-inline position-relative" (submit)="onSearch()">
         <input class="form-control" type="search" name="search" id="search-field" placeholder="Search"
-          aria-label="Search" [(ngModel)]="searchTerm" style="font-size: small; padding-left: 40px;">
+               aria-label="Search" [(ngModel)]="searchTerm" style="font-size: small; padding-left: 40px;">
 
         <div class="search-icon" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%);"></div>
         <!-- Placing searchIcon div inside input field -->
@@ -31,13 +31,20 @@
     </ul>
 
     <ul class="navbar-nav mr-3">
-      <app-login></app-login>
+      <app-login
+        buttonClass="btn btn-secondary"
+        label="Connect Wallet"></app-login>
     </ul>
     <ul class="navbar-nav mr-3">
-      <a class="nav-link login" href="#">
-        <div class="bag-icon">
-        </div>
-      </a>
+      <app-login
+        buttonClass="btn btn-secondary"
+        label="Connect Wallet">
+        >
+      </app-login>
+      <button class="btn btn-secondary bag-con">
+        <div class="bag-icon"></div>
+      </button>
+
     </ul>
   </div>
 </nav>

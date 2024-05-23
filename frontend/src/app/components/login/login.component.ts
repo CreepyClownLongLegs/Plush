@@ -1,10 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
-import { AuthService } from "../../services/auth.service";
-import { AuthRequest } from "../../dtos/auth-request";
-import { NonceRequest } from "../../dtos/nonce-request";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrService } from "ngx-toastr";
-import { WalletService } from "../../services/wallet.service";
+import {Component, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {AuthService} from "../../services/auth.service";
+import {AuthRequest} from "../../dtos/auth-request";
+import {NonceRequest} from "../../dtos/nonce-request";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ToastrService} from "ngx-toastr";
+import {WalletService} from "../../services/wallet.service";
 
 @Component({
   selector: "app-login",
@@ -13,7 +13,8 @@ import { WalletService } from "../../services/wallet.service";
 })
 export class LoginComponent implements OnInit {
   @ViewChild("walletModal") walletModal: TemplateRef<any>;
-
+  @Input() buttonClass: string;
+  @Input() label: string;
   error = false;
   errorMessage = "";
   publicKey = "";
@@ -81,7 +82,7 @@ export class LoginComponent implements OnInit {
    * @param nonce The nonce to sign
    */
   signNonce(publicKey: string, nonce: string) {
-    this.authService.signNonce(nonce).then(({ signature, status }) => {
+    this.authService.signNonce(nonce).then(({signature, status}) => {
       if (status === 'timeout') {
         this.notification.info("Late Signature", "You signed the message, but it was after the timeout.");
       } else if (status === 'success' && signature) {
@@ -89,7 +90,7 @@ export class LoginComponent implements OnInit {
         this.authenticateUser(authRequest);
       }
     })
-      .catch(({ status, error }) => {
+      .catch(({status, error}) => {
         if (status === 'timeout') {
           this.notification.error("Timeout", "Signing nonce took too long");
         } else if (status === 'error') {
