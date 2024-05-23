@@ -6,12 +6,11 @@
 </div>
 
 <div class="header-container">
-  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="logIn"
-     (click)="loginUser()">{{ label }}</a>
-  <!-- 'Connecting...' is slightly larger than the displayed pubKey, unwanted behavior at 358px -->
-  <a *ngIf="authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="loggedIn"
-     (click)="openWalletModal()">{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</a>
-</div>
+  <a [class]="buttonClass" (click)="handleButtonClick()">{{ buttonLabel() }}
+    <div [class]="iconClass"></div>
+  </a>
+
+
 
 <div>
   <ng-template #walletModal>

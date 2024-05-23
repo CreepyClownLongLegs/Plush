@@ -6,19 +6,30 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ToastrService} from "ngx-toastr";
 import {WalletService} from "../../services/wallet.service";
 
+export enum ButtonType {
+  ConnectButton,
+  CartButton,
+}
+
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
+
+
 export class LoginComponent implements OnInit {
   @ViewChild("walletModal") walletModal: TemplateRef<any>;
   @Input() buttonClass: string;
-  @Input() label: string;
+  @Input() type: ButtonType;
+
+  iconClass: string = '';
+  label: string = '';
   error = false;
   errorMessage = "";
   publicKey = "";
   balance = 0;
+  isDropdownOpen = false;
 
   constructor(
     public authService: AuthService,
@@ -29,6 +40,11 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.type === ButtonType.ConnectButton) {
+    }
+    if (this.type === ButtonType.CartButton) {
+      this.iconClass = "bag-icon";
+    }
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;
@@ -37,6 +53,25 @@ export class LoginComponent implements OnInit {
           this.resetWalletConnection();
           console.error("Error connecting to wallet:", error);
         });
+    }
+  }
+
+  buttonLabel() {
+    if (this.type == ButtonType.ConnectButton) {
+      if (this.authService.isLoggedIn()) {
+        return this.publicKey ? this.formatWalletAddress(this.publicKey) : 'Connecting...'
+
+      }
+      return "Connect Wallet";
+    }
+    return '';
+  }
+
+  handleButtonClick() {
+    if (this.authService.isLoggedIn()) {
+      this.openWalletModal();
+    } else {
+      this.loginUser();
     }
   }
 

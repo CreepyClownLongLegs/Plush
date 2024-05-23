@@ -5,6 +5,7 @@ import {PlushToySearchDto} from 'src/app/dtos/plushtoy';
 import {NavigationEnd} from '@angular/router';
 import {filter} from 'rxjs';
 import {SearchService} from 'src/app/services/search.service';
+import {ButtonType} from "../login/login.component";
 
 @Component({
   selector: 'app-header',
@@ -43,4 +44,5 @@ export class HeaderComponent implements OnInit {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  protected readonly ButtonType = ButtonType;
 }

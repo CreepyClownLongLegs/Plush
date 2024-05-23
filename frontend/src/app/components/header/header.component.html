@@ -33,18 +33,20 @@
     <ul class="navbar-nav mr-3">
       <app-login
         buttonClass="btn btn-secondary"
-        label="Connect Wallet"></app-login>
+        [type]="ButtonType.ConnectButton">
+      </app-login>
     </ul>
     <ul class="navbar-nav mr-3">
-      <app-login
-        buttonClass="btn btn-secondary"
-        label="Connect Wallet">
-        >
+      <app-login *ngIf="!authService.isLoggedIn()"
+                 buttonClass="btn btn-secondary bag-con"
+                 [type]="ButtonType.CartButton">
       </app-login>
-      <button class="btn btn-secondary bag-con">
-        <div class="bag-icon"></div>
-      </button>
 
+      <div *ngIf="authService.isLoggedIn()" class="cart-icon">
+        <button class="btn btn-secondary bag-con">
+          <div class="bag-icon"></div>
+        </button>
+      </div>
     </ul>
   </div>
 </nav>
