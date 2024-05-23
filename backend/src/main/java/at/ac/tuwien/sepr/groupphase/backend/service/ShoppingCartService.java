@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShoppingCartItemDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
 import java.util.List;
@@ -35,5 +34,5 @@ public interface ShoppingCartService {
      * @param publicKey the public key of the user
      * @return a list of PlushToyListDto representing the items in the user's cart
      */
-    List<PlushToyListDto> getFullCart(String publicKey);
+    List<PlushToyCartListDto> getFullCart(String publicKey);
 }

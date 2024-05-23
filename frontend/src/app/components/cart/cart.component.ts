@@ -1,12 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {PlushToyListDto} from "../../dtos/plushtoy";
+import {PlushToyCartListDto, PlushToyListDto} from "../../dtos/plushtoy";
 import {PlushtoyService} from "../../services/plushtoy.service";
 import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
 import {ToastrService} from "ngx-toastr";
 import {NgForOf} from "@angular/common";
-import {jwtDecode} from "jwt-decode";
 
 @Component({
   selector: 'app-cart',

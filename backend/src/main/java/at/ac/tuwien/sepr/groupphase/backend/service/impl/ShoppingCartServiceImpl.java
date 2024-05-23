@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShoppingCartItemDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
@@ -54,20 +53,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void deleteFromCart(String publicKey, long itemId) throws NotFoundException {
         LOGGER.debug("Deleting item from cart: {}", itemId);
 
-        User user = userRepository.findUserByPublicKey(publicKey)
-            .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
-        PlushToy toy = plushToyRepository.findById(itemId)
-            .orElseThrow(() -> new NotFoundException("Plushtoy not found by id: " + itemId));
-
-        ShoppingCartItem cartItem = shoppingCartItemRepository.findByPlushToyAndUser(toy, user)
+        ShoppingCartItem cartItem = shoppingCartItemRepository.findById(itemId)
             .orElseThrow(() -> new NotFoundException("Item not found in cart with id: " + itemId));
 
         shoppingCartItemRepository.delete(cartItem);
     }
 
     @Override
-    public List<PlushToyListDto> getFullCart(String publicKey) {
+    public List<PlushToyCartListDto> getFullCart(String publicKey) {
         LOGGER.debug("Fetching full cart for user with publicKey: {}", publicKey);
 
         User user = userRepository.findUserByPublicKey(publicKey)
@@ -78,7 +72,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartItems.stream()
             .map(cartItem -> {
                 PlushToy plushToy = cartItem.getPlushToy();
-                PlushToyListDto dto = new PlushToyListDto();
+                PlushToyCartListDto dto = new PlushToyCartListDto();
                 dto.setId(plushToy.getId());
                 dto.setName(plushToy.getName());
                 dto.setDescription(plushToy.getDescription());
@@ -86,6 +80,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 dto.setAverageRating(plushToy.getAverageRating());
                 dto.setHp(plushToy.getHp());
                 dto.setImageUrl(plushToy.getImageUrl());
+                dto.setCartItemId(cartItem.getId());
                 return dto;
             })
             .collect(Collectors.toList());
