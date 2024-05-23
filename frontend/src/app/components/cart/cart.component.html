@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="cart">
+    <h2 class="label" >Your Cart</h2>
+    <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+      <img [src]="item.imageUrl" alt="{{item.name}}" />
+      <div class="item-details">
+        <p>{{item.name}}</p>
+        <p>{{item.hp}}HP</p>
+        <p>PRICE: {{item.price}} SOL</p>
+        <button (click)="removeItem(item.id)">X</button>
+      </div>
+    </div>
+    <div class="payment-method">
+      <p>Select Payment Method:</p>
+      <label>
+        <input type="radio" name="payment" (change)="selectPaymentMethod('Credit Card')" />
+        Credit Card
+      </label>
+      <label>
+        <input type="radio" name="payment" (change)="selectPaymentMethod('Wallet')" />
+        Wallet
+      </label>
+    </div>
+    <div class="total-price">
+      <p>TOTAL PRICE: {{totalPrice}} SOL</p>
+    </div>
+    <button (click)="finishPayment()" class="finish-payment">Finish Payment</button>
+  </div>
+</div>
