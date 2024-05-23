@@ -5,25 +5,37 @@
   </button>
 </div>
 
+
 <div class="header-container">
-  <a [class]="buttonClass" (click)="handleButtonClick()">{{ buttonLabel() }}
+  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="logIn"
+     (click)="loginUser()">{{ buttonLabel() }}
     <div [class]="iconClass"></div>
   </a>
+  <!-- 'Connecting...' is slightly larger than the displayed pubKey, unwanted behavior at 358px -->
+  <a *ngIf="authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="loggedIn"
+     (click)="openWalletModal()">{{ buttonLabel() }}
+    <div [class]="iconClass"></div>
+  </a>
+</div>
 
-  <div>
-    <ng-template #connectModal>
-      <div class="modal-header">
-        <h4 class="modal-title">Connect Wallet</h4>
-        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <button *ngIf="!walletService.isWalletPresent()"class="btn btn-secondary btn-block mb-2" (click)="forwardToPhantom()">Install Phantom Wallet</button>
-        <button *ngIf="walletService.isWalletPresent()"class="btn btn-secondary btn-block mb-2" (click)="loginUser()">Connect Phantom Wallet</button>
-      </div>
-    </ng-template>
-  </div>
+<div>
+  <ng-template #connectModal>
+    <div class="modal-header">
+      <h4 class="modal-title">Connect Wallet</h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <button *ngIf="!walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2"
+              (click)="forwardToPhantom()">Install Phantom Wallet
+      </button>
+      <button *ngIf="walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2" (click)="loginUser()">
+        Connect Phantom Wallet
+      </button>
+    </div>
+  </ng-template>
+</div>
 
 
 <div>
@@ -37,10 +49,12 @@
     <div class="modal-body">
       <div class="flex-row">
         <span>{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</span>
-        <span>{{ balance !== undefined ? balance : 'Fetching Balance...'}} SOL</span>
+        <span>{{ balance !== undefined ? balance : 'Fetching Balance...' }} SOL</span>
       </div>
       <button class="btn btn-primary btn-block mb-2">Profile</button>
-      <button class="btn btn-primary btn-block mb-2"  *ngIf="authService.userIsAdmin()" [routerLink]="['/admin']" (click)="closeModal()">Admin View</button>
+      <button class="btn btn-primary btn-block mb-2" *ngIf="authService.userIsAdmin()" [routerLink]="['/admin']"
+              (click)="closeModal()">Admin View
+      </button>
       <button class="btn btn-primary btn-block mb-2" (click)="logoutUser()">Disconnect</button>
     </div>
   </ng-template>
