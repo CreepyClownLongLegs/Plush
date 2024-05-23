@@ -1,10 +1,11 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import { AdminService } from 'src/app/services/admin.service';
-import { PlushToySearchDto } from 'src/app/dtos/plushtoy';
-import { NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs';
-import { SearchService } from 'src/app/services/search.service';
+import {AdminService} from 'src/app/services/admin.service';
+import {PlushToySearchDto} from 'src/app/dtos/plushtoy';
+import {NavigationEnd} from '@angular/router';
+import {filter} from 'rxjs';
+import {SearchService} from 'src/app/services/search.service';
+import {ButtonType} from "../login/login.component";
 
 @Component({
   selector: 'app-header',
@@ -17,14 +18,21 @@ export class HeaderComponent implements OnInit {
   searchTerm: string = '';
   showSearchBar: boolean = false;
 
-
   constructor(
     public authService: AuthService,
     private adminService: AdminService,
     private searchService: SearchService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
+
+  }
+
+  showBag() {
+    if (!this.authService.isLoggedIn()) {
+
+    }
 
   }
 
@@ -36,4 +44,5 @@ export class HeaderComponent implements OnInit {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  protected readonly ButtonType = ButtonType;
 }
