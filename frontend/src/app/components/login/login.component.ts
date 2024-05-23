@@ -1,33 +1,51 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
-import { AuthService } from "../../services/auth.service";
-import { AuthRequest } from "../../dtos/auth-request";
-import { NonceRequest } from "../../dtos/nonce-request";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrService } from "ngx-toastr";
-import { WalletService } from "../../services/wallet.service";
+import {Component, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {AuthService} from "../../services/auth.service";
+import {AuthRequest} from "../../dtos/auth-request";
+import {NonceRequest} from "../../dtos/nonce-request";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ToastrService} from "ngx-toastr";
+import {WalletService} from "../../services/wallet.service";
+
+export enum ButtonType {
+  ConnectButton,
+  CartButton,
+}
 
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
+
+
 export class LoginComponent implements OnInit {
   @ViewChild("walletModal") walletModal: TemplateRef<any>;
+  @ViewChild("connectModal") connectModal: TemplateRef<any>;
+  @Input() buttonClass: string;
+  @Input() type: ButtonType;
 
+  iconClass: string = '';
+  label: string = '';
   error = false;
   errorMessage = "";
   publicKey = "";
   balance = 0;
+  isDropdownOpen = false;
 
   constructor(
     public authService: AuthService,
-    private walletService: WalletService,
+    public walletService: WalletService,
     private modalService: NgbModal,
     private notification: ToastrService,
   ) {
   }
 
   ngOnInit() {
+    if (this.type === ButtonType.ConnectButton) {
+    }
+    if (this.type === ButtonType.CartButton) {
+      this.iconClass = "bag-icon";
+    }
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;
@@ -40,6 +58,32 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  buttonLabel() {
+    if (this.type == ButtonType.ConnectButton) {
+      if (this.authService.isLoggedIn()) {
+        return this.publicKey ? this.formatWalletAddress(this.publicKey) : 'Connecting...'
+
+      }
+      return "Connect Wallet";
+    }
+    return '';
+  }
+
+  forwardToPhantom() {
+    window.open('https://phantom.app/', '_blank');
+    this.modalService.dismissAll();
+
+  }
+
+  handleButtonClick() {
+    if (this.authService.isLoggedIn()) {
+      this.openWalletModal();
+    } else {
+      this.openConnectModal();
+    }
+  }
+
+
   /**
    * Connects the wallet and tries to log in the user.
    */
@@ -48,6 +92,8 @@ export class LoginComponent implements OnInit {
       this.publicKey = publicKey;
       this.getNonce(publicKey);
       this.balance = await this.walletService.getBalance(publicKey);
+      this.modalService.dismissAll();
+
     })
       .catch((error) => {
         this.resetWalletConnection();
@@ -82,7 +128,7 @@ export class LoginComponent implements OnInit {
    * @param nonce The nonce to sign
    */
   signNonce(publicKey: string, nonce: string) {
-    this.authService.signNonce(nonce).then(({ signature, status }) => {
+    this.authService.signNonce(nonce).then(({signature, status}) => {
       if (status === 'timeout') {
         this.notification.info("Late Signature", "You signed the message, but it was after the timeout.");
       } else if (status === 'success' && signature) {
@@ -90,7 +136,7 @@ export class LoginComponent implements OnInit {
         this.authenticateUser(authRequest);
       }
     })
-      .catch(({ status, error }) => {
+      .catch(({status, error}) => {
         if (status === 'timeout') {
           this.notification.error("Timeout", "Signing nonce took too long");
         } else if (status === 'error') {
@@ -149,6 +195,10 @@ export class LoginComponent implements OnInit {
 
   openWalletModal() {
     this.modalService.open(this.walletModal);
+  }
+
+  openConnectModal() {
+    this.modalService.open(this.connectModal);
   }
 
   closeModal() {

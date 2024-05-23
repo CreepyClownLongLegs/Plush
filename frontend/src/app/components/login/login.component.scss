@@ -1,12 +1,15 @@
-.container{padding-top: 20vh;}
-
-.container-fluid{
-    margin-top: 0px;
-    width: 100%;
-    height: 100%;
-    background-image: url("../../../images/sepr-background.gif");
-    background-size: cover;
+.container {
+  padding-top: 20vh;
 }
+
+.container-fluid {
+  margin-top: 0px;
+  width: 100%;
+  height: 100%;
+  background-image: url("../../../images/sepr-background.gif");
+  background-size: cover;
+}
+
 .header-container {
   margin-left: 10px;
   margin-right: 10px;
@@ -32,6 +35,18 @@
   }
 }
 
+.btn-secondary {
+  background-color: #8064A2 !important;
+  padding: 4px;
+}
+
+.bag-icon {
+  height: 30px;
+  width: 30px;
+  background-image: url("../../../images/shoppingBag.png");
+  background-size: contain;
+}
+
 .flex-row {
   display: flex;
   justify-content: space-between;
@@ -39,29 +54,29 @@
   margin-bottom: 1em;
 }
 
-.card{
-    color: whitesmoke;
-    background-color: rgba($color: #000000, $alpha: 0.5);
-    border: whitesmoke 1px solid;
-    border-radius: 0px;
+.card {
+  color: whitesmoke;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+  border: whitesmoke 1px solid;
+  border-radius: 0px;
 }
 
-.card-header{
-    background-color: none;
-    border-bottom: 1px solid whitesmoke;
+.card-header {
+  background-color: none;
+  border-bottom: 1px solid whitesmoke;
 }
 
-.form-group{
-    margin-bottom: 20px;
+.form-group {
+  margin-bottom: 20px;
 }
 
-input{
-    border-radius: 0px;
-    background: none;
-    color: rgba($color: #ffffff, $alpha: 0.7);
+input {
+  border-radius: 0px;
+  background: none;
+  color: rgba($color: #ffffff, $alpha: 0.7);
 }
 
-button{
-    border-radius: 0px;
-    background-color: rgba($color:#0D094F, $alpha: 1.0);
+button {
+  border-radius: 0px;
+  background-color: rgba($color: #0D094F, $alpha: 1.0);
 }
