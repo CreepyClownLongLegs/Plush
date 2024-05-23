@@ -3,18 +3,19 @@ import {RouterLink} from "@angular/router";
 import {PlushToyDetailDto, PlushToyListDto} from "../../dtos/plushtoy";
 
 @Component({
-    selector: 'app-card',
-    standalone: true,
-    imports: [
-        RouterLink
-    ],
-    templateUrl: './card.component.html',
-    styleUrl: './card.component.scss'
+  selector: 'app-card',
+  standalone: true,
+  imports: [
+    RouterLink
+  ],
+  templateUrl: './card.component.html',
+  styleUrl: './card.component.scss'
 })
 export class CardComponent implements OnInit {
 
-    @Input() plushie: PlushToyListDto;
+  @Input() plushie: PlushToyListDto;
+  @Input() imageUrl!: string;
 
-    ngOnInit(): void {
-    }
+  ngOnInit(): void {
+  }
 }

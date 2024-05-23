@@ -7,7 +7,7 @@
 
 
 <div class="header-container">
-  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button"
+  <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="connectWallet"
      (click)="openConnectModal()">{{ buttonLabel() }}
     <div [class]="iconClass"></div>
   </a>
