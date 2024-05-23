@@ -21,10 +21,10 @@ Cypress.Commands.add(
                 },
             });
         })
-        cy.getBySel("connectWallet").click();
-        cy.getBySel("logIn").should('be.visible');
-        cy.getBySel("logIn").click();
-        cy.getBySel("loggedIn").should('be.visible');
+        cy.getBySel("connectWallet").eq(0).click();
+        cy.getBySel("logIn").eq(0).should('be.visible');
+        cy.getBySel("logIn").eq(0).click();
+        cy.getBySel("loggedIn").eq(0).should('be.visible');
 
     },
 );
