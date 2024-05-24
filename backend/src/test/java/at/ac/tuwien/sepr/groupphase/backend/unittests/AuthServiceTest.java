@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
@@ -18,9 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_NONCE;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_PUBKEY;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_SIGNATURE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class AuthServiceTest implements TestData {
+public class AuthServiceTest implements TestData, UserTestData, LoginTestData {
     @Autowired
     private AuthService authService;
 

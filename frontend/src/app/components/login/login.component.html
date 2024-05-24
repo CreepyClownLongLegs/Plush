@@ -51,7 +51,7 @@
         <span>{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</span>
         <span>{{ balance !== undefined ? balance : 'Fetching Balance...' }} SOL</span>
       </div>
-      <button class="btn btn-primary btn-block mb-2">Profile</button>
+      <button class="btn btn-primary btn-block mb-2" routerLink="/profile" (click)="closeModal()">Profile</button>
       <button class="btn btn-primary btn-block mb-2" *ngIf="authService.userIsAdmin()" [routerLink]="['/admin']"
               (click)="closeModal()">Admin View
       </button>
