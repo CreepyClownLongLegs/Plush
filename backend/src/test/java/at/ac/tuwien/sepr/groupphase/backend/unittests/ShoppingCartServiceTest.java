@@ -17,7 +17,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -38,6 +40,17 @@ public class ShoppingCartServiceTest implements TestData {
     private UserRepository userRepository;
 
 
+    private Supplier<PlushToy> plushySupplier = () -> {
+        PlushToy plushy = new PlushToy();
+        plushy.setName(TEST_PLUSHTOY_NAME);
+        plushy.setPrice(TEST_PLUSHTOY_PRICE);
+        plushy.setTaxClass(TEST_PLUSHTOY_TAX_CLASS);
+        plushy.setWeight(TEST_PLUSHTOY_WEIGHT);
+        plushy.setColor(Color.valueOf(TEST_PLUSHTOY_COLOR));
+        plushy.setSize(Size.valueOf(TEST_PLUSHTOY_SIZE));
+        return plushy;
+    };
+
     @BeforeEach
     public void setUp() {
         shoppingCartItemRepository.deleteAll();
@@ -53,19 +66,7 @@ public class ShoppingCartServiceTest implements TestData {
         user.setPublicKey(publicKey);
         userRepository.save(user);
 
-        PlushToy plushy = new PlushToy();
-        plushy.setName("Test");
-        plushy.setPrice(10.0);
-        plushy.setTaxClass(10.0f);
-        plushy.setDescription("Feisty lil fella");
-        plushy.setDescription("Cute lil gent");
-        plushy.setDescription("this one has seen better days");
-        plushy.setWeight(1);
-        plushy.setColor(Color.BLACK);
-        plushy.setSize(Size.MEDIUM);
-        plushy.setHp(100);
-        plushy.setStrength(5);
-        plushToyRepository.save(plushy);
+        plushToyRepository.save(plushySupplier.get());
 
         shoppingCartService.addToCart(publicKey, plushToyRepository.findAll().getFirst().getId());
 
@@ -92,20 +93,7 @@ public class ShoppingCartServiceTest implements TestData {
         User user = new User();
         user.setPublicKey(publicKey);
         userRepository.save(user);
-
-        PlushToy plushy = new PlushToy();
-        plushy.setName("Test");
-        plushy.setPrice(10.0);
-        plushy.setTaxClass(10.0f);
-        plushy.setDescription("Feisty lil fella");
-        plushy.setDescription("Cute lil gent");
-        plushy.setDescription("this one has seen better days");
-        plushy.setWeight(1);
-        plushy.setColor(Color.BLACK);
-        plushy.setSize(Size.MEDIUM);
-        plushy.setHp(100);
-        plushy.setStrength(5);
-
+        PlushToy plushy = plushySupplier.get();
         plushToyRepository.save(plushy);
 
         ShoppingCartItem cartItem = new ShoppingCartItem();
