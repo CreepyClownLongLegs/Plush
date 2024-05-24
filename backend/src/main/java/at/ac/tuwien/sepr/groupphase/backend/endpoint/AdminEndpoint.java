@@ -26,6 +26,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
 import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
+import at.ac.tuwien.sepr.groupphase.backend.service.SolanaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -46,12 +47,15 @@ public class AdminEndpoint {
     private final AdminService adminService;
     private final PlushToyMapper plushToyMapper;
     private final ProductCategoryMapper productCategoryMapper;
+    private final SolanaService solanaService;
 
     @Autowired
-    public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper, ProductCategoryMapper productCategoryMapper) {
+    public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper,
+            ProductCategoryMapper productCategoryMapper, SolanaService solanaService) {
         this.adminService = adminService;
         this.plushToyMapper = plushToyMapper;
         this.productCategoryMapper = productCategoryMapper;
+        this.solanaService = solanaService;
     }
 
     @Secured("ROLE_ADMIN")
@@ -89,6 +93,7 @@ public class AdminEndpoint {
         LOGGER.info("Creating new product. body: {}", plushToyCreationDto);
         PlushToyDetailDto res = adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
 
+        solanaService.createSmartContract(res.getId());
         if (plushToyCreationDto.getCategories() != null) {
             return adminService.addCategoriesToProduct(res.getId(), Arrays.asList(plushToyCreationDto.getCategories()));
         } else {
