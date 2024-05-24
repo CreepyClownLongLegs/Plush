@@ -3,7 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ShoppingCartEndpoint {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @PermitAll
+    @RolesAllowed({"USER", "ADMIN"})
     @PostMapping
     @Operation(summary = "Add an item to the shopping cart")
     public void addToCart(@RequestBody long itemId) {
@@ -43,7 +43,7 @@ public class ShoppingCartEndpoint {
         shoppingCartService.addToCart(publicKey, itemId);
     }
 
-    @PermitAll
+    @RolesAllowed({"USER", "ADMIN"})
     @DeleteMapping
     @Operation(summary = "Delete an item from the shopping cart")
     public void deleteFromCart(@RequestParam("itemId") long itemId) {
@@ -53,7 +53,7 @@ public class ShoppingCartEndpoint {
         shoppingCartService.deleteFromCart(publicKey, itemId);
     }
 
-    @PermitAll
+    @RolesAllowed({"USER", "ADMIN"})
     @GetMapping
     @Operation(summary = "Get the full cart for a user")
     public List<PlushToyCartListDto> getFullCart() {
