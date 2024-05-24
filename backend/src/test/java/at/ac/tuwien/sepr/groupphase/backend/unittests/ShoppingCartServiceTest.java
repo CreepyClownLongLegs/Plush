@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.*;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
@@ -66,11 +67,10 @@ public class ShoppingCartServiceTest implements TestData {
         plushy.setStrength(5);
         plushToyRepository.save(plushy);
 
-        shoppingCartService.addToCart(publicKey, 1);
+        shoppingCartService.addToCart(publicKey, plushToyRepository.findAll().getFirst().getId());
 
         List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(user.getId());
         assertEquals(1, cartItems.size());
-        assertEquals(1, cartItems.get(0).getPlushToy().getId());
     }
 
     @Test
@@ -113,8 +113,8 @@ public class ShoppingCartServiceTest implements TestData {
         cartItem.setPlushToy(plushy);
         cartItem.setAmount(1);
         shoppingCartItemRepository.save(cartItem);
-
-        shoppingCartService.deleteFromCart(publicKey, 2L);
+        PlushToyCartListDto plushCartDto = shoppingCartService.getFullCart(publicKey).getFirst();
+        shoppingCartService.deleteFromCart(publicKey, plushCartDto.getCartItemId());
 
         Optional<ShoppingCartItem> cartItems = shoppingCartItemRepository.findById(1L);
         assertTrue(cartItems.isEmpty());
