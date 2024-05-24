@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+
+import at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
@@ -21,13 +24,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-
 import java.util.function.Supplier;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.AUTH_BASE_URI;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_NONCE;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_PUBKEY;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_SIGNATURE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class LoginEndpointTest implements TestData {
+public class LoginEndpointTest implements TestData, LoginTestData, UserTestData {
 
     @Autowired
     private MockMvc mockMvc;
