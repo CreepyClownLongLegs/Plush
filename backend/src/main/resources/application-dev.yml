@@ -1,0 +1,7 @@
+spring:
+  h2:
+    console:
+      enabled: true
+solana:
+  pod:
+    url: http://localhost:3000/

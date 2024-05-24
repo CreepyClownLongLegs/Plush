@@ -17,13 +17,10 @@ public class SmartContract {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(nullable = false, length = 255)
-    private String code;
+    @Column(nullable = false, length = 44, unique = true)
+    private String publicKey;
 
-    @Column(nullable = false, length = 255)
-    private String language;
-
-    @OneToOne(optional = false)
+    @OneToOne(mappedBy = "smartContract", optional = false)
     private PlushToy plushToy;
 
     public SmartContract() {
@@ -41,20 +38,12 @@ public class SmartContract {
         this.name = name;
     }
 
-    public String getCode() {
-        return code;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public PlushToy getPlushToy() {

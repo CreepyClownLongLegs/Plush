@@ -9,6 +9,8 @@ import { AdminPlushtoyCreateComponent as AdminPlushtoyCreateComponent } from './
 import { AdminCategoryCreateComponent } from './components/admin/categories/create/create.component';
 import { AdminCategoryOverviewComponent } from './components/admin/categories/overview/overview.component';
 import {CartComponent} from "./components/cart/cart.component";
+import {UserProfileComponent} from "./components/user-profile/user-profile.component";
+
 
 
 const routes: Routes = [
@@ -16,6 +18,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'detail/:id', component: DetailViewComponent },
   { path: 'cart', component: CartComponent },
+  { path: 'profile', component: UserProfileComponent },
   {
     path: 'admin', canActivate: [AuthGuard], data: { role: 'ADMIN' }, children: [
       { path: '', component: AdminPlushtoyOverviewComponent, data: { role: 'ADMIN' } },

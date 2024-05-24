@@ -13,4 +13,7 @@ public interface PlushToyTestData {
     int TEST_PLUSHTOY_HP = 100;
     float TEST_PLUSHTOY_STRENGTH = 1;
 
+    String TEST_SMART_CONTRACT_NAME = "TEST SMART CONTRACT";
+    String TEST_SMART_CONTRACT_PUBLIC_KEY = "TEST5165165165165asdnkjn44as984a4sa8s4d4asdT";
+
 }

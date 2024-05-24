@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  solana:
+    build:
+      context: ./solana
+      dockerfile: Dockerfile
+    volumes:
+      - ./solana/:/solana/app # Mounting solana code directory as a volume
+    ports:
+      - "3000:3000"
+    command: npm run dev

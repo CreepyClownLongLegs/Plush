@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -12,9 +13,11 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -32,8 +35,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
+import at.ac.tuwien.sepr.groupphase.backend.entity.SmartContract;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.SolanaService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -70,7 +76,23 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
     @BeforeEach
     public void beforeEach() {
         plushToyRepository.deleteAll();
+
+        ArgumentCaptor<Long> argumentCaptor = ArgumentCaptor.forClass(Long.class);
+        when(solanaService.createSmartContract(argumentCaptor.capture())).thenAnswer(invocation -> {
+            Long capturedId = argumentCaptor.getValue();
+            SmartContract s = new SmartContract();
+            s.setName(TEST_SMART_CONTRACT_NAME);
+            s.setPublicKey(TEST_SMART_CONTRACT_PUBLIC_KEY);
+            s.setPlushToy(plushToyRepository.getReferenceById(capturedId));
+            return smartContractRepository.save(s);
+        });
     }
+
+    @MockBean
+    private SolanaService solanaService;
+
+    @Autowired
+    private SmartContractRepository smartContractRepository;
 
     @Test
     public void deleteWorksAsInteded() throws Exception {
@@ -100,6 +122,7 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
 
     @Test
     public void givenValidPlushToyAllFields_whenCreating_thenPlushToyPersisted() throws Exception {
+
         String requestBody = """
             {
                 "name": "%s",

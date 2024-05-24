@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Connection, PublicKey} from "@solana/web3.js";
 import {AuthService} from "./auth.service";
 
@@ -24,6 +24,10 @@ export class WalletService {
     return window.solana.publicKey.toString();
   }
 
+  isWalletPresent(): boolean {
+    return "solana" in window;
+  }
+
   /**
    * Disconnects the wallet and logs out the user.
    */
@@ -47,7 +51,7 @@ export class WalletService {
     try {
       const balance = await this.connection.getBalance(new PublicKey(publicKey.toString()));
       // balance in LAMPORTS, divide by 1e9 to get SOL
-      const solBalance =  balance / 1e9;
+      const solBalance = balance / 1e9;
       return parseFloat(solBalance.toFixed(4));
     } catch (error) {
       console.error('Error getting wallet balance:', error);

@@ -1,0 +1,14 @@
+<ng-template #deleteModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Profile</h4>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to delete your profile?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="deleteUser(); modal.close('Ok click')">Yes, delete</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">No, don't delete</button>
+  </div>
+</ng-template>
+
+<button class="btn btn-primary btn-block mb-2" (click)="openDeleteModal()">Delete Profile</button>
