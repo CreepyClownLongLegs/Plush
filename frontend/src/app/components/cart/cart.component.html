@@ -1,15 +1,20 @@
 <div class="container-fluid">
   <div class="cart">
-    <h2 class="label" >Your Cart</h2>
-    <div *ngFor="let item of cartItems; let i = index" class="cart-item">
-      <img [src]="item.imageUrl" alt="{{item.name}}" />
-      <div class="item-details">
-        <p>{{item.name}}</p>
-        <p>{{item.hp}}HP</p>
-        <p>PRICE: {{item.price}} SOL</p>
-        <button (click)="removeItem(item.cartItemId)">X</button>
+    <h2 class="label">Your Cart</h2>
+    <div class="cart-items">
+      <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+        <div class="item-image">
+          <img [src]="item.imageUrl" alt="{{item.name}}" />
+          <span class="hp">{{item.hp}}HP</span>
+          <button class="remove-btn" (click)="removeItem(item.cartItemId)">X</button>
+        </div>
+        <div class="item-details">
+          <p class="item-name">#{{item.id}} {{item.name}}</p>
+          <p class="item-price">PRICE: <span>{{item.price}} SOL</span></p>
+        </div>
       </div>
     </div>
+    <hr />
     <div class="payment-method">
       <p>Select Payment Method:</p>
       <label>
@@ -22,8 +27,8 @@
       </label>
     </div>
     <div class="total-price">
-      <p>TOTAL PRICE: {{totalPrice}} SOL</p>
+      <p>TOTAL PRICE: <span>{{totalPrice}}</span></p>
     </div>
-    <button (click)="finishPayment()" class="finish-payment">Finish Payment</button>
+    <button (click)="finishPayment()" class="finish-payment">🔥Finish Payment🔥</button>
   </div>
 </div>
