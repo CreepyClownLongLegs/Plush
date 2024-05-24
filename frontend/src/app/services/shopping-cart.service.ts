@@ -22,18 +22,17 @@ export class ShoppingCartService {
 
   addToCart(itemId: number): Observable<void> {
     console.log('Adding item to cart', itemId);
-    return this.httpClient.post<void>(`${this.cartBaseUri}/add`, itemId);
+    return this.httpClient.post<void>(`${this.cartBaseUri}`, itemId);
   }
 
   deleteFromCart(itemId: number): Observable<void> {
     console.log('Deleting item from cart', itemId);
-    return this.httpClient.delete<void>(`${this.cartBaseUri}/delete?itemId=${itemId}`);
+    return this.httpClient.delete<void>(`${this.cartBaseUri}?itemId=${itemId}`);
   }
-
 
   getFullCart(): Observable<PlushToyListDto[]> {
     console.log('Fetching full cart for user');
-    return this.httpClient.get<PlushToyListDto[]>(`${this.cartBaseUri}/full`);
+    return this.httpClient.get<PlushToyListDto[]>(`${this.cartBaseUri}`);
   }
 
 }

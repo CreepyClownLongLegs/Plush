@@ -34,32 +34,32 @@ public class ShoppingCartEndpoint {
     }
 
     @PermitAll
-    @PostMapping(value = "/add")
+    @PostMapping
     @Operation(summary = "Add an item to the shopping cart")
     public void addToCart(@RequestBody long itemId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String publicKey = authentication.getName();
-        LOGGER.info("POST /api/v1/cart/add - {}", itemId);
+        LOGGER.info("POST /api/v1/cart/ - {}", itemId);
         shoppingCartService.addToCart(publicKey, itemId);
     }
 
     @PermitAll
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping
     @Operation(summary = "Delete an item from the shopping cart")
     public void deleteFromCart(@RequestParam("itemId") long itemId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String publicKey = authentication.getName();
-        LOGGER.info("DELETE /api/v1/cart/delete - itemId: {}", itemId);
+        LOGGER.info("DELETE /api/v1/cart/ - itemId: {}", itemId);
         shoppingCartService.deleteFromCart(publicKey, itemId);
     }
 
     @PermitAll
-    @GetMapping(value = "/full")
+    @GetMapping
     @Operation(summary = "Get the full cart for a user")
     public List<PlushToyCartListDto> getFullCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String publicKey = authentication.getName();
-        LOGGER.info("GET /api/v1/cart/full - publicKey: {}", publicKey);
+        LOGGER.info("GET /api/v1/cart/ - publicKey: {}", publicKey);
         return shoppingCartService.getFullCart(publicKey);
     }
 
