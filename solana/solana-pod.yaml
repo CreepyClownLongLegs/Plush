@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: solana-pod
+  labels:
+    app: solana
+spec:
+  containers:
+  - name: solana-container
+    image: solana-backend:latest
+    ports:
+    - containerPort: 3000

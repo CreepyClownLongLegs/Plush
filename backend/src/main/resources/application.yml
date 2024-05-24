@@ -1,3 +1,6 @@
+solana:
+  pod:
+    url: https://24ss-se-pr-qse-15-3waboasclhk1v8gsgdpqh.apps.student.inso-w.at
 logging:
   file.name: ./log/backend.log
   level:
