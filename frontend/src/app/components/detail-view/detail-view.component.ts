@@ -35,9 +35,7 @@ export class DetailViewComponent implements OnInit {
   constructor(
     private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
-    private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService,
     private notification: ToastrService,
   ) {
   }
@@ -56,13 +54,6 @@ export class DetailViewComponent implements OnInit {
   }
 
   addToCart() {
-    const publicKey = jwtDecode(localStorage.getItem('authToken')).sub;
-    if (!publicKey) {
-      this.notification.error("Cant find the key: ");
-      console.error('Public key not found. User might not be logged in.');
-      return;
-    }
-
 
     this.shoppingCartService.addToCart(this.toy.id).subscribe({
       next: () => {
@@ -71,7 +62,8 @@ export class DetailViewComponent implements OnInit {
       },
       error: error => {
         console.error('Error adding item to cart', error);
-        this.notification.error("Could not add to cart", "Something went wrong...");
+        this.notification.info("Log in to use this button ");
+        this.error = false;
       }
     });
   }
@@ -81,8 +73,7 @@ export class DetailViewComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    window.history.back();  // Use window.history.back() to navigate back
   }
-
 }
 

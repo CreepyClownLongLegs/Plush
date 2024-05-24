@@ -2,10 +2,12 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {AdminService} from 'src/app/services/admin.service';
 import {PlushToySearchDto} from 'src/app/dtos/plushtoy';
-import {NavigationEnd} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {filter} from 'rxjs';
 import {SearchService} from 'src/app/services/search.service';
 import {ButtonType} from "../login/login.component";
+import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-header',
@@ -21,7 +23,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private adminService: AdminService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private router: Router
   ) {
   }
 
@@ -34,6 +37,10 @@ export class HeaderComponent implements OnInit {
 
     }
 
+  }
+
+  navigateToCart() {
+    this.router.navigate(['/cart']);  // Navigate to the cart page
   }
 
   onSearch() {

@@ -29,7 +29,7 @@
           {{ plushie.description }}
         </div>
         <div>
-          <button>
+          <button (click)="handleAddToCart($event, plushie.id)">
             ADD TO BAG :3
           </button>
         </div>
