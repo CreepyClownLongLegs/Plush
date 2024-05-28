@@ -15,7 +15,6 @@ public interface TestData {
     String BASE_URI = "/api/v1";
     String ADMIN_BASE_URI = BASE_URI + "/admin";
     String ADMIN_DELETE_PLUSH_TOY_URI = ADMIN_BASE_URI + "/product/{id}";
-
     String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {

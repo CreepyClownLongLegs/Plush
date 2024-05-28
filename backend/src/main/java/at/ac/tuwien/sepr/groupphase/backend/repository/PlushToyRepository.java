@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

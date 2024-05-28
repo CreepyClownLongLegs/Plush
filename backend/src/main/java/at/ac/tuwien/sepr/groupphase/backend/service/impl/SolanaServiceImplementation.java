@@ -32,7 +32,6 @@ import reactor.core.publisher.Mono;
  * Implementation of the SolanaService.
  * Works with WebClient see https://www.baeldung.com/spring-5-webclient for more
  * information.
- * 
  */
 @Service
 public class SolanaServiceImplementation implements SolanaService {
@@ -48,7 +47,7 @@ public class SolanaServiceImplementation implements SolanaService {
 
     @Autowired
     public SolanaServiceImplementation(SmartContractRepository smartContractRepository,
-            PlushToyRepository plushToyRepository) {
+                                       PlushToyRepository plushToyRepository) {
         this.smartContractRepository = smartContractRepository;
         this.plushToyRepository = plushToyRepository;
     }
@@ -57,17 +56,17 @@ public class SolanaServiceImplementation implements SolanaService {
     public void init() {
         this.createSmartContractUrl = solanaPodUrl + "smart-contract";
         this.client = WebClient.builder()
-                .baseUrl(solanaPodUrl)
-                .defaultCookie("cookieKey", "cookieValue")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+            .baseUrl(solanaPodUrl)
+            .defaultCookie("cookieKey", "cookieValue")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
     }
 
     @Override
     public SmartContract createSmartContract(@NonNull Long plushToyId) {
         LOGGER.info("Creating a new smart contract");
         CreateSmartContractDto response = sendJsonRequest(HttpMethod.POST, createSmartContractUrl,
-                CreateSmartContractDto.class);
+            CreateSmartContractDto.class);
         PlushToy plushToy = plushToyRepository.findById(plushToyId).get();
         SmartContract smartContract = new SmartContract();
         smartContract.setPublicKey(response.getPublicKey());
@@ -88,9 +87,9 @@ public class SolanaServiceImplementation implements SolanaService {
             headersSpec = bodySpec;
         }
         ResponseSpec responseSpec = headersSpec
-                .accept(MediaType.APPLICATION_JSON)
-                .acceptCharset(StandardCharsets.UTF_8)
-                .retrieve();
+            .accept(MediaType.APPLICATION_JSON)
+            .acceptCharset(StandardCharsets.UTF_8)
+            .retrieve();
         LOGGER.debug("Request {}", responseSpec);
         Mono<T> responseT = headersSpec.exchangeToMono(response -> {
             LOGGER.info("Response {}", response);
@@ -99,11 +98,11 @@ public class SolanaServiceImplementation implements SolanaService {
             } else if (response.statusCode().is4xxClientError()) {
                 LOGGER.warn("Solana Client Error {}", response);
                 return response.createException()
-                        .flatMap(Mono::error);
+                    .flatMap(Mono::error);
             } else {
                 LOGGER.error("Solana Pod Error {}", response);
                 return response.createException()
-                        .flatMap(Mono::error);
+                    .flatMap(Mono::error);
             }
         });
         T result = responseT.block();
