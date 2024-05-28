@@ -16,7 +16,8 @@
          alt="{{ plushToy.name }}"/>
   </div>
   <div class="col-md-3 col-sm-6 text-end">
-    <a class="btn btn-sm responsive-warning-button" aria-label="Edit">
+    <a class="btn btn-sm responsive-warning-button" aria-label="Edit" [routerLink]="['product', plushToy.id, 'edit']">
+
       <i class="fas fa-pencil"></i>
     </a>
     <button type="button" class="btn btn-small btn-danger" data-test="deleteButton" (click)="onDelete(plushToy.id)">

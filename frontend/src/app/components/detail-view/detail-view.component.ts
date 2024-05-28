@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
-import { PlushToyColor, PlushToyDetailDto, PlushToySize } from '../../dtos/plushtoy';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PlushtoyService } from '../../services/plushtoy.service';
+import {Component, OnInit} from '@angular/core';
+import {NgForOf, NgIf} from '@angular/common';
+import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PlushtoyService} from '../../services/plushtoy.service';
 
 @Component({
   selector: 'app-detail-view',
@@ -12,7 +12,7 @@ import { PlushtoyService } from '../../services/plushtoy.service';
   styleUrls: ['./detail-view.component.scss']
 })
 export class DetailViewComponent implements OnInit {
-  toy: PlushToyDetailDto = {
+  toy: PlushToy = {
     id: 0,
     name: "",
     price: 0,
@@ -33,6 +33,7 @@ export class DetailViewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    document.body.style.backgroundImage = `url('../../../assets/images/asset_background.png')`;
   }
 
   ngOnInit(): void {

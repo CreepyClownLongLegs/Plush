@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {
-  PlushToyCreationDto,
-  PlushToyDetailsDto,
+  PlushToy,
   PlushToyListDto,
   PlushToySearchDto,
   ProductCategoryCreationDto,
@@ -21,11 +20,6 @@ export class AdminService {
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  }
 
   /**
    * Send a delete request to the backend to delete the plushtoy with the given id
@@ -50,8 +44,17 @@ export class AdminService {
    *
    * @param plushToy Data of a plush toy to create
    */
-  create(plushToy: PlushToyCreationDto): Observable<PlushToyDetailsDto> {
-    return this.httpClient.post<PlushToyDetailsDto>(this.adminBaseUri + "/product", plushToy);
+  create(plushToy: PlushToy): Observable<PlushToy> {
+    return this.httpClient.post<PlushToy>(this.adminBaseUri + "/product", plushToy);
+  }
+
+  /**
+   * Send a put request to the backend to edit an existing plush toy
+   *
+   * @param plushToy Data of a plush toy to edit
+   */
+  edit(plushToy: PlushToy): Observable<PlushToy> {
+    return this.httpClient.put<PlushToy>(`${this.adminBaseUri}/product/${plushToy.id}`, plushToy);
   }
 
   /**

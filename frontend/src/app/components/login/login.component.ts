@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
   @ViewChild("connectModal") connectModal: TemplateRef<any>;
   @Input() buttonClass: string;
   @Input() type: ButtonType;
+  @Input() customLabel: string;
 
   iconClass: string = '';
   label: string = '';
@@ -41,11 +42,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.type === ButtonType.ConnectButton) {
-    }
-    if (this.type === ButtonType.CartButton) {
-      this.iconClass = "bag-icon";
-    }
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;
@@ -62,7 +58,6 @@ export class LoginComponent implements OnInit {
     if (this.type == ButtonType.ConnectButton) {
       if (this.authService.isLoggedIn()) {
         return this.publicKey ? this.formatWalletAddress(this.publicKey) : 'Connecting...'
-
       }
       return "Connect Wallet";
     }

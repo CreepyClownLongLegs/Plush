@@ -1,11 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapperImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,8 @@ public class AdminServiceTest implements TestData, PlushToyTestData {
         plushy.setSize(Size.valueOf(TEST_PLUSHTOY_SIZE));
         return plushy;
     };
+    @Autowired
+    private PlushToyMapperImpl plushToyMapperImpl;
 
     @Test
     public void deleteWorksAsIntededForValidId() {
@@ -52,6 +57,30 @@ public class AdminServiceTest implements TestData, PlushToyTestData {
 
         Optional<PlushToy> result = plushToyRepository.findById(plushy.getId());
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void editPlushToyWorksAsIntended() {
+        PlushToy plushy = plushToyRepository.save(plushySupplier.get());
+
+        PlushToyDetailDto plushyDetailsDto = plushToyMapperImpl.entityToDetailDto(plushy);
+        plushyDetailsDto.setName("New Name");
+        plushyDetailsDto.setPrice(200.0);
+
+        PlushToyDetailDto updatedPlushy = adminService.editPlushToy(plushy.getId(), plushyDetailsDto);
+
+        assertEquals("New Name", updatedPlushy.getName());
+        assertEquals(200.0, updatedPlushy.getPrice());
+    }
+
+    @Test
+    public void editThrowsIllegalArgumentExceptionWithInvalidID() {
+        PlushToyDetailDto plushyDetailsDto = new PlushToyDetailDto();
+        plushyDetailsDto.setName("New Name");
+        plushyDetailsDto.setPrice(200.0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            adminService.editPlushToy(-5L, plushyDetailsDto);
+        });
     }
 
     @Test

@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCreationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
@@ -32,9 +32,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-
-import java.util.Arrays;
-import java.util.List;
 
 import jakarta.annotation.security.PermitAll;
 
@@ -51,7 +48,7 @@ public class AdminEndpoint {
 
     @Autowired
     public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper,
-            ProductCategoryMapper productCategoryMapper, SolanaService solanaService) {
+                         ProductCategoryMapper productCategoryMapper, SolanaService solanaService) {
         this.adminService = adminService;
         this.plushToyMapper = plushToyMapper;
         this.productCategoryMapper = productCategoryMapper;
@@ -89,16 +86,33 @@ public class AdminEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/product")
     @Operation(summary = "Create a new product", security = @SecurityRequirement(name = "apiKey"))
-    public PlushToyDetailDto create(@Valid @RequestBody PlushToyCreationDto plushToyCreationDto) {
-        LOGGER.info("Creating new product. body: {}", plushToyCreationDto);
-        PlushToyDetailDto res = adminService.addPlushToy(plushToyMapper.creationDtoToEntity(plushToyCreationDto));
+    public PlushToyDetailDto create(@Valid @RequestBody PlushToyDetailDto plushToyDetailDto) {
+        LOGGER.info("Creating new product. body: {}", plushToyDetailDto);
+        PlushToyDetailDto res = adminService.addPlushToy(plushToyMapper.detailsDtoToEntity(plushToyDetailDto));
 
         solanaService.createSmartContract(res.getId());
-        if (plushToyCreationDto.getCategories() != null) {
-            return adminService.addCategoriesToProduct(res.getId(), Arrays.asList(plushToyCreationDto.getCategories()));
+
+        if (plushToyDetailDto.getProductCategories() != null) {
+            return adminService.editPlushToyCategories(res.getId(), productCategoryMapper.productCategoryDtoListToIdList(plushToyDetailDto.getProductCategories()));
+
         } else {
             return res;
         }
+    }
+
+    @Secured("ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/product/{id}")
+    @Operation(summary = "Edit an existing product", security = @SecurityRequirement(name = "apiKey"))
+    public PlushToyDetailDto update(@PathVariable(name = "id") Long id, @Valid @RequestBody PlushToyDetailDto plushToyDetailDto) {
+        LOGGER.info("Editing an existing product. body: {}", plushToyDetailDto);
+
+        if (plushToyDetailDto.getProductCategories() != null) {
+            adminService.editPlushToyCategories(id, productCategoryMapper.productCategoryDtoListToIdList(plushToyDetailDto.getProductCategories()));
+        }
+
+        return adminService.editPlushToy(id, plushToyDetailDto);
+
     }
 
     @Secured("ROLE_ADMIN")
@@ -125,7 +139,7 @@ public class AdminEndpoint {
     })
     public PlushToyDetailDto setCategories(@PathVariable("id") Long productId, @RequestBody List<Long> categoryIds) {
         LOGGER.info("Adding categories to product with id {}. body: {}", productId, categoryIds);
-        return adminService.addCategoriesToProduct(productId, categoryIds);
+        return adminService.editPlushToyCategories(productId, categoryIds);
     }
 
 }

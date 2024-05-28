@@ -1,6 +1,7 @@
 export enum PlushToyColor {
   RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, PINK, BROWN, BLACK, WHITE
 }
+
 export enum PlushToySize {
   SMALL, MEDIUM, LARGE
 }
@@ -15,7 +16,9 @@ export class PlushToyListDto {
   hp: number;
   strength: number;
 }
-export class PlushToyCreationDto {
+
+export class PlushToy {
+  id?: number;
   name: string;
   price: number;
   description: string;
@@ -26,18 +29,7 @@ export class PlushToyCreationDto {
   hp: number;
   strength: number;
   imageUrl: string;
-  categories: number[];
-}
-
-export class PlushToyDetailsDto {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  taxClass: number;
-  weight: number;
-  size: PlushToySize;
-  color: PlushToyColor;
+  productCategories: ProductCategoryDto[];
 }
 
 export class ProductCategoryCreationDto {
@@ -54,17 +46,3 @@ export class PlushToySearchDto {
 }
 
 
-export class PlushToyDetailDto {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  taxClass: number;
-  weight: number;
-  size: PlushToySize;
-  color: PlushToyColor;
-  hp: number;
-  imageUrl: string;
-  strength: number;
-  productCategories: ProductCategoryDto[];
-}

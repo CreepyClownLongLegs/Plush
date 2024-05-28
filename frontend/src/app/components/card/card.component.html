@@ -28,7 +28,8 @@
         <div class="card-description">
           {{ plushie.description }}
         </div>
-        <div>
+
+        <div *ngIf="authService.isLoggedIn()">
           <button>
             ADD TO BAG :3
           </button>
