@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.*;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData.TEST_PUBKEY;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -60,7 +61,7 @@ public class ShoppingCartServiceTest implements TestData {
 
     @Test
     public void givenValidItemIdAndPublicKey_whenAddToCart_thenItemAddedSuccessfully() {
-        String publicKey = "validPublicKey";
+        String publicKey = TEST_PUBKEY;
 
         User user = new User();
         user.setPublicKey(publicKey);
@@ -76,7 +77,7 @@ public class ShoppingCartServiceTest implements TestData {
 
     @Test
     public void givenNonExistingItem_whenAddToCart_thenNotFoundExceptionThrown() {
-        String publicKey = "validPublicKey";
+        String publicKey = TEST_PUBKEY;
         long nonExistingItemId = 999L;
 
         User user = new User();
@@ -88,7 +89,7 @@ public class ShoppingCartServiceTest implements TestData {
 
     @Test
     public void givenValidItemIdAndPublicKey_whenDeleteFromCart_thenItemRemovedSuccessfully() {
-        String publicKey = "validPublicKey";
+        String publicKey = TEST_PUBKEY;
 
         User user = new User();
         user.setPublicKey(publicKey);
@@ -110,7 +111,7 @@ public class ShoppingCartServiceTest implements TestData {
 
     @Test
     public void givenNonExistingItem_whenDeleteFromCart_thenNotFoundExceptionThrown() {
-        String publicKey = "validPublicKey";
+        String publicKey = TEST_PUBKEY;
         long nonExistingItemId = 999L;
 
         User user = new User();

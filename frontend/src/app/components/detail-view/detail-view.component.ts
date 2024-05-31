@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
-import { PlushToyColor, PlushToyDetailDto, PlushToySize } from '../../dtos/plushtoy';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { PlushtoyService } from '../../services/plushtoy.service';
 import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {AuthService} from "../../services/auth.service";
 import {ToastrService} from "ngx-toastr";
-import {jwtDecode} from "jwt-decode";
+import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
 
 @Component({
   selector: 'app-detail-view',
@@ -16,7 +14,7 @@ import {jwtDecode} from "jwt-decode";
   styleUrls: ['./detail-view.component.scss']
 })
 export class DetailViewComponent implements OnInit {
-  toy: PlushToyDetailDto = {
+  toy: PlushToy = {
     id: 0,
     name: "",
     price: 0,
@@ -34,9 +32,9 @@ export class DetailViewComponent implements OnInit {
 
   constructor(
     private service: PlushtoyService,
-    private shoppingCartService: ShoppingCartService,
     private route: ActivatedRoute,
     private notification: ToastrService,
+    private shoppingCartService: ShoppingCartService,
   ) {
   }
 
@@ -76,4 +74,7 @@ export class DetailViewComponent implements OnInit {
     window.history.back();  // Use window.history.back() to navigate back
   }
 }
+
+
+
 

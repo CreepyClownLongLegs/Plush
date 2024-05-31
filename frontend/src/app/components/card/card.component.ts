@@ -1,18 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {RouterLink} from "@angular/router";
-import {PlushToyDetailDto, PlushToyListDto} from "../../dtos/plushtoy";
-import {AuthService} from "../../services/auth.service";
-import {AdminService} from "../../services/admin.service";
-import {SearchService} from "../../services/search.service";
 import {ShoppingCartService} from "../../services/shopping-cart.service";
 import {ToastrService} from "ngx-toastr";
+import {PlushToyListDto} from "../../dtos/plushtoy";
+import {ButtonType} from "../login/login.component";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-card',
-  standalone: true,
-  imports: [
-    RouterLink
-  ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
@@ -22,6 +16,7 @@ export class CardComponent implements OnInit {
   @Input() imageUrl!: string;
 
   constructor(
+    public authService: AuthService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService
   ) {
@@ -29,6 +24,8 @@ export class CardComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  protected readonly ButtonType = ButtonType;
 
   addToCart(id: number) {
 

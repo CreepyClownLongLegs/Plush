@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import java.util.List;
 
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -22,5 +23,16 @@ public interface ProductCategoryMapper {
 
     @Named("entityListToDtoList")
     List<ProductCategoryDto> entityListToDtoList(List<ProductCategory> productCategories);
-    
+
+    @Named("detailDtoListToIdList")
+    @IterableMapping(qualifiedByName = "dtoToId")
+    List<Long> productCategoryDtoListToIdList(List<ProductCategoryDto> productCategoryDtos);
+
+    @Named("dtoListToEntityList")
+    List<ProductCategory> productCategoryDtoListToEntityList(List<ProductCategoryDto> productCategoryDtoList);
+
+    @Named("dtoToId")
+    default Long dtoToId(ProductCategoryDto productCategoryDto) {
+        return productCategoryDto.getId();
+    }
 }

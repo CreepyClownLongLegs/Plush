@@ -1,13 +1,9 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {AdminService} from 'src/app/services/admin.service';
-import {PlushToySearchDto} from 'src/app/dtos/plushtoy';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import {Router} from '@angular/router';
 import {SearchService} from 'src/app/services/search.service';
 import {ButtonType} from "../login/login.component";
-import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-header',
@@ -18,7 +14,6 @@ export class HeaderComponent implements OnInit {
 
   isDropdownOpen = false;
   searchTerm: string = '';
-  showSearchBar: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -40,7 +35,7 @@ export class HeaderComponent implements OnInit {
   }
 
   navigateToCart() {
-    this.router.navigate(['/cart']);  // Navigate to the cart page
+    this.router.navigate(['/cart']);
   }
 
   onSearch() {

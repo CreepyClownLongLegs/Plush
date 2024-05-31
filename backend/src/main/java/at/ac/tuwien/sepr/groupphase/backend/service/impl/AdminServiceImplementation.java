@@ -2,7 +2,9 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -29,10 +31,7 @@ public class AdminServiceImplementation implements AdminService {
     private final PlushToyMapper plushToyMapper;
     private final ProductCategoryMapper productCategoryMapper;
 
-    public AdminServiceImplementation(PlushToyRepository plushToyRepository,
-                                      PlushToyMapper plushToyMapper,
-                                      ProductCategoryRepository productCategoryRepository,
-                                      ProductCategoryMapper productCategoryMapper) {
+    public AdminServiceImplementation(PlushToyRepository plushToyRepository, PlushToyMapper plushToyMapper, ProductCategoryRepository productCategoryRepository, ProductCategoryMapper productCategoryMapper) {
         this.plushToyRepository = plushToyRepository;
         this.productCategoryRepository = productCategoryRepository;
         this.plushToyMapper = plushToyMapper;
@@ -67,19 +66,33 @@ public class AdminServiceImplementation implements AdminService {
     }
 
     @Override
-    public PlushToyDetailDto addPlushToy(PlushToy toCreate) {
+    public PlushToyDetailDto addPlushToy(@NonNull PlushToy toCreate) {
         LOGGER.info("addPlushToy");
 
         PlushToy created = plushToyRepository.save(toCreate);
-        LOGGER.trace("Generated PlushToy: " + created.getId());
-        return plushToyMapper.entityToDetailDto(created);        
+        LOGGER.trace("Generated PlushToy: {}", created.getId());
+        return plushToyMapper.entityToDetailDto(created);
     }
 
     @Override
-    public ProductCategoryDto addProductCategory(ProductCategory productCategoryDto) {
+    public PlushToyDetailDto editPlushToy(@NonNull Long id, PlushToyDetailDto plushToy) throws IllegalArgumentException, NotFoundException {
+        LOGGER.info("editPlushToy");
+        if (plushToy.getId() != id) {
+            throw new IllegalArgumentException("ID in path and body do not match");
+        }
+        PlushToy plushToyEntity = plushToyMapper.detailsDtoToEntity(plushToy);
+        plushToyRepository.findById(id).orElseThrow(() -> new NotFoundException("Plush toy not found"));
+        plushToyEntity.setId(id);
+        PlushToy edited = plushToyRepository.save(plushToyEntity);
+        LOGGER.trace("Edited PlushToy: " + plushToyEntity.getId());
+        return plushToyMapper.entityToDetailDto(edited);
+    }
+
+    @Override
+    public ProductCategoryDto addProductCategory(@NonNull ProductCategory productCategoryDto) {
         LOGGER.info("addProductCategory");
         ProductCategory created = productCategoryRepository.save(productCategoryDto);
-        LOGGER.trace("Generated ProductCategory: " + created.getId());
+        LOGGER.trace("Generated ProductCategory: {}", created.getId());
         return productCategoryMapper.entityToDto(created);
     }
 
@@ -90,22 +103,31 @@ public class AdminServiceImplementation implements AdminService {
     }
 
     @Override
-    public PlushToyDetailDto addCategoriesToProduct(Long productId, List<Long> productCategoryIds) throws NotFoundException {
-        LOGGER.info("addCategoriesToProduct");
-        PlushToy plushToy = plushToyRepository.findById(productId).orElseThrow(() -> new NotFoundException("Plush toy not found"));
+    public PlushToyDetailDto editPlushToyCategories(Long productId, List<Long> newProductCategoryIds) {
+        LOGGER.info("editPlushToyCategories");
 
-        for (Long id : productCategoryIds) {
-            // Ignore categories that are already set
-            if (plushToy.getProductCategories().stream().anyMatch(pc -> pc.getId().equals(id))) {
-                continue;
+        PlushToy plushToy = plushToyRepository.findById(productId)
+            .orElseThrow(() -> new NotFoundException("Plush toy not found"));
+
+        plushToy.getProductCategories().removeIf(category -> {
+            if (!newProductCategoryIds.contains(category.getId())) {
+                category.getPlushToys().remove(plushToy);
+                productCategoryRepository.save(category);
+                return true;
             }
-            ProductCategory productCategory = productCategoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Product category not found"));
-            productCategory.addPlushToy(plushToy);
-            productCategoryRepository.save(productCategory);
-        }
+            return false;
+        });
 
-        plushToyRepository.save(plushToy);
-        return plushToyMapper.entityToDetailDto(plushToyRepository.findById(productId).get());
+        newProductCategoryIds.forEach(id -> {
+            if (plushToy.getProductCategories().stream().noneMatch(category -> category.getId().equals(id))) {
+                ProductCategory productCategory = productCategoryRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Product category not found"));
+                productCategory.addPlushToy(plushToy);
+                productCategoryRepository.save(productCategory);
+            }
+        });
+        PlushToy edited = plushToyRepository.save(plushToy);
+        LOGGER.trace("Categories edited of PlushToy: {}", edited.getId());
+        return plushToyMapper.entityToDetailDto(edited);
     }
 }
-

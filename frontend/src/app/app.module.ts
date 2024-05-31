@@ -5,17 +5,17 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {HeaderComponent} from './components/header/header.component';
-import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
-import {LoginComponent} from './components/login/login.component';
-import {AdminPlushtoyOverviewComponent} from './components/admin/plushtoy/overview/overview.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {httpInterceptorProviders} from './interceptors';
-import {CardComponent} from './components/card/card.component';
-import {AdminPlushtoyCreateComponent} from './components/admin/plushtoy/create/create.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { AdminPlushtoyOverviewComponent } from './components/admin/plushtoy/overview/overview.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { httpInterceptorProviders } from './interceptors';
+import { CardComponent } from './components/card/card.component';
+import {AdminPlushtoyCreateEditComponent} from "./components/admin/plushtoy/create-edit/create-edit.component";
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
 
 @NgModule({
@@ -25,6 +25,7 @@ import {UserProfileComponent} from './components/user-profile/user-profile.compo
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    CardComponent,
     AdminPlushtoyOverviewComponent,
     UserProfileComponent,
   ],
@@ -35,8 +36,7 @@ import {UserProfileComponent} from './components/user-profile/user-profile.compo
     HttpClientModule,
     NgbModule,
     FormsModule,
-    CardComponent,
-    AdminPlushtoyCreateComponent,
+    AdminPlushtoyCreateEditComponent,
     //needed for Toastr
     BrowserAnimationsModule,
     ToastrModule.forRoot(),

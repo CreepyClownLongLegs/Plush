@@ -78,6 +78,10 @@ public class PlushToy {
     public PlushToy() {
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
@@ -207,8 +211,8 @@ public class PlushToy {
 
     public List<PlushToyAttribute> getPlushToyAttributes() {
         return attributeDistributions.stream()
-                .map(PlushToyAttributeDistribution::getAttribute)
-                .collect(Collectors.toList());
+            .map(PlushToyAttributeDistribution::getAttribute)
+            .collect(Collectors.toList());
     }
 
     public List<PlushToyAttributeDistribution> getAttributeDistributions() {

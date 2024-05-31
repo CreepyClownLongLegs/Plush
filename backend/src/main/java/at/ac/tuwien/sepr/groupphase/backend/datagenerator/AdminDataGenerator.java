@@ -20,7 +20,7 @@ public class AdminDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     // map of admins with name and public key
-    private static final Map<String, String> ADMINS = Map.of("tobi", "7B2hwXRW4bkepiBS3HMkvSSZNbrhUkVYzpuzNyFQAUZ6");
+    private static final Map<String, String> ADMINS = Map.of("tobi", "7B2hwXRW4bkepiBS3HMkvSSZNbrhUkVYzpuzNyFQAUZ6", "caro", "HGXLg2Eo9hUu7NGWkvVMrTzmjfwC2y1jGw25knAep4Gq");
     private final UserRepository userRepository;
 
     public AdminDataGenerator(UserRepository userRepository) {
@@ -32,12 +32,12 @@ public class AdminDataGenerator {
         for (String name : ADMINS.keySet()) {
             String publicKey = ADMINS.get(name);
             userRepository.findUserByPublicKey(publicKey)
-                    .or(() -> {
-                        User admin = new User(true);
-                        admin.setPublicKey(publicKey);
-                        LOGGER.info("creating admin {} with public key {}", name, publicKey);
-                        return Optional.of(userRepository.save(admin));
-                    });
+                .or(() -> {
+                    User admin = new User(true);
+                    admin.setPublicKey(publicKey);
+                    LOGGER.info("creating admin {} with public key {}", name, publicKey);
+                    return Optional.of(userRepository.save(admin));
+                });
         }
     }
 

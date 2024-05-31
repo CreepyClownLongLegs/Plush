@@ -1,16 +1,18 @@
-import { NgModule } from '@angular/core';
-import { mapToCanActivate, RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { AuthGuard } from './guards/auth.guard';
-import { AdminPlushtoyOverviewComponent } from './components/admin/plushtoy/overview/overview.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {HomeComponent} from './components/home/home.component';
+import {LoginComponent} from './components/login/login.component';
+import {AuthGuard} from './guards/auth.guard';
+import {AdminPlushtoyOverviewComponent} from './components/admin/plushtoy/overview/overview.component';
+import {
+  AdminPlushtoyCreateEditComponent as AdminPlushtoyCreateEditComponent,
+  PlushToyCreateEditMode
+} from './components/admin/plushtoy/create-edit/create-edit.component';
 import {DetailViewComponent} from "./components/detail-view/detail-view.component";
-import { AdminPlushtoyCreateComponent as AdminPlushtoyCreateComponent } from './components/admin/plushtoy/create/create.component';
-import { AdminCategoryCreateComponent } from './components/admin/categories/create/create.component';
-import { AdminCategoryOverviewComponent } from './components/admin/categories/overview/overview.component';
-import {CartComponent} from "./components/cart/cart.component";
+import {AdminCategoryCreateComponent} from './components/admin/categories/create/create.component';
+import {AdminCategoryOverviewComponent} from './components/admin/categories/overview/overview.component';
 import {UserProfileComponent} from "./components/user-profile/user-profile.component";
-
+import {CartComponent} from "./components/cart/cart.component";
 
 
 const routes: Routes = [
@@ -20,11 +22,20 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'profile', component: UserProfileComponent },
   {
-    path: 'admin', canActivate: [AuthGuard], data: { role: 'ADMIN' }, children: [
-      { path: '', component: AdminPlushtoyOverviewComponent, data: { role: 'ADMIN' } },
-      { path: 'new', component: AdminPlushtoyCreateComponent, data: { role: 'ADMIN' } },
-      { path: 'categories', component: AdminCategoryOverviewComponent, data: { role: 'ADMIN' } },
-      { path: 'categories/new', component: AdminCategoryCreateComponent, data: { role: 'ADMIN' } }
+    path: 'admin', canActivate: [AuthGuard], data: {role: 'ADMIN'}, children: [
+      {path: '', component: AdminPlushtoyOverviewComponent, data: {role: 'ADMIN'}},
+      {
+        path: 'new',
+        component: AdminPlushtoyCreateEditComponent,
+        data: {role: 'ADMIN', mode: PlushToyCreateEditMode.create}
+      },
+      {
+        path: 'product/:id/edit',
+        component: AdminPlushtoyCreateEditComponent,
+        data: {role: 'ADMIN', mode: PlushToyCreateEditMode.edit}
+      },
+      {path: 'categories', component: AdminCategoryOverviewComponent, data: {role: 'ADMIN'}},
+      {path: 'categories/new', component: AdminCategoryCreateComponent, data: {role: 'ADMIN'}}
     ]
   }
 ];
