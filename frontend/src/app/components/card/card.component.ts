@@ -36,7 +36,7 @@ export class CardComponent implements OnInit {
       },
       error: error => {
         console.error('Error adding item to cart', error);
-        this.notification.info("Log in to use this button ");
+        this.notification.error("Error occured while adding item to cart");
       }
     });
   }
