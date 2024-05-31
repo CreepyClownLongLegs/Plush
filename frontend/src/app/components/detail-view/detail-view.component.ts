@@ -1,8 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
+import {PlushtoyService} from '../../services/plushtoy.service';
+import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {AuthService} from "../../services/auth.service";
+import {ToastrService} from "ngx-toastr";
+import {jwtDecode} from "jwt-decode";
 import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PlushtoyService} from '../../services/plushtoy.service';
 
 @Component({
   selector: 'app-detail-view',
@@ -30,10 +34,12 @@ export class DetailViewComponent implements OnInit {
 
   constructor(
     private service: PlushtoyService,
+    private shoppingCartService: ShoppingCartService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private notification: ToastrService,
   ) {
-    document.body.style.backgroundImage = `url('../../../assets/images/asset_background.png')`;
   }
 
   ngOnInit(): void {
@@ -50,10 +56,33 @@ export class DetailViewComponent implements OnInit {
   }
 
   addToCart() {
-    // Add to cart logic
+    const publicKey = jwtDecode(localStorage.getItem('authToken')).sub;
+    if (!publicKey) {
+      this.notification.error("Cant find the key: ");
+      console.error('Public key not found. User might not be logged in.');
+      return;
+    }
+
+
+    this.shoppingCartService.addToCart(this.toy.id).subscribe({
+      next: () => {
+        console.log('Item added to cart successfully');
+        this.notification.success("Item added to cart ", "Success");
+      },
+      error: error => {
+        console.error('Error adding item to cart', error);
+        this.notification.error("Could not add to cart", "Something went wrong...");
+      }
+    });
   }
 
   buyNow() {
     // Buy now logic
   }
+
+  goBack() {
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
 }
+
