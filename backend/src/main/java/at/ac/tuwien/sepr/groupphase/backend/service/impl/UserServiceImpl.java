@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
 
 import org.springframework.lang.NonNull;
 
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+
     @Override
     @Transactional
     public void deleteUser(@NonNull String publicKey) throws NotFoundException {
@@ -33,5 +36,37 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User not found");
         }
         userRepository.deleteByPublicKey(publicKey);
+    }
+
+    @Override
+    @Transactional
+    public User findUserByPublicKey(@NonNull String publicKey) throws NotFoundException {
+        LOGGER.info("findUserByPublicKey{}", publicKey);
+        var user = userRepository.findUserByPublicKey(publicKey);
+        if (user.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+        return user.get();
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(@NonNull String publicKey, UserDetailDto userDetailDto) throws NotFoundException {
+        LOGGER.info("updateUser {}", publicKey);
+        var userOptional = userRepository.findUserByPublicKey(publicKey);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+        User user = userOptional.get();
+        user.setFirstname(userDetailDto.getFirstname());
+        user.setLastname(userDetailDto.getLastname());
+        user.setEmailAddress(userDetailDto.getEmailAddress());
+        user.setPhoneNumber(userDetailDto.getPhoneNumber());
+        user.setCountry(userDetailDto.getCountry());
+        user.setPostalCode(userDetailDto.getPostalCode());
+        user.setCity(userDetailDto.getCity());
+        user.setAddressLine1(userDetailDto.getAddressLine1());
+        user.setAddressLine2(userDetailDto.getAddressLine2());
+        return userRepository.save(user);
     }
 }

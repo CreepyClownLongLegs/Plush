@@ -1,0 +1,154 @@
+<ng-template #deleteModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Delete Profile</h4>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to delete your profile?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="deleteUser(); modal.close('Ok click')">Yes,
+            delete</button>
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">No, don't
+            delete</button>
+    </div>
+</ng-template>
+
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="container-fluid coverage">
+            <h1 class="title">Player Stats</h1>
+            <div class="row">
+                <div class="col-lg-6 col-sm-12 info">
+                    <h3 class="info-title">Player Info</h3>
+
+                    <!--Row1: Name and Surname row-->
+                    <div class="info-row row">
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="firstname">First Name</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.firstname" placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="lastname">Last Name</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.lastname" placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Row2: Email Address and Phone Number-->
+                    <div class="info-row row">
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="emailAddress">E-mail Address</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.emailAddress"
+                                        placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="phoneNumber">Phone Number</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.phoneNumber" placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Row3: Country and Postal Code-->
+                    <div class="info-row row">
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="country">Country</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.country" placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="postalCode">Postal Code</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.postalCode" placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Row4: Address Lines-->
+                    <div class="info-row row">
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="addressLine1">Delivery Address</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.addressLine1"
+                                        placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="stat">
+                                <label for="addressLine2">Optional Delivery Address</label>
+                                <div class="stat-value">
+                                    <input type="text" [(ngModel)]="userDetail.addressLine2"
+                                        placeholder="yet to be set">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--Level and Inventory-->
+                <div class="col-lg-6 col-sm-12 info">
+                    <h3 class="info-title">Inventory</h3>
+
+                    <!--progress bar-->
+                    <label class="d-flex justify-content-between">Level {{ level }} <div class="mx-4"
+                            style="color: brown;">{{ xp }}/140XP</div></label>
+                    <div role="progressbar" [ngStyle]="{'width': calculateWidth()}" class="progressbar">
+                        <div class="progressbar-fill"></div>
+                    </div>
+
+                    <!--inventory-->
+                    <div class="inventory row">
+                        <div class="inventory-item col-lg-4">
+                            <app-item></app-item>
+                        </div>
+
+                        <div class="inventory-item col-lg-4">
+                            <app-item></app-item>
+                        </div>
+
+                        <div class="inventory-item col-lg-4">
+                            <app-item></app-item>
+                        </div>
+
+                        <div class="inventory-item col-lg-4">
+                            <app-item></app-item>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between buttons">
+                <button class="btn btn-primary btn-block mb-2" (click)="openDeleteModal()">DELETE PROFILE</button>
+                <button (click)="updateUserDetails()">
+                    UPDATE
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

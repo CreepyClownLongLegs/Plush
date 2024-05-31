@@ -85,4 +85,5 @@ export class AdminService {
   createCategory(category: ProductCategoryCreationDto): Observable<ProductCategoryDto> {
     return this.httpClient.post<ProductCategoryDto>(this.adminBaseUri + "/categories", category);
   }
+
 }

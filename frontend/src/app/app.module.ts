@@ -1,9 +1,9 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ToastrModule} from 'ngx-toastr';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,8 +15,8 @@ import { AdminPlushtoyOverviewComponent } from './components/admin/plushtoy/over
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { httpInterceptorProviders } from './interceptors';
 import { CardComponent } from './components/card/card.component';
-import {AdminPlushtoyCreateEditComponent} from "./components/admin/plushtoy/create-edit/create-edit.component";
-import {UserProfileComponent} from './components/user-profile/user-profile.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { ItemComponent } from './components/profile/item/item.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import {UserProfileComponent} from './components/user-profile/user-profile.compo
     LoginComponent,
     CardComponent,
     AdminPlushtoyOverviewComponent,
-    UserProfileComponent,
+    ProfileComponent,
+    ItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +37,6 @@ import {UserProfileComponent} from './components/user-profile/user-profile.compo
     HttpClientModule,
     NgbModule,
     FormsModule,
-    AdminPlushtoyCreateEditComponent,
     //needed for Toastr
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
