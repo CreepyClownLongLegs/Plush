@@ -2,6 +2,11 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Objects;
 
@@ -10,16 +15,38 @@ public class UserDetailDto {
     @NotNull(message = "Public Key must not be null")
     @Length(min = 32, max = 44, message = "Public Key must be between 32 and 44 characters long")
     private String publicKey;
+
+    @Size(max = 255, message = "Firstname cannot be longer than 255 characters")
     private String firstname;
+
+    @Size(max = 255, message = "Lastname cannot be longer than 255 characters")
     private String lastname;
+
+    @Email(message = "Email should be valid")
+    @Size(max = 255, message = "Email cannot be longer than 255 characters")
     private String emailAddress;
+
+    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
+    @Size(max = 255, message = "Phone number cannot be longer than 255 characters")
     private String phoneNumber;
+
     private boolean locked;
+
+    @Size(max = 255, message = "Country cannot be longer than 255 characters")
     private String country;
+
+    @Size(max = 255, message = "Postal Code cannot be longer than 255 characters")
     private String postalCode;
+
+    @Size(max = 255, message = "City cannot be longer than 255 characters")
     private String city;
+
+    @Size(max = 255, message = "Address Line 1 cannot be longer than 255 characters")
     private String addressLine1;
+
+    @Size(max = 255, message = "Address Line 2 cannot be longer than 255 characters")
     private String addressLine2;
+
     private boolean isAdmin;
 
     public boolean isAdmin() {
@@ -29,7 +56,7 @@ public class UserDetailDto {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
-    
+
     public String getFirstname() {
         return firstname;
     }

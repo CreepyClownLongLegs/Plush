@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
 
 import java.util.Optional;
 
@@ -65,5 +66,15 @@ public class UserServiceTest implements UserTestData {
     public void givenInvalidPublicKey_whenFindUser_thenUserNotFound() {
         Optional<User> result = userRepository.findUserByPublicKey(TEST_NONEXISTENT_PUBKEY);
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void updateUserThrowsNotFoundExceptionWhenUserNotFound() {
+
+        String publicKey = "nonexistent-public-key";
+        UserDetailDto userDetailDto = new UserDetailDto();
+        userDetailDto.setPublicKey(publicKey);
+
+        assertThrows(NotFoundException.class, () -> userService.updateUser(publicKey, userDetailDto));
     }
 }
