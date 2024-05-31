@@ -10,6 +10,7 @@ import {AuthService} from "../../services/auth.service";
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
+
 export class CardComponent implements OnInit {
 
   @Input() plushie: PlushToyListDto;
