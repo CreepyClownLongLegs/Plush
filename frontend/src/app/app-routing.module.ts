@@ -12,12 +12,14 @@ import {DetailViewComponent} from "./components/detail-view/detail-view.componen
 import {AdminCategoryCreateComponent} from './components/admin/categories/create/create.component';
 import {AdminCategoryOverviewComponent} from './components/admin/categories/overview/overview.component';
 import {UserProfileComponent} from "./components/user-profile/user-profile.component";
+import {CartComponent} from "./components/cart/cart.component";
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'detail/:id', component: DetailViewComponent },
+  { path: 'cart', component: CartComponent },
   { path: 'profile', component: UserProfileComponent },
   {
     path: 'admin', canActivate: [AuthGuard], data: {role: 'ADMIN'}, children: [

@@ -17,6 +17,17 @@ export class PlushToyListDto {
   strength: number;
 }
 
+export class PlushToyCartListDto {
+  id: number;
+  name: string;
+  price: number;
+  averageRating: number;
+  description: string;
+  imageUrl: string;
+  hp: number;
+  cartItemId: number;
+}
+
 export class PlushToy {
   id?: number;
   name: string;

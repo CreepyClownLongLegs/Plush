@@ -104,6 +104,13 @@
   /* Reapply border for buy-now button */
 }
 
+.go-back-btn {
+  background-color: #6c757d;
+  color: #fff;
+  border: 2px solid black;
+  /* Reapply border for go-back button */
+}
+
 .button-section .btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

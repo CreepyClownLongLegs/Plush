@@ -1,0 +1,124 @@
+.container-fluid {
+  background-image: url("../../../images/asset_background.png");
+  background-size: cover;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.cart {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+  margin: auto;
+  max-width: 800px;
+  text-align: center; /* Add this line to center the button */
+}
+
+.cart-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cart-item {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 20px;
+  flex-basis: 48%;
+  position: relative;
+}
+
+.item-image {
+  position: relative;
+}
+
+.item-image img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.hp {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: red;
+  font-weight: bold;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.item-details {
+  margin-top: 10px;
+}
+
+.item-name {
+  margin: 5px 0;
+}
+
+.item-price {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.item-price span {
+  color: black;
+  text-shadow: 2px 2px 2px white;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.payment-method {
+  margin-top: 40px;
+}
+
+.payment-method label {
+  margin-right: 10px;
+}
+
+.total-price {
+  margin-top: 40px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.total-price p {
+  color: white;
+  text-shadow: 1px 1px 1px black;
+}
+
+.total-price span {
+  color: red;
+  border: 1px solid black;
+  padding: 0 5px;
+}
+
+.finish-payment {
+  background-color: #ff5733;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 20px;
+  display: inline-block; /* Ensure the button respects text alignment */
+}
+
+.finish-payment:hover {
+  background-color: #c70039;
+}
