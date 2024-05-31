@@ -38,7 +38,7 @@
       </app-login>
 
       <div *ngIf="authService.isLoggedIn()" class="cart-icon">
-        <button class="btn btn-secondary bag-con">
+        <button class="btn btn-secondary bag-con" (click)="navigateToCart()">
           <div class="bag-icon"></div>
         </button>
       </div>

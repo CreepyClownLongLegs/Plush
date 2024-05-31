@@ -28,9 +28,8 @@
         <div class="card-description">
           {{ plushie.description }}
         </div>
-
-        <div *ngIf="authService.isLoggedIn()">
-          <button>
+        <div>
+          <button *ngIf="authService.isLoggedIn()" (click)="handleAddToCart($event, plushie.id)">
             ADD TO BAG :3
           </button>
         </div>
