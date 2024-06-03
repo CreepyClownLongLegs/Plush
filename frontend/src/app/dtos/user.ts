@@ -10,5 +10,12 @@ export class UserDetailDto {
     city: string;
     addressLine1: string;
     addressLine2: string;
-    isAdmin: boolean;
+    admin: boolean;
+}
+
+export class UserListDto {
+  publicKey: string;
+  firstname: string;
+  lastname: string;
+  admin: boolean;
 }

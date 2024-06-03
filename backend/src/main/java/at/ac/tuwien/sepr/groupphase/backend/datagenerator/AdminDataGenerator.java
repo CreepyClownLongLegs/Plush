@@ -20,7 +20,11 @@ public class AdminDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     // map of admins with name and public key
-    private static final Map<String, String> ADMINS = Map.of("tobi", "7B2hwXRW4bkepiBS3HMkvSSZNbrhUkVYzpuzNyFQAUZ6", "caro", "HGXLg2Eo9hUu7NGWkvVMrTzmjfwC2y1jGw25knAep4Gq");
+    private static final Map<String, String> ADMINS = Map.of(
+        "tobi", "7B2hwXRW4bkepiBS3HMkvSSZNbrhUkVYzpuzNyFQAUZ6",
+        "caro", "HGXLg2Eo9hUu7NGWkvVMrTzmjfwC2y1jGw25knAep4Gq",
+        "jakob", "ErZoeAW8dwtWr9sxU1kPgwaw6vv9rVFQetXjyhxLDh3v"
+    );
     private final UserRepository userRepository;
 
     public AdminDataGenerator(UserRepository userRepository) {

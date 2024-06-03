@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Globals } from '../global/globals';
 import { Router } from '@angular/router';
 import { UserDetailDto } from '../dtos/user';
+import { UserListDto } from '../dtos/user';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class UserService {
   private userBaseUri: string = this.globals.backendUri + '/user';
 
   constructor(
-    private http: HttpClient,
+    private httpClient: HttpClient,
     private globals: Globals,
   ) { }
 
@@ -22,16 +23,16 @@ export class UserService {
    *
    */
   deleteUser(): Observable<void> {
-    return this.http.delete<void>(this.userBaseUri);
+    return this.httpClient.delete<void>(this.userBaseUri);
   }
 
   /**
-   * Function which returns all the details about the currently logged in user
+   * Function which returns all the details about the currently logged-in user
    *
    * @returns UserDetailDto object
    */
   getUserByPublicKey(): Observable<UserDetailDto> {
-    return this.http.get<UserDetailDto>(this.userBaseUri);
+    return this.httpClient.get<UserDetailDto>(this.userBaseUri);
   }
 
   /**
@@ -42,6 +43,6 @@ export class UserService {
  * @returns updated UserDetailDto object
  */
   updateUser(userDetailDto: UserDetailDto): Observable<UserDetailDto> {
-    return this.http.put<UserDetailDto>(this.userBaseUri, userDetailDto);
+    return this.httpClient.put<UserDetailDto>(this.userBaseUri, userDetailDto);
   }
 }

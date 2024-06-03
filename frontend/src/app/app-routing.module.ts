@@ -11,6 +11,7 @@ import {
 import {DetailViewComponent} from "./components/detail-view/detail-view.component";
 import {AdminCategoryCreateComponent} from './components/admin/categories/create/create.component';
 import {AdminCategoryOverviewComponent} from './components/admin/categories/overview/overview.component';
+import {AdminComponent} from './components/admin/admin.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import {CartComponent} from "./components/cart/cart.component";
 
@@ -23,7 +24,8 @@ const routes: Routes = [
     { path: 'cart', component: CartComponent},
   {
     path: 'admin', canActivate: [AuthGuard], data: {role: 'ADMIN'}, children: [
-      {path: '', component: AdminPlushtoyOverviewComponent, data: {role: 'ADMIN'}},
+      {path: '', component: AdminComponent, data: {role: 'ADMIN'}},
+      {path: 'plushtoy', component: AdminPlushtoyOverviewComponent, data: {role: 'ADMIN'}},
       {
         path: 'new',
         component: AdminPlushtoyCreateEditComponent,

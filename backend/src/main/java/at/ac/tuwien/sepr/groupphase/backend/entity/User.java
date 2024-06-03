@@ -80,6 +80,10 @@ public class User {
         return isAdmin;
     }
 
+    public void setAdmin(boolean admin) {
+        this.isAdmin = admin;
+    }
+
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
@@ -185,5 +189,4 @@ public class User {
         orders.add(order);
         order.setUser(this);
     }
-
 }

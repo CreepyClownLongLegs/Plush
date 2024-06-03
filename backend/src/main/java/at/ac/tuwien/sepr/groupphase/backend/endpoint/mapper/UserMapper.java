@@ -2,13 +2,11 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import java.util.List;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 
@@ -27,7 +25,21 @@ public interface UserMapper {
     @Mapping(source = "city", target = "city")
     @Mapping(source = "addressLine1", target = "addressLine1")
     @Mapping(source = "addressLine2", target = "addressLine2")
+    @Mapping(source = "admin", target = "admin")
     UserDetailDto toDto(User user);
+
+    @Named("entityListToDtoList")
+    List<UserDetailDto> entityListToDtoList(List<User> users);
+
+    @Named("toListDto")
+    @Mapping(source = "publicKey", target = "publicKey")
+    @Mapping(source = "firstname", target = "firstname")
+    @Mapping(source = "lastname", target = "lastname")
+    @Mapping(source = "admin", target = "admin")
+    UserListDto toListDto(User user);
+
+    @Named("entityListToListDtoList")
+    List<UserListDto> entityListToListDtoList(List<User> users);
 
     @Named("toEntity")
     @Mapping(source = "publicKey", target = "publicKey")
@@ -41,8 +53,13 @@ public interface UserMapper {
     @Mapping(source = "city", target = "city")
     @Mapping(source = "addressLine1", target = "addressLine1")
     @Mapping(source = "addressLine2", target = "addressLine2")
+    @Mapping(source = "admin", target = "admin")
     User toEntity(UserDetailDto dto);
 
-    @Named("entityListToDtoList")
-    List<UserDetailDto> entityListToDtoList(List<User> users);
+    @Named("toEntity")
+    @Mapping(source = "publicKey", target = "publicKey")
+    @Mapping(source = "firstname", target = "firstname")
+    @Mapping(source = "lastname", target = "lastname")
+    @Mapping(source = "admin", target = "admin")
+    User toEntity(UserListDto userListDto);
 }

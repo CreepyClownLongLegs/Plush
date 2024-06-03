@@ -54,7 +54,7 @@ public class UserDetailDto {
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.isAdmin = admin;
     }
 
     public String getFirstname() {

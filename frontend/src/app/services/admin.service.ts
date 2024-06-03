@@ -9,6 +9,7 @@ import {
   ProductCategoryCreationDto,
   ProductCategoryDto
 } from '../dtos/plushtoy';
+import {UserDetailDto, UserListDto} from "../dtos/user";
 
 @Injectable({
   providedIn: 'root'
@@ -86,4 +87,21 @@ export class AdminService {
     return this.httpClient.post<ProductCategoryDto>(this.adminBaseUri + "/categories", category);
   }
 
+  /**
+   * Send a get request to the backend to get all users
+   *
+   * @returns all users
+   */
+  getAllUsers(): Observable<UserListDto[]> {
+    return this.httpClient.get<UserListDto[]>(this.adminBaseUri + '/allUsers');
+  }
+
+  /**
+   * Send a put request to the backend to update the admin status of a user
+   *
+   * @param userListDto Data of a user to update
+   */
+  updateUserAdminStatus(userListDto: UserListDto): Observable<void> {
+    return this.httpClient.put<void>(this.adminBaseUri + '/users', userListDto);
+  }
 }
