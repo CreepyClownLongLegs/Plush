@@ -5,6 +5,7 @@ import {NonceRequest} from "../../dtos/nonce-request";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ToastrService} from "ngx-toastr";
 import {WalletService} from "../../services/wallet.service";
+import {Router} from "@angular/router";
 
 export enum ButtonType {
   ConnectButton,
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit {
     public walletService: WalletService,
     private modalService: NgbModal,
     private notification: ToastrService,
+    private router: Router,
   ) {
   }
 
@@ -175,13 +177,15 @@ export class LoginComponent implements OnInit {
       this.resetWalletConnection();
       this.closeModal();
       this.notification.success("Logout successful", "Logged out");
+      this.router.navigate(['/']);
     });
   }
 
   resetWalletConnection() {
-    this.walletService.disconnectWallet();
-    this.publicKey = "";
-    this.balance = 0;
+    this.walletService.disconnectWallet().then(r => {
+      this.publicKey = "";
+      this.balance = 0;
+    });
   }
 
   formatWalletAddress(address: string): string {

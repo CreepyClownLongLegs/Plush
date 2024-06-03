@@ -13,8 +13,9 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import jakarta.annotation.PostConstruct;
 
-@Profile("generateData")
+
 @Component
+@Profile("generateData")
 public class PlushToyDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

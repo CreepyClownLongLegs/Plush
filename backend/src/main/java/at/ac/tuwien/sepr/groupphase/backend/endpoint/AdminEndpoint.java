@@ -3,6 +3,18 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
+
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
 import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
@@ -45,14 +52,16 @@ public class AdminEndpoint {
     private final PlushToyMapper plushToyMapper;
     private final ProductCategoryMapper productCategoryMapper;
     private final SolanaService solanaService;
+    private final UserMapper userMapper;
 
     @Autowired
     public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper,
-                         ProductCategoryMapper productCategoryMapper, SolanaService solanaService) {
+                         ProductCategoryMapper productCategoryMapper, SolanaService solanaService, UserMapper userMapper) {
         this.adminService = adminService;
         this.plushToyMapper = plushToyMapper;
         this.productCategoryMapper = productCategoryMapper;
         this.solanaService = solanaService;
+        this.userMapper = userMapper;
     }
 
     @Secured("ROLE_ADMIN")
@@ -142,4 +151,20 @@ public class AdminEndpoint {
         return adminService.editPlushToyCategories(productId, categoryIds);
     }
 
+    @RolesAllowed("ADMIN")
+    @GetMapping(value = "/allUsers")
+    @Operation(summary = "Get all users", description = "Fetches a list of all users in the system", security = @SecurityRequirement(name = "apiKey"))
+    public List<UserListDto> getAllUsers() {
+        LOGGER.info("GET /api/v1/admin/allUsers");
+        List<User> users = adminService.getAllUsers();
+        return userMapper.entityListToListDtoList(users);
+    }
+
+    @RolesAllowed("ADMIN")
+    @PutMapping(value = "/users")
+    @Operation(summary = "Update user's admin status", description = "updates the admin status of a user based on the provided UserListDto.", security = @SecurityRequirement(name = "apiKey"))
+    public void updateUserAdminStatus(@RequestBody UserListDto userListDto) {
+        LOGGER.info("PUT /api/v1/admin/users");
+        adminService.updateUserAdminStatus(userListDto);
+    }
 }

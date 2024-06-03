@@ -1,0 +1,30 @@
+<div class="container">
+  <h1>User Management</h1>
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, public key, address..." class="form-control my-3">
+
+  <table class="table table-fixed">
+    <thead>
+    <tr>
+      <th style="width: 50%;">Public Key</th>
+      <th style="width: 20%;">Name</th>
+      <th style="width: 15%;">Admin</th>
+      <th style="width: 15%;">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of paginatedUsers()">
+      <td style="width: 50%;">{{ user?.publicKey }}</td>
+      <td style="width: 20%;">{{ user?.firstname }} {{ user?.lastname }}</td>
+      <td style="width: 15%;">{{ user ? (user.admin ? 'Yes' : 'No') : '' }}</td>
+      <td style="width: 15%;">
+        <button *ngIf="user" class="btn btn-primary wrap-text" [disabled]="user.admin" (click)="updateUserAdminStatus(user)">Make Admin</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-controls">
+    <button class="btn btn-secondary btn-spaced" (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+    <button class="btn btn-secondary btn-spaced" (click)="nextPage()" [disabled]="currentPage >= totalPages()">Next</button>
+  </div>
+</div>

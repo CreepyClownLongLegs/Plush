@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import java.util.List;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.lang.NonNull;
 
@@ -58,7 +60,7 @@ public interface AdminService {
      * @return a list of all product categories
      */
     List<ProductCategory> getAllProductCategories();
-    
+
     /**
      * Updates an existing product.
      *
@@ -79,4 +81,19 @@ public interface AdminService {
      * @throws NotFoundException if the plush toy or any of the categories does not exist.
      */
     PlushToyDetailDto editPlushToyCategories(Long productId, List<Long> newProductCategoryIds) throws NotFoundException;
+
+    /**
+     * Retrieves all users in the system.
+     *
+     * @return a list of User objects representing all users in the system
+     */
+    List<User> getAllUsers();
+
+    /**
+     * Updates the admin status of a user.
+     *
+     * @param userListDto is the user to be updated
+     * @throws NotFoundException if the user cannot be found
+     */
+    void updateUserAdminStatus(UserListDto userListDto) throws NotFoundException;
 }

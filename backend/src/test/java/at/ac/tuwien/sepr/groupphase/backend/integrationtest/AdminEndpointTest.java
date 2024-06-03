@@ -2,15 +2,19 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.*;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,11 +38,6 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
-import at.ac.tuwien.sepr.groupphase.backend.entity.SmartContract;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
@@ -48,7 +48,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.SolanaService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class AdminEndpointTest implements PlushToyTestData, TestData {
+public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestData {
     @Autowired
     private MockMvc mockMvc;
 
@@ -57,6 +57,9 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
 
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JwtTokenizer jwtTokenizer;
@@ -83,6 +86,7 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
     public void beforeEach() {
         productCategoryRepository.deleteAll();
         plushToyRepository.deleteAll();
+        userRepository.deleteAll();
 
         ArgumentCaptor<Long> argumentCaptor = ArgumentCaptor.forClass(Long.class);
         when(solanaService.createSmartContract(argumentCaptor.capture())).thenAnswer(invocation -> {
@@ -277,5 +281,76 @@ public class AdminEndpointTest implements PlushToyTestData, TestData {
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void givenUsersExist_whenGetAllUsers_thenAllUsersAreReturned() throws Exception {
+        User user1 = new User();
+        user1.setPublicKey(TEST_PUBKEY);
+        user1.setFirstname("firstname1");
+        user1.setLastname("lastname1");
+        userRepository.save(user1);
+
+        User user2 = new User();
+        user2.setPublicKey(TEST_PUBKEY_2);
+        user2.setFirstname("firstname2");
+        user2.setLastname("lastname2");
+        userRepository.save(user2);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/allUsers")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+
+        UserListDto[] users = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), UserListDto[].class);
+        assertEquals(2, users.length);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void givenValidUserListDto_whenUpdateUserAdminStatus_thenUserAdminStatusIsUpdated() throws Exception {
+        User user = new User();
+        user.setPublicKey(TEST_PUBKEY);
+        user.setAdmin(false);
+        userRepository.save(user);
+
+        UserListDto userListDto = new UserListDto();
+        userListDto.setPublicKey(TEST_PUBKEY);
+        userListDto.setAdmin(true);
+
+        String requestBody = new ObjectMapper().writeValueAsString(userListDto);
+
+        MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+
+        Optional<User> updatedUser = userRepository.findUserByPublicKey(TEST_PUBKEY);
+        assertTrue(updatedUser.isPresent());
+        assertTrue(updatedUser.get().isAdmin());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void givenInvalidPublicKey_whenUpdateUserAdminStatus_thenNotFoundExceptionIsThrown() throws Exception {
+        UserListDto userListDto = new UserListDto();
+        userListDto.setPublicKey(TEST_NONEXISTENT_PUBKEY);
+        userListDto.setAdmin(true);
+
+        String requestBody = new ObjectMapper().writeValueAsString(userListDto);
+
+        MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 }

@@ -4,6 +4,9 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +33,17 @@ public class AdminServiceImplementation implements AdminService {
     private final ProductCategoryRepository productCategoryRepository;
     private final PlushToyMapper plushToyMapper;
     private final ProductCategoryMapper productCategoryMapper;
+    private final UserRepository userRepository;
 
-    public AdminServiceImplementation(PlushToyRepository plushToyRepository, PlushToyMapper plushToyMapper, ProductCategoryRepository productCategoryRepository, ProductCategoryMapper productCategoryMapper) {
+    public AdminServiceImplementation(PlushToyRepository plushToyRepository,
+                                      PlushToyMapper plushToyMapper,
+                                      ProductCategoryRepository productCategoryRepository,
+                                      ProductCategoryMapper productCategoryMapper, UserRepository userRepository) {
         this.plushToyRepository = plushToyRepository;
         this.productCategoryRepository = productCategoryRepository;
         this.plushToyMapper = plushToyMapper;
         this.productCategoryMapper = productCategoryMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -129,5 +137,19 @@ public class AdminServiceImplementation implements AdminService {
         PlushToy edited = plushToyRepository.save(plushToy);
         LOGGER.trace("Categories edited of PlushToy: {}", edited.getId());
         return plushToyMapper.entityToDetailDto(edited);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        LOGGER.info("getAllUsers");
+        return userRepository.findAll();
+    }
+
+    public void updateUserAdminStatus(UserListDto userListDto) throws NotFoundException {
+        LOGGER.info("updateUserAdminStatus {}", userListDto.getPublicKey());
+        User user = userRepository.findUserByPublicKey(userListDto.getPublicKey())
+            .orElseThrow(() -> new NotFoundException("User not found"));
+        user.setAdmin(userListDto.isAdmin());
+        userRepository.save(user);
     }
 }

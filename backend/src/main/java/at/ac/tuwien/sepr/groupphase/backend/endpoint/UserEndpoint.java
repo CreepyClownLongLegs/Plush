@@ -1,12 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +35,7 @@ import jakarta.validation.Valid;
 
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/user")
@@ -37,12 +44,14 @@ public class UserEndpoint {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserEndpoint(UserService userService, UserMapper userMapper) {
+    public UserEndpoint(UserService userService, UserMapper userMapper, UserRepository userRepository) {
 
         this.userService = userService;
         this.userMapper = userMapper;
+        this.userRepository = userRepository;
     }
 
     @RolesAllowed({"USER", "ADMIN"})
@@ -80,6 +89,4 @@ public class UserEndpoint {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }
