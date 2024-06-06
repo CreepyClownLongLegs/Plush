@@ -103,7 +103,7 @@ public class ShoppingCartServiceTest implements TestData {
         cartItem.setAmount(1);
         shoppingCartItemRepository.save(cartItem);
         PlushToyCartListDto plushCartDto = shoppingCartService.getFullCart(publicKey).getFirst();
-        shoppingCartService.deleteFromCart(publicKey, plushCartDto.getCartItemId());
+        shoppingCartService.deleteFromCart(publicKey, plushCartDto.getId());
 
         Optional<ShoppingCartItem> cartItems = shoppingCartItemRepository.findById(1L);
         assertTrue(cartItems.isEmpty());
@@ -120,6 +120,44 @@ public class ShoppingCartServiceTest implements TestData {
 
         assertThrows(NotFoundException.class, () -> shoppingCartService.deleteFromCart(publicKey, nonExistingItemId));
     }
+
+    @Test
+    public void givenValidItemIdAndPublicKey_whenDecreaseAmount_thenAmountDecreasedSuccessfully() {
+        String publicKey = TEST_PUBKEY;
+
+        User user = new User();
+        user.setPublicKey(publicKey);
+        userRepository.save(user);
+
+        PlushToy plushToy = plushySupplier.get();
+        Long id = plushToyRepository.save(plushToy).getId();
+
+        ShoppingCartItem item = new ShoppingCartItem();
+        item.setUser(user);
+        item.setPlushToy(plushToy);
+        item.setAmount(2); // Initial amount set to 2
+        shoppingCartItemRepository.save(item);
+
+        shoppingCartService.decreaseAmount(publicKey, id);
+
+        ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId()).orElseThrow(() -> new NotFoundException("Item not found"));
+        assertEquals(1, updatedItem.getAmount()); // Check if the amount decreased by 1
+    }
+
+    @Test
+    public void givenInvalidItemIdAndPublicKey_whenDecreaseAmount_thenNotFoundExceptionThrown() {
+        String publicKey = TEST_PUBKEY;
+
+        User user = new User();
+        user.setPublicKey(publicKey);
+        userRepository.save(user);
+
+        long nonExistingItemId = 999L;
+
+        assertThrows(NotFoundException.class, () -> shoppingCartService.decreaseAmount(publicKey, nonExistingItemId));
+    }
+
+
 
 
 }

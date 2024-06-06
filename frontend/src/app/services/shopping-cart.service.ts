@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
 import { Observable } from 'rxjs';
-import {PlushToyListDto} from "../dtos/plushtoy";
+import {PlushToyCartListDto, PlushToyListDto} from "../dtos/plushtoy";
 
 export interface ShoppingCartItemDto {
   publicKey: string;
@@ -30,9 +30,14 @@ export class ShoppingCartService {
     return this.httpClient.delete<void>(`${this.cartBaseUri}?itemId=${itemId}`);
   }
 
-  getFullCart(): Observable<PlushToyListDto[]> {
+  getFullCart(): Observable<PlushToyCartListDto[]> {
     console.log('Fetching full cart for user');
-    return this.httpClient.get<PlushToyListDto[]>(`${this.cartBaseUri}`);
+    return this.httpClient.get<PlushToyCartListDto[]>(`${this.cartBaseUri}`);
+  }
+
+  decreaseAmount(itemId: number): Observable<void> {
+    console.log('Decreasing amount of item in cart', itemId);
+    return this.httpClient.post<void>(`${this.cartBaseUri}/decrease`, itemId); // Send itemId directly
   }
 
 }

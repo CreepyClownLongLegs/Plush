@@ -15,7 +15,7 @@ import {NgForOf} from "@angular/common";
   styleUrl: './cart.component.scss'
 })
 export class CartComponent implements OnInit{
-  cartItems: PlushToyListDto[] = [];
+  cartItems: PlushToyCartListDto[] = [];
   totalPrice: string;
   selectedPaymentMethod: string;
 
@@ -39,6 +39,44 @@ export class CartComponent implements OnInit{
     });
   }
 
+  increaseAmount(itemId: number): void {
+    this.shoppingCartService.addToCart(itemId).subscribe({
+      next: () => {
+        console.log('Item amount increased successfully');
+        this.updateCartItemAmount(itemId, 1);
+      },
+      error: (error) => {
+        console.error('Error occurred while increasing item amount:', error);
+        this.notification.error("Cannot increase item amount in the cart");
+      }
+    });
+  }
+
+  decreaseAmount(itemId: number): void {
+    this.shoppingCartService.decreaseAmount(itemId).subscribe({
+      next: () => {
+        console.log('Item amount decreased successfully');
+        this.updateCartItemAmount(itemId, -1);
+      },
+      error: (error) => {
+        console.error('Error occurred while decreasing item amount:', error);
+        this.notification.error("Cannot decrease item amount in the cart");
+      }
+    });
+  }
+
+  updateCartItemAmount(itemId: number, change: number): void {
+    const item = this.cartItems.find(cartItem => cartItem.id === itemId);
+    if (item) {
+      item.amount += change;
+      if (item.amount <= 0) {
+        this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== itemId);
+      }
+      this.calculateTotalPrice();
+    }
+  }
+
+
 
   finishPayment(): void {
     if (!this.selectedPaymentMethod) {
@@ -55,7 +93,7 @@ export class CartComponent implements OnInit{
 
   loadCart(): void {
     this.shoppingCartService.getFullCart().subscribe({
-      next: (items: PlushToyListDto[]) => {
+      next: (items: PlushToyCartListDto[]) => {
         this.cartItems = items;
         this.calculateTotalPrice();
       },
@@ -70,7 +108,7 @@ export class CartComponent implements OnInit{
   }
 
   calculateTotalPrice(): void {
-    const total = this.cartItems.reduce((acc, item) => acc + item.price, 0);
+    const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
     this.totalPrice = `${total} SOL`;
   }
 

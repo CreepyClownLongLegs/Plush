@@ -35,4 +35,13 @@ public interface ShoppingCartService {
      * @return a list of PlushToyListDto representing the items in the user's cart
      */
     List<PlushToyCartListDto> getFullCart(String publicKey);
+
+    /**
+     * Decreases the amount of an item in the shopping cart.
+     *
+     * @param publicKey the public key of the user
+     * @param itemId    the ID of the item to decrease the amount of
+     * @throws NotFoundException if the item is not found in the shopping cart
+     */
+    void decreaseAmount(String publicKey, long itemId) throws NotFoundException;
 }
