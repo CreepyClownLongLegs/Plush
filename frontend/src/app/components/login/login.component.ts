@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;
-        this.balance = await this.walletService.getBalance(publicKey);
       })
         .catch((error) => {
           this.resetWalletConnection();
@@ -56,6 +55,9 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /**
+   * Determines the label to be displayed on the button based on the button type and user login status.
+   */
   buttonLabel() {
     if (this.type == ButtonType.ConnectButton) {
       if (this.authService.isLoggedIn()) {
@@ -66,12 +68,9 @@ export class LoginComponent implements OnInit {
     return '';
   }
 
-  forwardToPhantom() {
-    window.open('https://phantom.app/', '_blank');
-    this.modalService.dismissAll();
-
-  }
-
+  /**
+   * Handles the button click event by opening the appropriate modal based on the user login status.
+   */
   handleButtonClick() {
     if (this.authService.isLoggedIn()) {
       this.openWalletModal();
@@ -80,6 +79,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /**
+   * Opens the Phantom Wallet website in a new tab and closes the current modal.
+   */
+  forwardToPhantom() {
+    window.open('https://phantom.app/', '_blank');
+    this.modalService.dismissAll();
+  }
 
   /**
    * Connects the wallet and tries to log in the user.
@@ -88,9 +94,8 @@ export class LoginComponent implements OnInit {
     this.walletService.connectWallet().then(async (publicKey: string) => {
       this.publicKey = publicKey;
       this.getNonce(publicKey);
-      this.balance = await this.walletService.getBalance(publicKey);
+      this.balance = await this.walletService.getBalance(this.publicKey);
       this.modalService.dismissAll();
-
     })
       .catch((error) => {
         this.resetWalletConnection();
@@ -192,8 +197,9 @@ export class LoginComponent implements OnInit {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   }
 
-  openWalletModal() {
+  async openWalletModal() {
     this.modalService.open(this.walletModal);
+    this.balance = await this.walletService.getBalance(this.publicKey);
   }
 
   openConnectModal() {
