@@ -122,3 +122,25 @@ hr {
 .finish-payment:hover {
   background-color: #c70039;
 }
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the buttons horizontally */
+}
+
+.item-quantity button {
+  background-color: #ff5733;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 5px; /* Add right margin to decrease button */
+  margin-left: 5px; /* Add left margin to increase button */
+}
+
+.item-quantity button:hover {
+  background-color: #c70039;
+}
