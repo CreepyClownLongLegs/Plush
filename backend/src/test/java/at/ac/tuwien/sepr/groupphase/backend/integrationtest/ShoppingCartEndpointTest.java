@@ -1,15 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.common.PlushToySupplier;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShoppingCartItemDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData.TEST_PUBKEY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,14 +27,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData.TEST_PUBKEY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.common.PlushToySupplier;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ShoppingCartItemDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -54,7 +58,7 @@ public class ShoppingCartEndpointTest implements TestData {
     private PlushToyRepository plushToyRepository;
 
     @Autowired
-    private PlushToySupplier plushToySupplier ;
+    private PlushToySupplier plushToySupplier;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -65,7 +69,6 @@ public class ShoppingCartEndpointTest implements TestData {
     private PlushToy testPlushToy;
     private User testUser;
 
-
     @BeforeEach
     public void beforeEach() {
         shoppingCartItemRepository.deleteAll();
@@ -73,9 +76,9 @@ public class ShoppingCartEndpointTest implements TestData {
         plushToyRepository.deleteAll();
 
         mockMvc = MockMvcBuilders
-            .webAppContextSetup(context)
-            .apply(springSecurity())
-            .build();
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
 
         testUser = new User(TEST_PUBKEY);
         testUser = userRepository.save(testUser);
@@ -94,8 +97,8 @@ public class ShoppingCartEndpointTest implements TestData {
 
         MvcResult mvcResult = mockMvc.perform(delete("/api/v1/cart")
                 .param("itemId", String.valueOf(testPlushToy.getId())))
-            .andDo(print())
-            .andReturn();
+                .andDo(print())
+                .andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }
@@ -111,13 +114,14 @@ public class ShoppingCartEndpointTest implements TestData {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/cart")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andReturn();
+                .andDo(print())
+                .andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
-        List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse, objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
+        List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse,
+                objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
 
         assertTrue(cartList.size() > 0);
     }
@@ -127,13 +131,14 @@ public class ShoppingCartEndpointTest implements TestData {
     public void givenValidPublicKey_whenGetFullCart_then200AndEmptyCart() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/cart")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andReturn();
+                .andDo(print())
+                .andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
-        List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse, objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
+        List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse,
+                objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
 
         assertTrue(cartList.isEmpty());
     }
@@ -150,8 +155,8 @@ public class ShoppingCartEndpointTest implements TestData {
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/cart/decrease")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.valueOf(item.getId())))
-            .andDo(print())
-            .andReturn();
+                .andDo(print())
+                .andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId()).orElseThrow();
@@ -164,8 +169,8 @@ public class ShoppingCartEndpointTest implements TestData {
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/cart/decrease")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.valueOf(999)))
-            .andDo(print())
-            .andReturn();
+                .andDo(print())
+                .andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }

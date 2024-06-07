@@ -3,18 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
-
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +18,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SolanaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
-
 import jakarta.annotation.security.PermitAll;
-
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin")
@@ -56,7 +51,7 @@ public class AdminEndpoint {
 
     @Autowired
     public AdminEndpoint(AdminService adminService, PlushToyMapper plushToyMapper,
-                         ProductCategoryMapper productCategoryMapper, SolanaService solanaService, UserMapper userMapper) {
+            ProductCategoryMapper productCategoryMapper, SolanaService solanaService, UserMapper userMapper) {
         this.adminService = adminService;
         this.plushToyMapper = plushToyMapper;
         this.productCategoryMapper = productCategoryMapper;
@@ -68,7 +63,7 @@ public class AdminEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/product/{id}")
     @Operation(summary = "Delete a product", security = @SecurityRequirement(name = "apiKey"), parameters = {
-        @Parameter(name = "id", description = "The id of the product to delete", required = true, in = ParameterIn.PATH)
+            @Parameter(name = "id", description = "The id of the product to delete", required = true, in = ParameterIn.PATH)
     })
     public void delete(@PathVariable("id") Long productId) {
         LOGGER.info("DELETE /api/v1/admin/product/{}", productId);
@@ -99,10 +94,9 @@ public class AdminEndpoint {
         LOGGER.info("Creating new product. body: {}", plushToyDetailDto);
         PlushToyDetailDto res = adminService.addPlushToy(plushToyMapper.detailsDtoToEntity(plushToyDetailDto));
 
-        solanaService.createSmartContract(res.getId());
-
         if (plushToyDetailDto.getProductCategories() != null) {
-            return adminService.editPlushToyCategories(res.getId(), productCategoryMapper.productCategoryDtoListToIdList(plushToyDetailDto.getProductCategories()));
+            return adminService.editPlushToyCategories(res.getId(),
+                    productCategoryMapper.productCategoryDtoListToIdList(plushToyDetailDto.getProductCategories()));
 
         } else {
             return res;
@@ -113,11 +107,13 @@ public class AdminEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/product/{id}")
     @Operation(summary = "Edit an existing product", security = @SecurityRequirement(name = "apiKey"))
-    public PlushToyDetailDto update(@PathVariable(name = "id") Long id, @Valid @RequestBody PlushToyDetailDto plushToyDetailDto) {
+    public PlushToyDetailDto update(@PathVariable(name = "id") Long id,
+            @Valid @RequestBody PlushToyDetailDto plushToyDetailDto) {
         LOGGER.info("Editing an existing product. body: {}", plushToyDetailDto);
 
         if (plushToyDetailDto.getProductCategories() != null) {
-            adminService.editPlushToyCategories(id, productCategoryMapper.productCategoryDtoListToIdList(plushToyDetailDto.getProductCategories()));
+            adminService.editPlushToyCategories(id,
+                    productCategoryMapper.productCategoryDtoListToIdList(plushToyDetailDto.getProductCategories()));
         }
 
         return adminService.editPlushToy(id, plushToyDetailDto);
@@ -144,7 +140,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     @PostMapping("/product/{id}/categories")
     @Operation(summary = "Add categories to a product", security = @SecurityRequirement(name = "apiKey"), parameters = {
-        @Parameter(name = "id", description = "The id of the product to update", required = true, in = ParameterIn.PATH)
+            @Parameter(name = "id", description = "The id of the product to update", required = true, in = ParameterIn.PATH)
     })
     public PlushToyDetailDto setCategories(@PathVariable("id") Long productId, @RequestBody List<Long> categoryIds) {
         LOGGER.info("Adding categories to product with id {}. body: {}", productId, categoryIds);

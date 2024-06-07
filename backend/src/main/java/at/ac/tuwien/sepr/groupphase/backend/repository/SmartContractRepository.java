@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,12 @@ public interface SmartContractRepository extends JpaRepository<SmartContract, Lo
      *         Optional if not
      */
     Optional<SmartContract> findByPublicKey(String publicKey);
+
+    /**
+     * Finds a list of smart contracts by the plush toy id.
+     *
+     * @param plushToyId the plush toy id
+     * @return a list of smart contracts
+     */
+    List<SmartContract> findByPlushToyId(Long plushToyId);
 }

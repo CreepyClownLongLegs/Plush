@@ -1,35 +1,35 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana;
 
-public class CreateSmartContractDto {
+public class NftPlushToyAttributeDto {
     private String name;
-    private String url;
+    private String value;
 
-    public CreateSmartContractDto(String name, String url) {
+    public NftPlushToyAttributeDto(String name, String value) {
         this.name = name;
-        this.url = url;
+        this.value = value;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getValue() {
+        return value;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return "CreateSmartContractDto{"
+        return "NftPlushToyAttributeDto{"
                 + "name='" + name + '\''
-                + "url='" + url + '\''
+                + "value='" + value + '\''
                 + '}';
     }
 }

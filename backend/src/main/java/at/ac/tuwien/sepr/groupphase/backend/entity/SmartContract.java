@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class SmartContract {
@@ -20,7 +20,7 @@ public class SmartContract {
     @Column(nullable = false, length = 44, unique = true)
     private String publicKey;
 
-    @OneToOne(mappedBy = "smartContract", optional = false)
+    @ManyToOne
     private PlushToy plushToy;
 
     public SmartContract() {
