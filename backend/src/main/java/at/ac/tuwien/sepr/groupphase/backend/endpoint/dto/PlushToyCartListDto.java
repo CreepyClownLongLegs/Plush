@@ -8,8 +8,7 @@ public class PlushToyCartListDto {
     private Double averageRating;
     private int hp;
     private String imageUrl;
-
-    private Long cartItemId;
+    private int amount;
 
     public PlushToyCartListDto() {
     }
@@ -70,12 +69,12 @@ public class PlushToyCartListDto {
         this.imageUrl = imageUrl;
     }
 
-    public Long getCartItemId() {
-        return cartItemId;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setCartItemId(Long cartItemId) {
-        this.cartItemId = cartItemId;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
 }

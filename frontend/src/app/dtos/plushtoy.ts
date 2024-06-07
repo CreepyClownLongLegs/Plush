@@ -14,7 +14,6 @@ export class PlushToyListDto {
   description: string;
   imageUrl: string;
   hp: number;
-  strength: number;
 }
 
 export class PlushToyCartListDto {
@@ -25,7 +24,7 @@ export class PlushToyCartListDto {
   description: string;
   imageUrl: string;
   hp: number;
-  cartItemId: number;
+  amount: number;
 }
 
 export class PlushToy {

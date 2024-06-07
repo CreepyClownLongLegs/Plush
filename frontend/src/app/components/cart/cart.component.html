@@ -6,11 +6,16 @@
         <div class="item-image">
           <img [src]="item.imageUrl" alt="{{item.name}}" />
           <span class="hp">{{item.hp}}HP</span>
-          <button class="remove-btn" (click)="removeItem(item.cartItemId)">X</button>
+          <button class="remove-btn" (click)="removeItem(item.id)">X</button>
         </div>
         <div class="item-details">
           <p class="item-name">#{{item.id}} {{item.name}}</p>
           <p class="item-price">PRICE: <span>{{item.price}} SOL</span></p>
+          <div class="item-quantity">
+            <button (click)="decreaseAmount(item.id)">-</button>
+            <span>{{item.amount}}</span>
+            <button (click)="increaseAmount(item.id)">+</button>
+          </div>
         </div>
       </div>
     </div>

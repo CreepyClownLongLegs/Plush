@@ -63,4 +63,14 @@ public class ShoppingCartEndpoint {
         return shoppingCartService.getFullCart(publicKey);
     }
 
+    @RolesAllowed({"USER", "ADMIN"})
+    @PostMapping("/decrease")
+    @Operation(summary = "Decrease the amount of an item in the shopping cart")
+    public void decreaseAmount(@RequestBody long itemId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String publicKey = authentication.getName();
+        LOGGER.info("POST /api/v1/cart/decrease - itemId: {}", itemId);
+        shoppingCartService.decreaseAmount(publicKey, itemId);
+    }
+
 }

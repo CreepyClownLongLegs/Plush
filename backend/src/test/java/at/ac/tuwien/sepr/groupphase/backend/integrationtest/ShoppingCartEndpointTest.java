@@ -65,6 +65,7 @@ public class ShoppingCartEndpointTest implements TestData {
     private PlushToy testPlushToy;
     private User testUser;
 
+
     @BeforeEach
     public void beforeEach() {
         shoppingCartItemRepository.deleteAll();
@@ -79,8 +80,7 @@ public class ShoppingCartEndpointTest implements TestData {
         testUser = new User(TEST_PUBKEY);
         testUser = userRepository.save(testUser);
 
-        testPlushToy = plushToySupplier.getPlushie();
-        plushToyRepository.save(testPlushToy);
+        testPlushToy = plushToyRepository.save(plushToySupplier.getPlushie());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ShoppingCartEndpointTest implements TestData {
         shoppingCartItemRepository.save(item);
 
         MvcResult mvcResult = mockMvc.perform(delete("/api/v1/cart")
-                .param("itemId", String.valueOf(shoppingCartItemRepository.findAll().getFirst().getId())))
+                .param("itemId", String.valueOf(testPlushToy.getId())))
             .andDo(print())
             .andReturn();
 
@@ -136,5 +136,37 @@ public class ShoppingCartEndpointTest implements TestData {
         List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse, objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
 
         assertTrue(cartList.isEmpty());
+    }
+
+    @Test
+    @WithMockUser(username = TEST_PUBKEY)
+    public void givenValidItemId_whenDecreaseAmount_then200() throws Exception {
+        ShoppingCartItem item = new ShoppingCartItem();
+        item.setUser(testUser);
+        item.setPlushToy(testPlushToy);
+        item.setAmount(2); // Set amount to 2 for testing decrease
+        shoppingCartItemRepository.save(item);
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/cart/decrease")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(item.getId())))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId()).orElseThrow();
+        assertEquals(1, updatedItem.getAmount()); // Check if the amount decreased by 1
+    }
+
+    @Test
+    @WithMockUser(username = TEST_PUBKEY)
+    public void givenInvalidItemId_whenDecreaseAmount_then404() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/cart/decrease")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(999)))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 }
