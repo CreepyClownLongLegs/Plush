@@ -37,4 +37,8 @@ public class PlushToyAttribute {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<PlushToyAttributeDistribution> getDistributions() {
+        return distributions;
+    }
 }

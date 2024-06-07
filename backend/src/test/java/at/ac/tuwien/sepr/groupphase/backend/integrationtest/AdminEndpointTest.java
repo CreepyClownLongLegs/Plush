@@ -42,7 +42,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
-import at.ac.tuwien.sepr.groupphase.backend.service.SolanaService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.SolanaServiceImplementation;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -97,10 +97,11 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
             s.setPlushToy(plushToyRepository.getReferenceById(capturedId));
             return smartContractRepository.save(s);
         });
+
     }
 
     @MockBean
-    private SolanaService solanaService;
+    private SolanaServiceImplementation solanaService;
 
     @Autowired
     private SmartContractRepository smartContractRepository;
@@ -147,7 +148,8 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
                 }
                 """;
 
-        requestBody = String.format(Locale.ROOT, requestBody, savePlushy.getId(), "new name", TEST_PLUSHTOY_DESCRIPTION,
+        requestBody = String.format(Locale.ROOT, requestBody, savePlushy.getId(), "new name",
+                TEST_PLUSHTOY_DESCRIPTION,
                 TEST_PLUSHTOY_PRICE, TEST_PLUSHTOY_TAX_CLASS,
                 TEST_PLUSHTOY_WEIGHT, TEST_PLUSHTOY_SIZE, TEST_PLUSHTOY_COLOR, TEST_PLUSHTOY_HP, null,
                 TEST_PLUSHTOY_STRENGTH, x.getId(), x.getName());
@@ -235,7 +237,8 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
                 TEST_PLUSHTOY_HP, TEST_PLUSHTOY_STRENGTH);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .header(securityProperties.getAuthHeader(),
+                        jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andDo(print())
@@ -271,7 +274,8 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
                 """;
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .header(securityProperties.getAuthHeader(),
+                        jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andDo(print())

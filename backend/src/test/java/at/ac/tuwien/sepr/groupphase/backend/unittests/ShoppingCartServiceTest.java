@@ -1,13 +1,20 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.*;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.impl.ShoppingCartServiceImpl;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.TEST_PLUSHTOY_COLOR;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.TEST_PLUSHTOY_NAME;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.TEST_PLUSHTOY_PRICE;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.TEST_PLUSHTOY_SIZE;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.TEST_PLUSHTOY_TAX_CLASS;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.TEST_PLUSHTOY_WEIGHT;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData.TEST_PUBKEY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +22,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData.*;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData.TEST_PUBKEY;
-import static org.junit.jupiter.api.Assertions.*;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.ShoppingCartServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -39,7 +52,6 @@ public class ShoppingCartServiceTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
-
 
     private Supplier<PlushToy> plushySupplier = () -> {
         PlushToy plushy = new PlushToy();
@@ -140,7 +152,8 @@ public class ShoppingCartServiceTest implements TestData {
 
         shoppingCartService.decreaseAmount(publicKey, id);
 
-        ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId()).orElseThrow(() -> new NotFoundException("Item not found"));
+        ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId())
+                .orElseThrow(() -> new NotFoundException("Item not found"));
         assertEquals(1, updatedItem.getAmount()); // Check if the amount decreased by 1
     }
 
@@ -156,8 +169,5 @@ public class ShoppingCartServiceTest implements TestData {
 
         assertThrows(NotFoundException.class, () -> shoppingCartService.decreaseAmount(publicKey, nonExistingItemId));
     }
-
-
-
 
 }

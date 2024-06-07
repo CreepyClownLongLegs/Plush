@@ -30,8 +30,12 @@ public class Nft {
     @Column(nullable = false, length = 255)
     private String ownerId;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = true, length = 255)
     private String description;
+
+    // the public key of the NFT (associated account on the blockchain)
+    @Column(nullable = false, length = 44, unique = true)
+    private String publicKey;
 
     @ManyToOne
     private PlushToy plushToy;
@@ -39,11 +43,15 @@ public class Nft {
     @OneToMany(mappedBy = "nft")
     private List<NftPlushToyAttributeValue> attributes;
 
-    public Nft(String name, LocalDateTime timestamp, String ownerId, String description) {
+    public Nft(String name, LocalDateTime timestamp, String ownerId, String publicKey, String description) {
         this.name = name;
         this.timestamp = timestamp;
         this.ownerId = ownerId;
+        this.publicKey = publicKey;
         this.description = description;
+    }
+
+    public Nft() {
     }
 
     public Long getId() {
@@ -72,6 +80,14 @@ public class Nft {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public String getDescription() {

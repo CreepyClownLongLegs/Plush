@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,10 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class PlushToy {
@@ -71,9 +68,8 @@ public class PlushToy {
     @OneToMany(mappedBy = "plushToy", fetch = FetchType.EAGER)
     private List<PlushToyAttributeDistribution> attributeDistributions;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "smart_contract_id")
-    private SmartContract smartContract;
+    @OneToMany(mappedBy = "plushToy", fetch = FetchType.EAGER)
+    private List<SmartContract> smartContracts;
 
     public PlushToy() {
     }
@@ -201,18 +197,19 @@ public class PlushToy {
         nft.setPlushToy(this);
     }
 
-    public void setSmartContract(SmartContract smartContract) {
-        this.smartContract = smartContract;
+    public List<SmartContract> getSmartContracts() {
+        return smartContracts;
     }
 
-    public SmartContract getSmartContract() {
-        return smartContract;
+    public void addSmartContract(SmartContract smartContract) {
+        smartContracts.add(smartContract);
+        smartContract.setPlushToy(this);
     }
 
     public List<PlushToyAttribute> getPlushToyAttributes() {
         return attributeDistributions.stream()
-            .map(PlushToyAttributeDistribution::getAttribute)
-            .collect(Collectors.toList());
+                .map(PlushToyAttributeDistribution::getAttribute)
+                .collect(Collectors.toList());
     }
 
     public List<PlushToyAttributeDistribution> getAttributeDistributions() {
