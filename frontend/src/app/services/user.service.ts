@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Globals } from '../global/globals';
-import { Router } from '@angular/router';
-import { UserDetailDto } from '../dtos/user';
-import { UserListDto } from '../dtos/user';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Globals} from '../global/globals';
+import {Router} from '@angular/router';
+import {UserDetailDto} from '../dtos/user';
+import {UserListDto} from '../dtos/user';
+import {OrderListDto} from "../dtos/order";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,13 @@ import { UserListDto } from '../dtos/user';
 export class UserService {
 
   private userBaseUri: string = this.globals.backendUri + '/user';
+  private orderBaseUri: string = this.globals.backendUri + '/user/orders';
 
   constructor(
     private httpClient: HttpClient,
     private globals: Globals,
-  ) { }
+  ) {
+  }
 
   /**
    * Deletes current logged in user
@@ -35,13 +38,17 @@ export class UserService {
     return this.httpClient.get<UserDetailDto>(this.userBaseUri);
   }
 
+  getAllOrders(): Observable<OrderListDto[]> {
+    return this.httpClient.get<OrderListDto[]>(this.orderBaseUri)
+  }
+
   /**
- * Updates the user details
- *
- * @param publicKey the public key of the user to update
- * @param userDetailDto the updated user details
- * @returns updated UserDetailDto object
- */
+   * Updates the user details
+   *
+   * @param publicKey the public key of the user to update
+   * @param userDetailDto the updated user details
+   * @returns updated UserDetailDto object
+   */
   updateUser(userDetailDto: UserDetailDto): Observable<UserDetailDto> {
     return this.httpClient.put<UserDetailDto>(this.userBaseUri, userDetailDto);
   }

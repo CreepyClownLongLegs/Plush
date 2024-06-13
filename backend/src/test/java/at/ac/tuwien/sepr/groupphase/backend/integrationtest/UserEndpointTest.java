@@ -1,11 +1,19 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import java.util.Optional;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderItemMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AuthRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.AuthService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.AuthServiceImplementation;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,27 +22,32 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
+import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_NONCE;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_SIGNATURE;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.OrderTestData.ORDERS_BASE_URI;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 @ExtendWith(SpringExtension.class)
@@ -42,15 +55,36 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class UserEndpointTest implements UserTestData {
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     private MockMvc mockMvc;
-
+    @Autowired
+    private AuthRepository authRepository;
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private WebApplicationContext context;
+
+    private Supplier<AuthenticationCache> authRepositorySupplier = () -> {
+        return new AuthenticationCache(TEST_NONCE, TEST_PUBKEY);
+    };
+    private Supplier<User> userSupplier = () -> {
+        User user = new User();
+        user.setPublicKey(TEST_PUBKEY);
+        return user;
+    };
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+    @Autowired
+    private AuthServiceImplementation authServiceImplementation;
+    @Autowired
+    private OrderItemMapper orderItemMapper;
+    @Autowired
+    private OrderMapper orderMapper;
 
     @BeforeEach
     public void beforeEach() {
@@ -92,9 +126,8 @@ public class UserEndpointTest implements UserTestData {
 
     @Test
     public void givenValidPublicKey_whenFindUser_thenUserIsFound() {
-        User user = new User();
-        user.setPublicKey(TEST_PUBKEY);
-        userRepository.save(user);
+        userRepository.save(userSupplier.get());
+
 
         Optional<User> result = userRepository.findUserByPublicKey(TEST_PUBKEY);
         assertTrue(result.isPresent());
@@ -104,6 +137,34 @@ public class UserEndpointTest implements UserTestData {
     public void givenInvalidPublicKey_whenFindUser_thenUserNotFound() {
         Optional<User> result = userRepository.findUserByPublicKey(TEST_NONEXISTENT_PUBKEY);
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void givenNoAuthorizationToken_whenGetOrders_then403Forbidden() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get(ORDERS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+        assertEquals(HttpStatus.FORBIDDEN.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    public void givenValidAuthorizationToken_whenGetOrders_thenExpectedOrderListDto() throws Exception {
+
+        userRepository.save(userSupplier.get());
+        authRepository.save(authRepositorySupplier.get());
+
+        AuthRequestDto testRequest = new AuthRequestDto();
+        testRequest.setSignature(TEST_SIGNATURE);
+        testRequest.setPublicKey(TEST_PUBKEY);
+        String jwt = authServiceImplementation.login(testRequest);
+
+        MvcResult mvcResult = mockMvc.perform(get(ORDERS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON).header("Authorization",
+                    "Bearer " + jwt))
+            .andDo(print())
+            .andReturn();
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
@@ -118,21 +179,21 @@ public class UserEndpointTest implements UserTestData {
 
         // Create JSON string for the update request
         String requestBody = """
-        {
-            "publicKey": "%s",
-            "firstname": "%s",
-            "lastname": "%s",
-            "emailAddress": "%s",
-            "phoneNumber": "%s",
-            "country": "%s",
-            "city": "%s",
-            "postalCode": "%s",
-            "addressLine1": "%s",
-            "addressLine2": "%s",
-            "locked": %b,
-            "admin": %b
-        }
-        """;
+            {
+                "publicKey": "%s",
+                "firstname": "%s",
+                "lastname": "%s",
+                "emailAddress": "%s",
+                "phoneNumber": "%s",
+                "country": "%s",
+                "city": "%s",
+                "postalCode": "%s",
+                "addressLine1": "%s",
+                "addressLine2": "%s",
+                "locked": %b,
+                "admin": %b
+            }
+            """;
         requestBody = String.format(requestBody, TEST_PUBKEY, "NewName", "NewLastname", "newemail@example.com",
             "1234567890", "NewCountry", "NewCity", "12345", "New Address Line 1", "New Address Line 2",
             false, false);

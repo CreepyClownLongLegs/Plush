@@ -1,17 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Map;
-import java.util.Optional;
-
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
+import java.lang.invoke.MethodHandles;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Generates test users if no user with the public key exists.

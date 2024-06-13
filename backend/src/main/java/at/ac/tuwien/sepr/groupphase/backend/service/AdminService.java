@@ -1,18 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import java.util.List;
-
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import org.aspectj.weaver.ast.Not;
-import org.springframework.lang.NonNull;
-
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import org.springframework.lang.NonNull;
+
+import java.util.List;
 
 public interface AdminService {
 

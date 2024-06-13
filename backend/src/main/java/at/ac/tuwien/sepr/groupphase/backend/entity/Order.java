@@ -31,9 +31,6 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    @Column(nullable = false, length = 255)
-    private String paymentMethod;
-
     @Column(nullable = false)
     private double totalTax;
 
@@ -69,14 +66,6 @@ public class Order {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
     }
 
     public double getTotalTax() {

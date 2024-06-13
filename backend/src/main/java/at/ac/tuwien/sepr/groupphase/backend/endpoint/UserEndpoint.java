@@ -1,38 +1,30 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import jakarta.annotation.security.PermitAll;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import org.springframework.web.bind.annotation.GetMapping;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.validation.FieldError;
-import jakarta.validation.Valid;
-
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -43,13 +35,14 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final UserService userService;
+    private final OrderMapper orderMapper;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserEndpoint(UserService userService, UserMapper userMapper, UserRepository userRepository) {
-
+    public UserEndpoint(UserService userService, OrderMapper orderMapper, UserMapper userMapper, UserRepository userRepository) {
         this.userService = userService;
+        this.orderMapper = orderMapper;
         this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
@@ -63,6 +56,17 @@ public class UserEndpoint {
         String publicKey = authentication.getName();
         LOGGER.info("DELETE /api/v1/user {}", publicKey);
         userService.deleteUser(publicKey);
+    }
+
+    @RolesAllowed({"USER", "ADMIN"})
+    @GetMapping(value = "/orders")
+    @Operation(summary = "Get the order history of the user", security = @SecurityRequirement(name = "apiKey"))
+    public List<OrderListDto> getOrders() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String publicKey = authentication.getName();
+        LOGGER.info("GET /api/v1/user/orders {}", publicKey);
+        List<OrderListDto> orders = userService.getOrderHistory(publicKey);
+        return orders;
     }
 
     @RolesAllowed({"USER", "ADMIN"})

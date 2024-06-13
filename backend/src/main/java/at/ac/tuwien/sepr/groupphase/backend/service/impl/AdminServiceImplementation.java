@@ -1,29 +1,28 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import java.lang.invoke.MethodHandles;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OrderItem;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import org.jetbrains.annotations.NotNull;
+import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
+import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Service
 public class AdminServiceImplementation implements AdminService {
@@ -33,24 +32,27 @@ public class AdminServiceImplementation implements AdminService {
     private final ProductCategoryRepository productCategoryRepository;
     private final PlushToyMapper plushToyMapper;
     private final ProductCategoryMapper productCategoryMapper;
+    private final OrderItemRepository orderItemRepository;
     private final UserRepository userRepository;
 
-    public AdminServiceImplementation(PlushToyRepository plushToyRepository,
-                                      PlushToyMapper plushToyMapper,
-                                      ProductCategoryRepository productCategoryRepository,
-                                      ProductCategoryMapper productCategoryMapper, UserRepository userRepository) {
+    public AdminServiceImplementation(PlushToyRepository plushToyRepository, PlushToyMapper plushToyMapper, ProductCategoryRepository productCategoryRepository, ProductCategoryMapper productCategoryMapper,
+                                      OrderItemRepository orderItemRepository, UserRepository userRepository) {
         this.plushToyRepository = plushToyRepository;
         this.productCategoryRepository = productCategoryRepository;
         this.plushToyMapper = plushToyMapper;
         this.productCategoryMapper = productCategoryMapper;
+        this.orderItemRepository = orderItemRepository;
         this.userRepository = userRepository;
     }
 
     @Override
     public void deletePlushToy(@NonNull Long productId) throws NotFoundException {
         LOGGER.info("deletePlushToy {}", productId);
-        if (!plushToyRepository.existsById(productId)) {
-            throw new NotFoundException("Plush toy not found");
+        PlushToy plushToy = plushToyRepository.findById(productId).orElseThrow(() -> new NotFoundException("PlushToy not found"));
+        List<OrderItem> orderItems = orderItemRepository.findByPlushToy(plushToy);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setPlushToy(null);
+            orderItemRepository.save(orderItem);
         }
         plushToyRepository.deleteById(productId);
     }

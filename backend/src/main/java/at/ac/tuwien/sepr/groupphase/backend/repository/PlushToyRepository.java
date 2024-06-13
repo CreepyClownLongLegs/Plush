@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PlushToyRepository extends JpaRepository<PlushToy, Long> {
@@ -16,4 +17,5 @@ public interface PlushToyRepository extends JpaRepository<PlushToy, Long> {
         + "(:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) OR "
         + "(LOWER(p.description) LIKE LOWER(CONCAT('%', :name, '%')))")
     List<PlushToy> searchPlushToys(@Param("name") String name);
+
 }

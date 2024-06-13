@@ -1,7 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import java.lang.invoke.MethodHandles;
-
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.NonceDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.NonceRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.NonceDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.NonceRequestDto;
-import at.ac.tuwien.sepr.groupphase.backend.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.PermitAll;
+import java.lang.invoke.MethodHandles;
 
 @RestController
 @RequestMapping(value = "/api/v1/authentication")

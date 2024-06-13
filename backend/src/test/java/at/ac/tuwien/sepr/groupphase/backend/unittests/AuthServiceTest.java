@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;

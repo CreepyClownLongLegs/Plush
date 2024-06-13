@@ -1,38 +1,40 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import java.lang.invoke.MethodHandles;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
-
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
+import java.lang.invoke.MethodHandles;
+import java.util.Collections;
+import java.util.List;
+
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, OrderRepository orderRepository, OrderMapper orderMapper) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
+        this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
-
 
     @Override
     @Transactional
@@ -75,5 +77,11 @@ public class UserServiceImpl implements UserService {
         user.setAddressLine1(userDetailDto.getAddressLine1());
         user.setAddressLine2(userDetailDto.getAddressLine2());
         return userRepository.save(user);
+    }
+
+    public List<OrderListDto> getOrderHistory(String publicKey) {
+        userRepository.findUserByPublicKey(publicKey).orElseThrow(() -> new NotFoundException("User not found"));
+        List<Order> orders = orderRepository.findOrdersByUser_PublicKey(publicKey).orElse(Collections.emptyList());
+        return orderMapper.entityListToDtoList(orders);
     }
 }
