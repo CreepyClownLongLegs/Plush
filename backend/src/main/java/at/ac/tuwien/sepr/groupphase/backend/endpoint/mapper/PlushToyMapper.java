@@ -1,16 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import java.util.List;
-
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import java.util.List;
 
 @Mapper
 public interface PlushToyMapper {

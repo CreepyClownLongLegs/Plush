@@ -11,17 +11,23 @@ import {
 import {DetailViewComponent} from "./components/detail-view/detail-view.component";
 import {AdminCategoryCreateComponent} from './components/admin/categories/create/create.component';
 import {AdminCategoryOverviewComponent} from './components/admin/categories/overview/overview.component';
+import {OrderHistoryComponent} from "./components/order-history/order-history.component";
 import {AdminComponent} from './components/admin/admin.component';
-import { ProfileComponent } from './components/profile/profile.component';
+import {ProfileComponent} from './components/profile/profile.component';
 import {CartComponent} from "./components/cart/cart.component";
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'detail/:id', component: DetailViewComponent },
-  { path: 'profile', component: ProfileComponent },
-    { path: 'cart', component: CartComponent},
+  {path: '', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'detail/:id', component: DetailViewComponent},
+  {path: 'profile', component: ProfileComponent},
+  {path: 'orders', component: OrderHistoryComponent},
+  {path: '', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'detail/:id', component: DetailViewComponent},
+  {path: 'profile', component: ProfileComponent},
+  {path: 'cart', component: CartComponent},
   {
     path: 'admin', canActivate: [AuthGuard], data: {role: 'ADMIN'}, children: [
       {path: '', component: AdminComponent, data: {role: 'ADMIN'}},
@@ -43,7 +49,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

@@ -1,15 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import java.util.List;
-
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryCreationDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
+import java.util.List;
 
 @Mapper
 public interface ProductCategoryMapper {

@@ -1,11 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UserDetailDto } from 'src/app/dtos/user';
-import { UserService } from 'src/app/services/user.service';
-import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/services/auth.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
-import { WalletService } from 'src/app/services/wallet.service';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {UserDetailDto} from 'src/app/dtos/user';
+import {UserService} from 'src/app/services/user.service';
+import {ToastrService} from 'ngx-toastr';
+import {AuthService} from 'src/app/services/auth.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router';
+import {WalletService} from 'src/app/services/wallet.service';
 
 @Component({
   selector: 'app-profile',
@@ -29,7 +29,8 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private walletService: WalletService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.calculateLevel();
@@ -56,6 +57,10 @@ export class ProfileComponent implements OnInit {
         console.error('Error fetching user details', error);
       }
     );
+  }
+
+  openOrderHistoryView(): void {
+    this.router.navigate(['/orders']);
   }
 
   updateUserDetails(): void {

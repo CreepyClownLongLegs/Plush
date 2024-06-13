@@ -1,17 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
-import java.lang.invoke.MethodHandles;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+import java.lang.invoke.MethodHandles;
 
 
 @Component
@@ -48,6 +47,7 @@ public class PlushToyDataGenerator {
                 } else {
                     plushy.setDescription("this one has seen better days");
                 }
+                plushy.setImageUrl("https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain");
                 plushy.setWeight(i);
                 plushy.setColor(Color.BLACK);
                 plushy.setSize(Size.MEDIUM);

@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import java.util.function.Supplier;
-
+import at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AuthRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,14 +22,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData;
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
-import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AuthRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import java.util.function.Supplier;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -68,8 +67,8 @@ public class LoginEndpointTest implements TestData, LoginTestData, UserTestData 
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andDo(print())
-                .andReturn();
+            .andDo(print())
+            .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -85,8 +84,8 @@ public class LoginEndpointTest implements TestData, LoginTestData, UserTestData 
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andDo(print())
-                .andReturn();
+            .andDo(print())
+            .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -100,8 +99,8 @@ public class LoginEndpointTest implements TestData, LoginTestData, UserTestData 
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andDo(print())
-                .andReturn();
+            .andDo(print())
+            .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());

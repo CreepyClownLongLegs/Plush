@@ -26,6 +26,9 @@ public class OrderItem {
     @Column(nullable = false)
     private int amount;
 
+    @Column(nullable = true, length = 255)
+    private String imageUrl;
+
     @Column(nullable = false)
     private double taxAmount;
 
@@ -39,6 +42,14 @@ public class OrderItem {
     private Order order;
 
     public OrderItem() {
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
