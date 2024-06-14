@@ -126,6 +126,17 @@ public class AdminEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
+    @DeleteMapping("/categories/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a category", security = @SecurityRequirement(name = "apiKey"), parameters = {
+        @Parameter(name = "id", description = "The id of the category to delete", required = true, in = ParameterIn.PATH)
+    })
+    public void deleteCategory(@PathVariable("id") Long categoryId) {
+        LOGGER.info("DELETE /api/v1/admin/categories/{}", categoryId);
+        adminService.deleteProductCategory(categoryId);
+    }
+
+    @Secured("ROLE_ADMIN")
     @GetMapping("/categories")
     @Operation(summary = "Get all categories", security = @SecurityRequirement(name = "apiKey"))
     public List<ProductCategoryDto> getAllCategories() {

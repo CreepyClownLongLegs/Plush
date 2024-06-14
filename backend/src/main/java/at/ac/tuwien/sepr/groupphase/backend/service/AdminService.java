@@ -53,6 +53,14 @@ public interface AdminService {
     ProductCategoryDto addProductCategory(@NonNull ProductCategory productCategory);
 
     /**
+     * Delete a product category by id.
+     *
+     * @param productCategoryId the id of the product category
+     * @throws NotFoundException if the product category does not exist
+     */
+    void deleteProductCategory(@NonNull Long productCategoryId) throws NotFoundException;
+
+    /**
      * Get all product categories.
      *
      * @return a list of all product categories

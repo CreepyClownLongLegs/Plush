@@ -4,13 +4,14 @@
 <div *ngFor="let category of categories; let i = index" class="row">
     <div class="col-md-3 col-sm-6">
         <h5>{{ category.name }}</h5>
+        <p>{{category.plushToys.length}} assigned Plushtoys</p>
     </div>
 
     <div class="col-md-3 col-sm-6 text-end">
         <a class="btn btn-sm responsive-warning-button" aria-label="Edit">
             <i class="fas fa-pencil"></i>
         </a>
-        <button type="button" class="btn btn-small btn-danger" data-test="deleteButton">
+        <button type="button" class="btn btn-small btn-danger" data-test="deleteButton" (click)="deleteCategory(category.id)">
             <i class="fas fa-trash"></i>
         </button>
     </div>

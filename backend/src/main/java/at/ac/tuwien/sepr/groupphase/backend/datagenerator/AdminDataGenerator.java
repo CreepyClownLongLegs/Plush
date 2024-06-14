@@ -22,6 +22,7 @@ public class AdminDataGenerator {
     // map of admins with name and public key
     private static final Map<String, String> ADMINS = Map.of(
         "tobi", "7B2hwXRW4bkepiBS3HMkvSSZNbrhUkVYzpuzNyFQAUZ6",
+        "lucas", "GQSvsb31QRsbDT4wyXgL42RJqRrEk6rmG6c7As3LBXZa",
         "caro", "HGXLg2Eo9hUu7NGWkvVMrTzmjfwC2y1jGw25knAep4Gq",
         "jakob", "ErZoeAW8dwtWr9sxU1kPgwaw6vv9rVFQetXjyhxLDh3v"
     );

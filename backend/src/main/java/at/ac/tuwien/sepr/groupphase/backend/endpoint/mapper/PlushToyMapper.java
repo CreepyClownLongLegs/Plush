@@ -30,6 +30,10 @@ public interface PlushToyMapper {
     @Mapping(target = "productCategories", source = "plushToy.productCategories")
     PlushToyDetailDto entityToDetailDto(PlushToy plushToy);
 
+    public static Long[] map(List<PlushToy> plushToys) {
+        return new Long[0]; // Ignore nested lists of PlushToys
+    }
+    
     @Named("toDto")
     @Mapping(source = "publicKey", target = "publicKey")
     @Mapping(source = "firstname", target = "firstname")
