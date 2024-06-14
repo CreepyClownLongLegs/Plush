@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 public class ProductCategoryDto {
     private Long id;
     private String name;
+    private Long[] plushToys;
 
     public ProductCategoryDto() {
     }
@@ -26,5 +27,13 @@ public class ProductCategoryDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long[] getPlushToys() {
+        return plushToys;
+    }
+    
+    public void setPlushToys(Long[] plushToys) {
+        this.plushToys = plushToys;
     }
 }

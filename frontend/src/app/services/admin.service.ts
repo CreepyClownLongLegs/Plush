@@ -88,6 +88,15 @@ export class AdminService {
   }
 
   /**
+   * Send a delete request to the backend to delete the category with the given id
+   * 
+   * @param id of the category to delete
+   */
+  deleteCategory(id: number): Observable<void> {
+    return this.httpClient.delete<void>(this.adminBaseUri + "/categories/" + id);
+  }
+  
+  /**
    * Send a get request to the backend to get all users
    *
    * @returns all users

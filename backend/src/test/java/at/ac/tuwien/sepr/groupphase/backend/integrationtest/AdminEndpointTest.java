@@ -1,24 +1,19 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
-import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
-import at.ac.tuwien.sepr.groupphase.backend.entity.SmartContract;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
-import at.ac.tuwien.sepr.groupphase.backend.service.impl.SolanaServiceImplementation;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import java.util.Locale;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,25 +31,34 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Locale;
-import java.util.Optional;
-import java.util.function.Supplier;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.ProductCategoryTestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
+import at.ac.tuwien.sepr.groupphase.backend.entity.SmartContract;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.SolanaServiceImplementation;
+import jakarta.transaction.Transactional;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestData {
+public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestData, ProductCategoryTestData {
     @Autowired
     private MockMvc mockMvc;
 
@@ -73,6 +77,12 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
     @Autowired
     private SecurityProperties securityProperties;
 
+    private Supplier<ProductCategory> productCategorySupplier = () -> {
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.setName(TEST_PRODUCT_CATEGORY_NAME);
+        return productCategory;
+    };
+
     private Supplier<PlushToy> plushySupplier = () -> {
         PlushToy plushy = new PlushToy();
         plushy.setName(TEST_PLUSHTOY_NAME);
@@ -85,10 +95,12 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
         plushy.setStrength(TEST_PLUSHTOY_STRENGTH);
         return plushy;
     };
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
+    @Transactional
     public void beforeEach() {
         productCategoryRepository.deleteAll();
         plushToyRepository.deleteAll();
@@ -223,6 +235,8 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
 
     @Test
     public void givenValidPlushToyAllFields_whenCreating_thenPlushToyPersisted() throws Exception {
+        ProductCategory productCategory = productCategorySupplier.get();
+        productCategory = productCategoryRepository.save(productCategory);
 
         String requestBody = """
             {
@@ -294,6 +308,72 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
     }
 
     @Test
+    public void givenValidCategoryAllFields_whenCreatingCategory_thenCategoryPersisted() throws Exception {
+        String requestBody = """
+            {
+                "name": "%s"
+            }
+            """;
+        requestBody = String.format(requestBody, TEST_PRODUCT_CATEGORY_NAME + "1");
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/categories")
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        assertThat(response.getContentAsString()).contains(TEST_PRODUCT_CATEGORY_NAME + "1");
+
+        // Get categories
+        mvcResult = mockMvc.perform(get("/api/v1/admin/categories")
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        
+        response = mvcResult.getResponse();
+        assertThat(response.getContentAsString()).contains(TEST_PRODUCT_CATEGORY_NAME + "1");
+    }
+
+    @Test
+    public void givenMalformedCategoryInput_WhenCreatingCategory_thenBadRequest() throws Exception {
+        String requestBody = """
+            {}
+            """;
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/categories")
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+    }
+
+    @Test
+    public void givenValidCategory_WhenDeletingCategory_thenCategoryDeleted() throws Exception {
+        ProductCategory productCategory = productCategoryRepository.save(productCategorySupplier.get());
+
+        MvcResult mvcResult = mockMvc.perform(delete("/api/v1/admin/categories/" + productCategory.getId())
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertThat(productCategoryRepository.findById(productCategory.getId())).isEmpty();
+    }
+
     @WithMockUser(roles = "ADMIN")
     public void givenUsersExist_whenGetAllUsers_thenAllUsersAreReturned() throws Exception {
         User user1 = new User();

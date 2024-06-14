@@ -1,5 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import java.lang.invoke.MethodHandles;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
@@ -16,13 +24,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ProductCategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-
-import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 @Service
 public class AdminServiceImplementation implements AdminService {
@@ -104,6 +105,15 @@ public class AdminServiceImplementation implements AdminService {
         ProductCategory created = productCategoryRepository.save(productCategoryDto);
         LOGGER.trace("Generated ProductCategory: {}", created.getId());
         return productCategoryMapper.entityToDto(created);
+    }
+
+    @Override
+    public void deleteProductCategory(Long productCategoryId) throws NotFoundException {
+        LOGGER.info("deleteProductCategory {}", productCategoryId);
+        if (!productCategoryRepository.existsById(productCategoryId)) {
+            throw new NotFoundException("Product category not found");
+        }
+        productCategoryRepository.deleteById(productCategoryId);
     }
 
     @Override
