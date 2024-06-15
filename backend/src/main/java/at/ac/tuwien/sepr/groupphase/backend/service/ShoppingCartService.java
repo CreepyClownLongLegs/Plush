@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-
 import java.util.List;
 
 /**
@@ -44,4 +44,12 @@ public interface ShoppingCartService {
      * @throws NotFoundException if the item is not found in the shopping cart
      */
     void decreaseAmount(String publicKey, long itemId) throws NotFoundException;
+
+    /**
+     * Converts the items in the shopping cart into an order.
+     *
+     * @return OrderListDto representing the details of the created order
+     * @throws NotFoundException if the user or items are not found
+     */
+    OrderListDto convertCartToOrder() throws NotFoundException;
 }
