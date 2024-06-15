@@ -5,9 +5,9 @@
 
     <groupId>at.ac.tuwien.sepr.groupphase</groupId>
     <artifactId>backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>backend</name>
-    <description>SE PR group phase backend template</description>
+    <description>Backend for the Plush Online Shop</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +25,7 @@
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <checkstyle.version>10.15.0</checkstyle.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+        <zstd-jni.version>1.5.6-3</zstd-jni.version>
     </properties>
 
     <dependencyManagement>
@@ -179,6 +180,13 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>${jib-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                        <version>${zstd-jni.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <from>
                         <image>registry.reset.inso-w.at/pub/docker/eclipse-temurin:17</image>
