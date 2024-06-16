@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -35,16 +36,18 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final UserService userService;
+    private final ShoppingCartService cartService;
     private final OrderMapper orderMapper;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserEndpoint(UserService userService, OrderMapper orderMapper, UserMapper userMapper, UserRepository userRepository) {
+    public UserEndpoint(UserService userService, OrderMapper orderMapper, UserMapper userMapper, UserRepository userRepository, ShoppingCartService shoppingCartService) {
         this.userService = userService;
         this.orderMapper = orderMapper;
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.cartService = shoppingCartService;
     }
 
     @RolesAllowed({"USER", "ADMIN"})

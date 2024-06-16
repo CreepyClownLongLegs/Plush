@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Authentication problems!</strong> {{ errorMessage }}
+        <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="container" style="height: 100vh;">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <span class="anchor" id="formLogin"></span>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="m-3">Please update your location to proceed with the payment!</h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <label for="inputAddress" class="mb-2">Shipping Address</label>
+                            <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.addressLine1"
+                                placeholder="Input Shipping Address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="postalCode" class="mb-2">Postal Code </label>
+                            <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.postalCode"
+                                placeholder="Input Postal Code">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="country" class="mb-2">Country</label>
+                            <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.country"
+                                placeholder="Input Country">
+                        </div>
+
+                        <button (click)="updateAddress()" class="btn btn-success float-center"
+                            style="margin: auto;">Save Address</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

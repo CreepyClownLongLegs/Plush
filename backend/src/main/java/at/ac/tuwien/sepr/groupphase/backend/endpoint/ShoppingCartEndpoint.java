@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -51,6 +55,17 @@ public class ShoppingCartEndpoint {
         String publicKey = authentication.getName();
         LOGGER.info("DELETE /api/v1/cart/ - itemId: {}", itemId);
         shoppingCartService.deleteFromCart(publicKey, itemId);
+    }
+
+    @RolesAllowed({"USER", "ADMIN"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(value = "/emptyCart")
+    @Operation(summary = "Delete all items from the shopping cart", description = "Deletes all items from the shopping cart of the logged in user", security = @SecurityRequirement(name = "apiKey"))
+    public void deleteAllItemsFromCart() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String publicKey = authentication.getName();
+        LOGGER.info("DELETE /api/v1/cart/emptyCart {}", publicKey);
+        shoppingCartService.deleteAllItemsByUserPublicKey(publicKey);
     }
 
     @RolesAllowed({"USER", "ADMIN"})

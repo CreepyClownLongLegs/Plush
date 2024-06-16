@@ -44,4 +44,11 @@ public interface ShoppingCartService {
      * @throws NotFoundException if the item is not found in the shopping cart
      */
     void decreaseAmount(String publicKey, long itemId) throws NotFoundException;
+
+    /**
+     * Deletes all the items in the shopping cart of the logged in user.
+     *
+     * @param publicKey the public key of the user used to identify the items of the logged in user
+     */
+    void deleteAllItemsByUserPublicKey(String publicKey) throws NotFoundException;
 }

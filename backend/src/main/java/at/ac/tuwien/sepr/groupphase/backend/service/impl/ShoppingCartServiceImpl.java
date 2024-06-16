@@ -12,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         PlushToy plushToy = plushToyRepository.findById(itemId)
             .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
 
-        Optional<ShoppingCartItem> itemOptional  = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user);
+        Optional<ShoppingCartItem> itemOptional = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user);
 
         ShoppingCartItem cartItem;
         if (itemOptional.isPresent()) {
@@ -72,6 +73,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             .orElseThrow(() -> new NotFoundException("Item not found in cart, itemId: " + itemId + " publicKey: " + publicKey));
 
         shoppingCartItemRepository.delete(cartItem);
+    }
+
+    @Override
+    public void deleteAllItemsByUserPublicKey(String publicKey) throws NotFoundException {
+        LOGGER.debug("Deleting all items from cart for user with publicKey: {}", publicKey);
+
+        User user = userRepository.findUserByPublicKey(publicKey)
+            .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
+
+        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserPublicKey(publicKey);
+
+        if (cartItems.isEmpty()) {
+            LOGGER.debug("No items found in the cart for user with publicKey: {}", publicKey);
+            return;
+        }
+
+        shoppingCartItemRepository.deleteAll(cartItems);
+        LOGGER.debug("Deleted {} items from the cart for user with publicKey: {}", cartItems.size(), publicKey);
     }
 
 
