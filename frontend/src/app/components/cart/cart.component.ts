@@ -1,9 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {PlushToyCartListDto, PlushToyListDto} from "../../dtos/plushtoy";
-import {PlushtoyService} from "../../services/plushtoy.service";
-import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ToastrService} from "ngx-toastr";
-import {NgForOf} from "@angular/common";
+import { Component, OnInit } from '@angular/core';
+import { PlushToyCartListDto, PlushToyListDto } from "../../dtos/plushtoy";
+import { PlushtoyService } from "../../services/plushtoy.service";
+import { ShoppingCartService } from "../../services/shopping-cart.service";
+import { ToastrService } from "ngx-toastr";
+import { NgForOf } from "@angular/common";
+import { AuthService } from 'src/app/services/auth.service';
+import { WalletService } from 'src/app/services/wallet.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserDetailDto } from 'src/app/dtos/user';
+import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -14,15 +20,23 @@ import {NgForOf} from "@angular/common";
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
-export class CartComponent implements OnInit{
+export class CartComponent implements OnInit {
   cartItems: PlushToyCartListDto[] = [];
   totalPrice: string;
   selectedPaymentMethod: string;
+  publicKey = "";
+  balance = 0;
+  userDetail: UserDetailDto | null = null;
 
   constructor(
     private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService,
+    public authService: AuthService,
+    private walletService: WalletService,
+    private modalService: NgbModal,
+    private userService: UserService,
+    private router: Router
   ) {
   }
 
@@ -79,16 +93,49 @@ export class CartComponent implements OnInit{
 
 
   finishPayment(): void {
-    if (!this.selectedPaymentMethod) {
-      console.error('Please select a payment method');
+    if (this.cartItems.length === 0) {
+      console.error('Please add some items to Cart');
+      this.notification.error('You have no Items in your Cart to purchase :\')', 'Error');
       return;
     }
 
-    console.log('Finishing payment with method:', this.selectedPaymentMethod);
+    if (this.authService.isLoggedIn()) {
+      //we are logged in, time to fetch user data and check if the address is set
+      if (this.checkIfAddressIsSet()) {
+        this.notification.success("You are the proud owner of a new plushie now!", "Congrats!!1!");
+        this.deleteAllItems();
+      } else {
+        this.notification.info("Please fill out the empty fields so we can deliver you your plushie(s) :) !", "Shipping Information incomplete");
+        return;
+      }
+
+    } else {
+      this.notification.error('Please Log in with your wallet', 'Error');
+    }
+  }
+
+  deleteAllItems() {
+    this.shoppingCartService.deleteAllItemsFromCart().subscribe({
+      next: () => {
+        console.log('All items deleted from cart.');
+        this.router.navigate(['./']);
+        // Optionally, navigate to another page or refresh the cart view
+      },
+      error: (err) => {
+        console.error('Error deleting items from cart:', err);
+      }
+    });
+  }
+
+  resetWalletConnection() {
+    this.walletService.disconnectWallet();
+    this.publicKey = "";
+    this.balance = 0;
   }
 
   ngOnInit(): void {
     this.loadCart();
+    this.fetchUserDetails();
   }
 
   loadCart(): void {
@@ -110,6 +157,48 @@ export class CartComponent implements OnInit{
   calculateTotalPrice(): void {
     const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
     this.totalPrice = `${total} SOL`;
+  }
+
+  fetchUserDetails(): void {
+    this.userService.getUserByPublicKey().subscribe(
+      (data: UserDetailDto) => {
+        this.userDetail = data;
+      },
+      (error) => {
+        console.error('Error fetching user details', error);
+      }
+    );
+  }
+
+  checkIfAddressIsSet(): boolean {
+
+    if (!this.userDetail?.addressLine1) {
+      this.notification.error("No Address given", "Incomplete Address");
+      this.router.navigate(['/register']); // Reroute to the register component
+      return false;
+    } else if (this.userDetail!.addressLine1.trim() === "") {
+      this.notification.error("Address cannot consist of empty spaces", "Incomplete Address");
+      this.router.navigate(['/register']); // Reroute to the register component
+      return false;
+    } else if (!this.userDetail!.postalCode) {
+      this.notification.info("Postal Code is empty", "Postal Code Incomplete");
+      this.router.navigate(['/register']); // Reroute to the register component
+      return false;
+    } else if (this.userDetail!.postalCode.trim() === "") {
+      this.notification.info("Postal Code cannot consist of empty spaces", "Postal Code Incomplete");
+      this.router.navigate(['/register']); // Reroute to the register component
+      return false;
+    } else if (!this.userDetail!.country === null) {
+      this.notification.info("Country is empty", "Country Incomplete");
+      this.router.navigate(['/register']); // Reroute to the register component
+      return false;
+    } else if (this.userDetail!.country.trim() === "") {
+      this.notification.info("Country cannot consist of empty spaces", "Country Incomplete");
+      this.router.navigate(['/register']); // Reroute to the register component
+      return false;
+    } else {
+      return true;
+    }
   }
 
 

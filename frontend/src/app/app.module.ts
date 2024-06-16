@@ -20,6 +20,7 @@ import { ItemComponent } from './components/profile/item/item.component';
 import {AdminPlushtoyCreateEditComponent} from "./components/admin/plushtoy/create-edit/create-edit.component";
 import {AdminComponent} from './components/admin/admin.component';
 import {AdminCreateAdminComponent} from './components/admin/create-admin/create-admin.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {AdminCreateAdminComponent} from './components/admin/create-admin/create-
     ItemComponent,
     AdminComponent,
     AdminCreateAdminComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,

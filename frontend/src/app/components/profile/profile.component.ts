@@ -1,11 +1,11 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {UserDetailDto} from 'src/app/dtos/user';
-import {UserService} from 'src/app/services/user.service';
-import {ToastrService} from 'ngx-toastr';
-import {AuthService} from 'src/app/services/auth.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {Router} from '@angular/router';
-import {WalletService} from 'src/app/services/wallet.service';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UserDetailDto } from 'src/app/dtos/user';
+import { UserService } from 'src/app/services/user.service';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
   selector: 'app-profile',
@@ -51,7 +51,6 @@ export class ProfileComponent implements OnInit {
     this.userService.getUserByPublicKey().subscribe(
       (data: UserDetailDto) => {
         this.userDetail = data;
-        console.log(data);
       },
       (error) => {
         console.error('Error fetching user details', error);

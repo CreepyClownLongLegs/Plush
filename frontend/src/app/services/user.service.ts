@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Globals} from '../global/globals';
-import {Router} from '@angular/router';
-import {UserDetailDto} from '../dtos/user';
-import {UserListDto} from '../dtos/user';
-import {OrderListDto} from "../dtos/order";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Globals } from '../global/globals';
+import { Router } from '@angular/router';
+import { UserDetailDto } from '../dtos/user';
+import { UserListDto } from '../dtos/user';
+import { OrderListDto } from "../dtos/order";
 
 @Injectable({
   providedIn: 'root'
@@ -52,4 +52,5 @@ export class UserService {
   updateUser(userDetailDto: UserDetailDto): Observable<UserDetailDto> {
     return this.httpClient.put<UserDetailDto>(this.userBaseUri, userDetailDto);
   }
+
 }
