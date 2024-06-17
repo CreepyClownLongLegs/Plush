@@ -16,7 +16,7 @@ import java.util.Optional;
  * Generates test users if no user with the public key exists.
  */
 @Component
-@Profile("generateData")
+@Profile({"generateData", "test"})
 public class TestUserDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

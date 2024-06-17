@@ -39,12 +39,11 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
     private fb: FormBuilder,
     private adminService: AdminService,
     private plushtoyService: PlushtoyService,
-    private notification: ToastrService,
     private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private notification: ToastrService) {
     this.plushToy = new PlushToy();
   }
-
 
   get modeIsCreate(): boolean {
     return this.mode === PlushToyCreateEditMode.create;
@@ -211,10 +210,12 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
         .subscribe({
           next: (pt: PlushToy) => {
             console.log(`PlushToy ${this.actionModeFinished} with id ${pt.id}`);
+            this.notification.success(`PlushToy ${this.actionModeFinished} successfully!`, 'Success');
             this.router.navigate(['/admin']);
           },
           error: error => {
             console.error(`Error ${this.actionModeError} PlushToy`, error);
+            this.notification.error(`Error ${this.actionModeError} PlushToy: ${error.message}`, 'Error');
           }
         });
     } else {
@@ -222,10 +223,12 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
         .subscribe({
           next: (pt: PlushToy) => {
             console.log(`PlushToy ${this.actionModeFinished} with id ${pt.id}`);
+            this.notification.success(`PlushToy ${this.actionModeFinished} successfully!`, 'Success');
             this.router.navigate(['/admin']);
           },
           error: error => {
             console.error(`Error ${this.actionModeError} PlushToy`, error);
+            this.notification.error(`Error ${this.actionModeError} PlushToy: ${error.message}`, 'Error');
           }
         });
     }
