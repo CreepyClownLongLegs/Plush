@@ -20,43 +20,47 @@
 <!--Modal for user to login-->
 <div>
   <ng-template #connectModal>
-    <div class="modal-header">
-      <h4 class="modal-title">Connect Wallet</h4>
-      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <button *ngIf="!walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2"
-              (click)="forwardToPhantom()">Install Phantom Wallet
-      </button>
-      <button *ngIf="walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2" (click)="loginUser()"
-              data-test="logIn">
-        Connect Phantom Wallet
-      </button>
-    </div>
+    <div data-test="connectModal">
+      <div class="modal-header">
+        <h4 class="modal-title">Connect Wallet</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button *ngIf="!walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2"
+                (click)="forwardToPhantom()">Install Phantom Wallet
+        </button>
+        <button *ngIf="walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2" (click)="loginUser()"
+                data-test="logIn">
+          Connect Phantom Wallet
+        </button>
+      </div>
+  </div>
   </ng-template>
 </div>
 
 <!--Modal for logged in user-->
 <div>
   <ng-template #walletModal>
-    <div class="modal-header">
-      <h4 class="modal-title">Your Wallet</h4>
-      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="flex-row">
-        <span>{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</span>
-        <span>{{ balance !== undefined ? balance : 'Fetching Balance...' }} SOL</span>
+    <div data-test="walletModal">
+      <div class="modal-header">
+        <h4 class="modal-title">Your Wallet</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <button class="btn btn-primary btn-block mb-2" routerLink="/profile" (click)="closeModal()">Profile</button>
-      <button class="btn btn-primary btn-block mb-2" *ngIf="authService.userIsAdmin()" [routerLink]="['/admin']"
-              (click)="closeModal()">Admin View
-      </button>
-      <button class="btn btn-primary btn-block mb-2" (click)="logoutUser()">Disconnect</button>
+      <div class="modal-body">
+        <div class="flex-row">
+          <span>{{ publicKey ? formatWalletAddress(publicKey) : 'Connecting...' }}</span>
+          <span>{{ balance !== undefined ? balance : 'Fetching Balance...' }} SOL</span>
+        </div>
+        <button class="btn btn-primary btn-block mb-2" routerLink="/profile" (click)="closeModal()">Profile</button>
+        <button class="btn btn-primary btn-block mb-2" *ngIf="authService.userIsAdmin()" [routerLink]="['/admin']"
+                (click)="closeModal()">Admin View
+        </button>
+        <button class="btn btn-primary btn-block mb-2" (click)="logoutUser()">Disconnect</button>
+      </div>
     </div>
   </ng-template>
 </div>

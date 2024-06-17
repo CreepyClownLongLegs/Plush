@@ -3,6 +3,12 @@
   "adminPw": "password",
   "baseUrl": "localhost:4200",
   "adminUrl": "localhost:4200/#/admin",
+  "cartUrl": "localhost:4200/#/cart",
+  "userUrl": "localhost:4200/#/profile",
+  "plushToyUrl": "localhost:4200/#/plush",
+  "authUrl": "localhost:4200/#/authentication",
   "adminPublicKey": "EFWHJmGb4Ybgo7cueShmv42mDKZTkCrFNTeTPikhxitM",
-  "adminSecretKey": "28mhB4hjCrWdUhjmUcHjZtaKnoTg8dnowRZ4VKLPTriWev59zg6ziuyCw2FNSTmNyGHJ6SKCPkMmxJkPieXZSok1"
+  "adminSecretKey": "28mhB4hjCrWdUhjmUcHjZtaKnoTg8dnowRZ4VKLPTriWev59zg6ziuyCw2FNSTmNyGHJ6SKCPkMmxJkPieXZSok1",
+  "userPublicKey": "8L68Ao7wugEDzFQhp6tDLPifejiu2Z2JMy3SfSyMxiKe",
+  "userSecretKey": "5uYJb3YG21EcQsJEz8uEP1GAsffkuNotFxUo3bb4dPweXrezJEx3qLoYNSZSyvaUBR1qA5pGSVUUUqgsc5FnveCC"
 }

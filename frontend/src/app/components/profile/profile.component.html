@@ -6,10 +6,10 @@
     Are you sure you want to delete your profile?
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="deleteUser(); modal.close('Ok click')">Yes,
+    <button type="button" class="btn btn-danger" data-test="confirmDeleteButton" (click)="deleteUser(); modal.close('Ok click')">Yes,
       delete
     </button>
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">No, don't
+    <button type="button" class="btn btn-secondary" data-test="cancelDeleteButton" (click)="modal.dismiss('cancel click')">No, don't
       delete
     </button>
   </div>
@@ -30,7 +30,7 @@
               <div class="stat">
                 <label for="firstname">First Name</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.firstname" placeholder="yet to be set">
+                  <input type="text" data-test="firstName" [(ngModel)]="userDetail.firstname" placeholder="yet to be set">
                 </div>
               </div>
             </div>
@@ -39,7 +39,7 @@
               <div class="stat">
                 <label for="lastname">Last Name</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.lastname" placeholder="yet to be set">
+                  <input type="text" data-test="lastName" [(ngModel)]="userDetail.lastname" placeholder="yet to be set">
                 </div>
               </div>
             </div>
@@ -51,7 +51,7 @@
               <div class="stat">
                 <label for="emailAddress">E-mail Address</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.emailAddress"
+                  <input type="text" data-test="emailAddress" [(ngModel)]="userDetail.emailAddress"
                          placeholder="yet to be set">
                 </div>
               </div>
@@ -61,7 +61,7 @@
               <div class="stat">
                 <label for="phoneNumber">Phone Number</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.phoneNumber" placeholder="yet to be set">
+                  <input type="text" data-test="phoneNumber" [(ngModel)]="userDetail.phoneNumber" placeholder="yet to be set">
                 </div>
               </div>
             </div>
@@ -73,7 +73,7 @@
               <div class="stat">
                 <label for="country">Country</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.country" placeholder="yet to be set">
+                  <input type="text" data-test="country" [(ngModel)]="userDetail.country" placeholder="yet to be set">
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@
               <div class="stat">
                 <label for="postalCode">Postal Code</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.postalCode" placeholder="yet to be set">
+                  <input type="text" data-test="postalCode" [(ngModel)]="userDetail.postalCode" placeholder="yet to be set">
                 </div>
               </div>
             </div>
@@ -94,7 +94,7 @@
               <div class="stat">
                 <label for="addressLine1">Delivery Address</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.addressLine1"
+                  <input type="text" data-test="addressLine1" [(ngModel)]="userDetail.addressLine1"
                          placeholder="yet to be set">
                 </div>
               </div>
@@ -104,7 +104,7 @@
               <div class="stat">
                 <label for="addressLine2">Optional Delivery Address</label>
                 <div class="stat-value">
-                  <input type="text" [(ngModel)]="userDetail.addressLine2"
+                  <input type="text" data-test="addressLine2" [(ngModel)]="userDetail.addressLine2"
                          placeholder="yet to be set">
                 </div>
               </div>
@@ -150,9 +150,9 @@
 
       <div class="d-flex justify-content-between buttons">
 
-        <button class="btn btn-primary btn-block mb-2" (click)="openOrderHistoryView()">VIEW ORDER HISTORY</button>
-        <button class="btn btn-danger btn-block mb-2" (click)="openDeleteModal()">DELETE PROFILE</button>
-        <button (click)="updateUserDetails()">
+        <button class="btn btn-primary btn-block mb-2" data-test="orderHistoryButton" (click)="openOrderHistoryView()">VIEW ORDER HISTORY</button>
+        <button class="btn btn-danger btn-block mb-2" data-test="deleteButton" (click)="openDeleteModal()">DELETE PROFILE</button>
+        <button data-test="updateButton" (click)="updateUserDetails()">
           UPDATE
         </button>
       </div>

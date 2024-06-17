@@ -1,10 +1,10 @@
 <h1>Plush Toys</h1>
-<button class="btn btn-primary me-1 my-3" [routerLink]="['product', 'new']">Add a plush toy</button>
+<button class="btn btn-primary me-1 my-3" data-test="createButton" [routerLink]="['product', 'new']">Add a plush toy</button>
 <button class="btn btn-secondary" routerLink="categories">Manage Categories</button>
-<div *ngFor="let plushToy of plushtoys; let i = index" class="row">
+<div *ngFor="let plushToy of plushtoys; let i = index" class="row" data-test="plushToyInfo">
   <div class="col-md-3 col-sm-6">
-    <h5>{{ plushToy.name }}</h5>
-    <p>{{ plushToy.description }}</p>
+    <h5 data-test="plushToyName">{{ plushToy.name }}</h5>
+    <p data-test="plushToyDesc">{{ plushToy.description }}</p>
   </div>
 
   <div class="col-md-3 col-sm-6">
@@ -16,7 +16,7 @@
       alt="{{ plushToy.name }}" />
   </div>
   <div class="col-md-3 col-sm-6 text-end">
-    <a class="btn btn-sm responsive-warning-button" aria-label="Edit" [routerLink]="['product', plushToy.id, 'edit']">
+    <a class="btn btn-sm responsive-warning-button" aria-label="Edit" data-test="editButton" [routerLink]="['product', plushToy.id, 'edit']">
 
       <i class="fas fa-pencil"></i>
     </a>

@@ -1,7 +1,7 @@
 import base58 from "bs58";
 import nacl from "tweetnacl";
-Cypress.Commands.add(
-    "loginAdmin",
+
+Cypress.Commands.add("loginAdmin",
     (path, visitOptions) => {
         cy.fixture('settings').then(settings => {
             cy.visit('/', {
@@ -26,23 +26,43 @@ Cypress.Commands.add(
         cy.getBySel("logIn").eq(0).click();
         cy.getBySel("loggedIn").eq(0).should('be.visible');
 
+        cy.url().should('contain', '/');
+        cy.get('.ng-trigger').should('contain', 'Login successful').click();
     },
 );
 
-Cypress.Commands.add('createMessage', (msg) => {
-    cy.fixture('settings').then(settings => {
-        cy.contains('a', 'Message');
-        cy.contains('button', 'Add message').click();
-        cy.get('input[name="title"]').type('title' + msg);
-        cy.get('textarea[name="summary"]').type('summary' + msg);
-        cy.get('textarea[name="text"]').type('text' + msg);
-        cy.get('button[id="add-msg"]').click();
-        cy.get('button[id="close-modal-btn"]').click();
+Cypress.Commands.add("loginUser",
+    (path, visitOptions) => {
+        cy.fixture('settings').then(settings => {
+            cy.visit('/', {
+                onBeforeLoad: (win) => {
+                    win.solana = {
+                        signMessage: cy.stub().callsFake(async (message) => {
+                            var string = new TextDecoder().decode(message);
+                            console.log("faking sign for", string);
+                            const messageBytes = new TextEncoder().encode(string)
+                            //user sec key
+                            const signature = nacl.sign.detached(messageBytes, base58.decode(settings.userSecretKey));
+                            return Promise.resolve({ signature: signature });
+                        }).as('solanaSignMessage'),
+                        disconnect: cy.stub().returns(Promise.resolve('mocked_signature')).as('solanaDisConnect'),
+                        connect: cy.stub().returns(Promise.resolve('mocked_signature')).as('solanaConnect'),
+                        //user pub key
+                        publicKey: settings.userPublicKey
+                    }
+                },
+            });
+        })
+        cy.getBySel("connectWallet").eq(0).click();
+        cy.getBySel("logIn").eq(0).should('be.visible');
+        cy.getBySel("logIn").eq(0).click();
+        cy.getBySel("loggedIn").eq(0).should('be.visible');
 
-        cy.contains('title' + msg).should('be.visible');
-        cy.contains('summary' + msg).should('be.visible');
-    })
-})
+        cy.url().should('contain', '/');
+        cy.get('.ng-trigger').should('contain', 'Login successful').click();
+    },
+);
+
 
 Cypress.Commands.add('goToAdminOverview', (msg) => {
     cy.fixture('settings').then(settings => {
