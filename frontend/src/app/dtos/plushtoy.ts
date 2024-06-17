@@ -40,6 +40,7 @@ export class PlushToy {
   strength: number;
   imageUrl: string;
   productCategories: ProductCategoryDto[];
+  attributesDistributions: PlushToyAttributeDistributionDto[] = [];
 }
 
 export class ProductCategoryCreationDto {
@@ -53,6 +54,24 @@ export class ProductCategoryDto {
 
 export class PlushToySearchDto {
   name: string;
+}
+
+export class PlushToyAttributeDistributionDto {
+  id?: number;
+  attribute: ProductAttributeDto;
+  quantityPercentage: number;
+  name: string;
+}
+
+export class ProductAttributeDto {
+  id?: number;
+  name: string;
+}
+
+export class PlushToyAttributeDtoWithDistribution {
+  id?: number;
+  name: string;
+  distributions: PlushToyAttributeDistributionDto[];
 }
 
 

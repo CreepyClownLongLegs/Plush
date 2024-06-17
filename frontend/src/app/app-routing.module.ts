@@ -31,7 +31,7 @@ const routes: Routes = [
       { path: '', component: AdminComponent, data: { role: 'ADMIN' } },
       { path: 'plushtoy', component: AdminPlushtoyOverviewComponent, data: { role: 'ADMIN' } },
       {
-        path: 'new',
+        path: 'product/new',
         component: AdminPlushtoyCreateEditComponent,
         data: { role: 'ADMIN', mode: PlushToyCreateEditMode.create }
       },

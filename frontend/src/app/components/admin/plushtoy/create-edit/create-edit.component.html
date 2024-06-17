@@ -2,8 +2,7 @@
 <form #createForm="ngForm" (ngSubmit)="submitForm()" class="container">
   <div class="form-group">
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="plushToy.name"
-           class="form-control">
+    <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="plushToy.name" class="form-control">
     <div *ngIf="createForm.controls.name?.invalid && createForm.controls.name?.touched" class="error-message">
       Name is required and must be less than 255 characters.
     </div>
@@ -18,14 +17,12 @@
   <div class="form-group">
     <label for="description">Description:</label>
     <textarea id="description" name="description" maxlength="1024" [(ngModel)]="plushToy.description"
-              class="form-control"></textarea>
+      class="form-control"></textarea>
   </div>
   <div class="form-group">
     <label for="taxClass">Tax Class:</label>
-    <input type="number" id="taxClass" name="taxClass" required [(ngModel)]="plushToy.taxClass"
-           class="form-control">
-    <div *ngIf="createForm.controls.taxClass?.invalid && createForm.controls.taxClass?.touched"
-         class="error-message">
+    <input type="number" id="taxClass" name="taxClass" required [(ngModel)]="plushToy.taxClass" class="form-control">
+    <div *ngIf="createForm.controls.taxClass?.invalid && createForm.controls.taxClass?.touched" class="error-message">
       Tax Class is required.
     </div>
   </div>
@@ -57,30 +54,65 @@
   <div class="row">
     <div class="form-group col-sm-3">
       <label for="hp">HP:</label>
-      <input type="number" id="hp" name="hp" min="10" step="5" required [(ngModel)]="plushToy.hp"
-             class="form-control">
+      <input type="number" id="hp" name="hp" min="10" step="5" required [(ngModel)]="plushToy.hp" class="form-control">
       <div *ngIf="createForm.controls.hp?.invalid && createForm.controls.hp?.touched" class="error-message">
         HP is required.
       </div>
     </div>
     <div class="form-group col-sm-3 ">
       <label for="strength">Strength:</label>
-      <input type="number" id="strength" name="strength" required [(ngModel)]="plushToy.strength"
-             class="form-control">
-      <div *ngIf="createForm.controls.strength?.invalid && createForm.controls.strength?.touched"
-           class="error-message">
+      <input type="number" id="strength" name="strength" required [(ngModel)]="plushToy.strength" class="form-control">
+      <div *ngIf="createForm.controls.strength?.invalid && createForm.controls.strength?.touched" class="error-message">
         Strength is required.
       </div>
     </div>
   </div>
-  <br/>
+  <br />
   <div class="form-group">
     <label for="categories">Categories:</label>
     <select id="categories" name="categories" [(ngModel)]="plushToy.productCategories" [compareWith]="compareCategories"
-            class="form-control" multiple>
+      class="form-control" multiple>
       <option *ngFor="let category of categories" [ngValue]="category">{{ category.name }}</option>
     </select>
   </div>
-  <br/>
+  <div class="form-group">
+    <label for="attributes">Attributes:</label>
+    <button type="button" class="btn btn-secondary btn-sm mx-2" (click)="addAttribute()">+</button>
+    <div *ngFor="let attribute of plushToyAttributeDtoWithDistribution; let i = index">
+      <div class="row">
+        <div class="col-sm-11">
+          <input type="text" name="attr-name-{{i}}" required maxlength="255" [(ngModel)]="attribute.name"
+            (ngModelChange)="syncPlushToyAttributes(attribute)" class="form-control">
+        </div>
+        <button type="button" class="btn btn-danger btn-sm col-1 offset-sm-0 offset-10"
+          (click)="removeAttribute(attribute.name)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      <p style="margin-bottom: 0px;" class="d-inline">Distribution:</p>
+      <button type="button" class="btn btn-secondary btn-sm mx-2" (click)="addDistribution(attribute)">+</button>
+      <ul>
+        <li *ngFor="let distribution of attribute.distributions; let idx = index">
+          <div class="row  align-items-center">
+            <div class=" col-md-3 col-sm-5">
+              <input type="number" name="quantityPercentage-{{i}}-{{idx}}" max="100" min="0" step="0.1"
+                [(ngModel)]="distribution.quantityPercentage" (ngModelChange)="syncPlushToyAttributesDistributions()"
+                class="form-control d-inline">
+            </div>
+            <span class="col-sm-1 text-center"> -></span>
+            <div class="col-md-5 col-sm-6 ">
+              <input type="text" name="dist-name-{{i}}-{{idx}}" required maxlength="255" [(ngModel)]="distribution.name"
+                (ngModelChange)="syncPlushToyAttributesDistributions()" class="form-control d-inline">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm col-1 offset-md-0 offset-10"
+              (click)="removeDistribution(attribute, idx)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <br />
   <button type="submit" [disabled]="createForm.invalid" class="btn btn-primary">{{ submitButtonText }}</button>
 </form>

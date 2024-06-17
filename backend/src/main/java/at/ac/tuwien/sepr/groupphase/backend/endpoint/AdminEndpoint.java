@@ -88,7 +88,7 @@ public class AdminEndpoint {
     @Operation(summary = "Create a new product", security = @SecurityRequirement(name = "apiKey"))
     public PlushToyDetailDto create(@Valid @RequestBody PlushToyDetailDto plushToyDetailDto) {
         LOGGER.info("Creating new product. body: {}", plushToyDetailDto);
-        PlushToyDetailDto res = adminService.addPlushToy(plushToyMapper.detailsDtoToEntity(plushToyDetailDto));
+        PlushToyDetailDto res = adminService.addPlushToy(plushToyDetailDto);
 
         if (plushToyDetailDto.getProductCategories() != null) {
             return adminService.editPlushToyCategories(res.getId(),

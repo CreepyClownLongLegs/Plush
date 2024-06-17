@@ -1,9 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import java.util.List;
+
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-
-import java.util.List;
 
 /**
  * Service interface for managing shopping cart operations.
@@ -17,7 +17,6 @@ public interface ShoppingCartService {
      * @param itemId    the ID of the item to be added
      */
     void addToCart(String publicKey, long itemId);
-
 
     /**
      * Deletes an item from the shopping cart.
@@ -43,12 +42,13 @@ public interface ShoppingCartService {
      * @param itemId    the ID of the item to decrease the amount of
      * @throws NotFoundException if the item is not found in the shopping cart
      */
-    void decreaseAmount(String publicKey, long itemId) throws NotFoundException;
+    void decreaseAmount(String publicKey, Long itemId) throws NotFoundException;
 
     /**
      * Deletes all the items in the shopping cart of the logged in user.
      *
-     * @param publicKey the public key of the user used to identify the items of the logged in user
+     * @param publicKey the public key of the user used to identify the items of the
+     *                  logged in user
      */
     void deleteAllItemsByUserPublicKey(String publicKey) throws NotFoundException;
 }
