@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,8 +42,8 @@ public class Nft {
     @ManyToOne
     private PlushToy plushToy;
 
-    @OneToMany(mappedBy = "nft")
-    private List<NftPlushToyAttributeValue> attributes;
+    @OneToMany(mappedBy = "nft", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<NftPlushToyAttributeValue> attributes = new ArrayList<>();
 
     public Nft(String name, LocalDateTime timestamp, String ownerId, String publicKey, String description) {
         this.name = name;
@@ -56,6 +58,10 @@ public class Nft {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

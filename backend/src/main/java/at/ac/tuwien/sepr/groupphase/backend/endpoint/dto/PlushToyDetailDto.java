@@ -1,12 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
 public class PlushToyDetailDto {
     private Long id;
@@ -33,6 +35,7 @@ public class PlushToyDetailDto {
     @Range(min = 0, message = "Strength must not be negative")
     public float strength;
     private List<ProductCategoryDto> productCategories;
+    private List<PlushToyAttributeDistributionDto> attributesDistributions = new ArrayList<>();
 
     public PlushToyDetailDto() {
     }
@@ -40,8 +43,8 @@ public class PlushToyDetailDto {
     @Override
     public String toString() {
         return "PlushToyCreationDto [name=" + name + ", price=" + price + ", description=" + description + ", taxClass="
-            + taxClass + ", weight=" + weight + ", color=" + color + ", size=" + size + ", hp=" + hp + ", imageUrl="
-            + imageUrl + ", strength=" + strength + "]";
+                + taxClass + ", weight=" + weight + ", color=" + color + ", size=" + size + ", hp=" + hp + ", imageUrl="
+                + imageUrl + ", strength=" + strength + "]";
     }
 
     public Long getId() {
@@ -138,5 +141,13 @@ public class PlushToyDetailDto {
 
     public void setProductCategories(List<ProductCategoryDto> categories) {
         this.productCategories = categories;
+    }
+
+    public List<PlushToyAttributeDistributionDto> getAttributesDistributions() {
+        return attributesDistributions;
+    }
+
+    public void setAttributesDistributions(List<PlushToyAttributeDistributionDto> attributesDistributions) {
+        this.attributesDistributions = attributesDistributions;
     }
 }

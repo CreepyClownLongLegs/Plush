@@ -21,13 +21,13 @@ public interface PlushToyMapper {
     @Mapping(target = "averageRating", ignore = true)
     @Mapping(target = "smartContracts", ignore = true)
     @Mapping(target = "taxAmount", ignore = true)
-    @Mapping(target = "attributeDistributions", ignore = true)
-    @Mapping(target = "plushToyAttributes", ignore = true)
     @Mapping(target = "productCategories", ignore = true)
+    @Mapping(target = "attributeDistributions", source = "plushToyDetailsDto.attributesDistributions")
     PlushToy detailsDtoToEntity(PlushToyDetailDto plushToyDetailsDto);
 
     @Named("entityToDetailDto")
     @Mapping(target = "productCategories", source = "plushToy.productCategories")
+    @Mapping(target = "attributesDistributions", source = "plushToy.attributeDistributions")
     PlushToyDetailDto entityToDetailDto(PlushToy plushToy);
 
     public static Long[] map(List<PlushToy> plushToys) {
@@ -64,4 +64,5 @@ public interface PlushToyMapper {
 
     @Named("entityListToDtoList")
     List<UserDetailDto> entityListToDtoList(List<User> users);
+
 }

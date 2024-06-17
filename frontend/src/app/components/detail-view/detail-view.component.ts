@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PlushtoyService } from '../../services/plushtoy.service';
-import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ToastrService} from "ngx-toastr";
-import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
+import { ShoppingCartService } from "../../services/shopping-cart.service";
+import { ToastrService } from "ngx-toastr";
+import { PlushToyColor, PlushToy, PlushToySize } from '../../dtos/plushtoy';
 
 @Component({
   selector: 'app-detail-view',
@@ -27,6 +27,7 @@ export class DetailViewComponent implements OnInit {
     imageUrl: "",
     strength: 0,
     productCategories: [],
+    attributesDistributions: []
   };
   error: boolean = false;
 

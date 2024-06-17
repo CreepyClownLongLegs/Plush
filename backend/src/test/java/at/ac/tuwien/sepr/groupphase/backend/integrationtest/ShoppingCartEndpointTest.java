@@ -101,6 +101,7 @@ public class ShoppingCartEndpointTest implements TestData {
                 .andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(0, shoppingCartItemRepository.findAll().size());
     }
 
     @Test
@@ -121,7 +122,8 @@ public class ShoppingCartEndpointTest implements TestData {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
+                objectMapper.getTypeFactory().constructCollectionType(List.class,
+                        ShoppingCartItemDto.class));
 
         assertTrue(cartList.size() > 0);
     }
@@ -138,7 +140,8 @@ public class ShoppingCartEndpointTest implements TestData {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
+                objectMapper.getTypeFactory().constructCollectionType(List.class,
+                        ShoppingCartItemDto.class));
 
         assertTrue(cartList.isEmpty());
     }
@@ -150,7 +153,7 @@ public class ShoppingCartEndpointTest implements TestData {
         item.setUser(testUser);
         item.setPlushToy(testPlushToy);
         item.setAmount(2); // Set amount to 2 for testing decrease
-        shoppingCartItemRepository.save(item);
+        item = shoppingCartItemRepository.save(item);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/cart/decrease")
                 .contentType(MediaType.APPLICATION_JSON)

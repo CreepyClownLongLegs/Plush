@@ -31,6 +31,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToyAttribute;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToyAttributeDistribution;
 import at.ac.tuwien.sepr.groupphase.backend.entity.SmartContract;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.NftPlushToyAttributeValueRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.NftRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
@@ -55,10 +56,10 @@ public class SolanaServiceImplementation implements SolanaService {
     private Function<String, String> updateMintUrl = (publicKey) -> solanaPodUrl + "smart-contract/" + publicKey;
     private Function<String, String> getTokenInfoUrl = (smartContractPublicKey) -> baseUrl + "t/"
             + smartContractPublicKey;
-    // TODO expose the data via a REST endpoint
     private SmartContractRepository smartContractRepository;
     private NftRepository nftRepository;
     private PlushToyRepository plushToyRepository;
+    private NftPlushToyAttributeValueRepository nftPlushToyAttributeValueRepository;
     private WebClient client;
     private NftPlushToyAttributeValueMapper nftPlushToyAttributeValueMapper;
     private RestRequestService restRequestService;
@@ -66,11 +67,13 @@ public class SolanaServiceImplementation implements SolanaService {
     @Autowired
     public SolanaServiceImplementation(SmartContractRepository smartContractRepository,
             PlushToyRepository plushToyRepository, NftRepository nftRepository,
+            NftPlushToyAttributeValueRepository nftPlushToyAttributeValueRepository,
             NftPlushToyAttributeValueMapper nftPlushToyAttributeValueMapper,
             RestRequestService restRequestService) {
         this.smartContractRepository = smartContractRepository;
         this.plushToyRepository = plushToyRepository;
         this.nftRepository = nftRepository;
+        this.nftPlushToyAttributeValueRepository = nftPlushToyAttributeValueRepository;
         this.nftPlushToyAttributeValueMapper = nftPlushToyAttributeValueMapper;
         this.restRequestService = restRequestService;
     }
@@ -127,6 +130,7 @@ public class SolanaServiceImplementation implements SolanaService {
             for (PlushToyAttributeDistribution dis : distributions) {
                 if (choosen >= segStart && choosen < segStart + dis.getQuantityPercentage()) {
                     attributeValue.setValue(dis.getName());
+                    attributeValues.add(attributeValue);
                     LOGGER.info("Choosing random Attribute {}", dis);
                     break;
                 }
@@ -153,11 +157,21 @@ public class SolanaServiceImplementation implements SolanaService {
                 getMintNftUrl.apply(receiverPublicKey), request,
                 PublicKeyDto.class);
 
-        Nft nft = new Nft("NFT for " + plushToy.getName(), LocalDateTime.now(), receiverPublicKey,
-                response.getPublicKey(), plushToy.getDescription());
+        Nft nft = new Nft();
+
         nft.setPlushToy(plushToy);
         nft.setTimestamp(LocalDateTime.now());
+        nft.setOwnerId(receiverPublicKey);
+        nft.setPublicKey(response.getPublicKey());
+        nft.setDescription(plushToy.getDescription());
+        nft.setName("NFT for " + plushToy.getName());
+        nft = nftRepository.save(nft);
+        for (NftPlushToyAttributeValue nftAttributeValues : attributeValues) {
+            nftAttributeValues.setNft(nft);
+            nftPlushToyAttributeValueRepository.save(nftAttributeValues);
+            nft.getAttributes().add(nftAttributeValues);
+        }
 
-        return nftRepository.save(nft);
+        return nft;
     }
 }

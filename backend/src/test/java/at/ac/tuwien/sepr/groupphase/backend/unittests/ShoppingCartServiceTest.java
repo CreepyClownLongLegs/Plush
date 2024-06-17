@@ -142,15 +142,15 @@ public class ShoppingCartServiceTest implements TestData {
         userRepository.save(user);
 
         PlushToy plushToy = plushySupplier.get();
-        Long id = plushToyRepository.save(plushToy).getId();
+        plushToyRepository.save(plushToy).getId();
 
         ShoppingCartItem item = new ShoppingCartItem();
         item.setUser(user);
         item.setPlushToy(plushToy);
         item.setAmount(2); // Initial amount set to 2
-        shoppingCartItemRepository.save(item);
+        item = shoppingCartItemRepository.save(item);
 
-        shoppingCartService.decreaseAmount(publicKey, id);
+        shoppingCartService.decreaseAmount(publicKey, item.getId());
 
         ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId())
                 .orElseThrow(() -> new NotFoundException("Item not found"));

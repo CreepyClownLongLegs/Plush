@@ -1,19 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +18,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.PlushToyTestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyAttributeDistributionMapperImpl;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapperImpl;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToyAttribute;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToyAttributeDistribution;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.NftRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyAttributeDistributionRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyAttributeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,6 +52,12 @@ public class AdminServiceTest implements TestData, PlushToyTestData, UserTestDat
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PlushToyAttributeDistributionRepository attributeDistributionRepository;
+    @Autowired
+    private PlushToyAttributeRepository attributeRepository;
+    @Autowired
+    private NftRepository nftRepository;
 
     private Supplier<PlushToy> plushySupplier = () -> {
         PlushToy plushy = new PlushToy();
@@ -56,11 +70,24 @@ public class AdminServiceTest implements TestData, PlushToyTestData, UserTestDat
         return plushy;
     };
     @Autowired
-    private PlushToyMapper plushToyMapperImpl;
+    private PlushToyMapperImpl plushToyMapperImpl;
+    @Autowired
+    private PlushToyAttributeDistributionMapperImpl plushToyAttributeDistributionMapperImpl;
 
     @BeforeEach
     public void beforeEach() {
+        nftRepository.deleteAll();
+        attributeRepository.deleteAll();
+        plushToyRepository.deleteAll();
         userRepository.deleteAll();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userRepository.deleteAll();
+        nftRepository.deleteAll();
+        attributeRepository.deleteAll();
+        plushToyRepository.deleteAll();
     }
 
     @Test
@@ -85,6 +112,48 @@ public class AdminServiceTest implements TestData, PlushToyTestData, UserTestDat
 
         assertEquals("New Name", updatedPlushy.getName());
         assertEquals(200.0, updatedPlushy.getPrice());
+    }
+
+    @Test
+    public void editPlushToyWorksWithNewDistribution() {
+        PlushToy plushy = plushToyRepository.save(plushySupplier.get());
+        PlushToyAttribute attribute = new PlushToyAttribute(TEST_PLUSHTOY_ATTRIBUTE_NAME);
+        PlushToyAttributeDistribution attributeDistribution = new PlushToyAttributeDistribution();
+        attributeDistribution.setAttribute(attribute);
+        attributeDistribution.setName(TEST_PLUSHTOY_ATTRIBUTE_DIST_NAME);
+        attributeDistribution.setQuantityPercentage(TEST_PLUSHTOY_ATTRIBUTE_DIST_VALUE);
+        attributeDistribution.setPlushToy(plushy);
+
+        PlushToyDetailDto plushyDetailsDto = plushToyMapperImpl.entityToDetailDto(plushy);
+        plushyDetailsDto.getAttributesDistributions()
+                .add(plushToyAttributeDistributionMapperImpl.entityToDto(attributeDistribution));
+
+        PlushToyDetailDto updatedPlushy = adminService.editPlushToy(plushy.getId(), plushyDetailsDto);
+
+        assertEquals(1, updatedPlushy.getAttributesDistributions().size());
+        assertEquals(TEST_PLUSHTOY_ATTRIBUTE_DIST_NAME,
+                updatedPlushy.getAttributesDistributions().get(0).getName());
+        assertEquals(TEST_PLUSHTOY_ATTRIBUTE_DIST_VALUE,
+                updatedPlushy.getAttributesDistributions().get(0).getQuantityPercentage());
+    }
+
+    @Test
+    public void editPlushToyDeletesDistribution() {
+        PlushToyAttribute attribute = new PlushToyAttribute(TEST_PLUSHTOY_ATTRIBUTE_NAME);
+        attribute = attributeRepository.save(attribute);
+        PlushToyAttributeDistribution attributeDistribution2 = new PlushToyAttributeDistribution();
+        attributeDistribution2.setAttribute(attribute);
+        attributeDistribution2.setName(TEST_PLUSHTOY_ATTRIBUTE_DIST_NAME + "SHOULD NOT BE IN RESULT");
+        attributeDistribution2.setQuantityPercentage(TEST_PLUSHTOY_ATTRIBUTE_DIST_VALUE);
+        PlushToy plushy = plushToyRepository.save(plushySupplier.get());
+        attributeDistribution2.setPlushToy(plushy);
+        attributeDistribution2 = attributeDistributionRepository.save(attributeDistribution2);
+
+        PlushToyDetailDto plushyDetailsDto = plushToyMapperImpl.entityToDetailDto(plushy);
+
+        PlushToyDetailDto updatedPlushy = adminService.editPlushToy(plushy.getId(), plushyDetailsDto);
+
+        assertEquals(0, updatedPlushy.getAttributesDistributions().size());
     }
 
     @Test
