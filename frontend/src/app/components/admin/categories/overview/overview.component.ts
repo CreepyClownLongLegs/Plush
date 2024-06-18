@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmationDialogComponent } from 'src/app/components/util/confirmation-dialog/confirmation-dialog.component';
 import { ProductCategoryDto } from 'src/app/dtos/plushtoy';
 import { AdminService } from 'src/app/services/admin.service';
 
@@ -10,10 +11,12 @@ import { AdminService } from 'src/app/services/admin.service';
   standalone: true,
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmationDialogComponent],
 })
 export class AdminCategoryOverviewComponent implements OnInit {
   categories: ProductCategoryDto[] = [];
+  @ViewChild(ConfirmationDialogComponent) confirmationDialog!: ConfirmationDialogComponent;
+  selectedForDeleteId: number | null = null;
   constructor(
     private service: AdminService,
     private notification: ToastrService
@@ -47,6 +50,11 @@ export class AdminCategoryOverviewComponent implements OnInit {
           console.error('Error deleting category', error);
         }
       });
+  }
+
+  selectForDeletion(id: number): void {
+    this.selectedForDeleteId = id;
+    this.confirmationDialog.showModal();
   }
 
 }
