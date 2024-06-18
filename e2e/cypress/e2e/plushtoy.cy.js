@@ -54,6 +54,7 @@ context('plushtoy', () => {
     it('should get delete on button press', () => {
         cy.getBySel("deleteButton").its('length').then((num) => {
             cy.getBySel("deleteButton").last().click();
+            cy.getBySel("confirmModal").first().click()
             cy.getBySel("deleteButton").should("have.length", num - 1);
         });
     });
