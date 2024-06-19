@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { PlushToyListDto, PlushToySearchDto } from 'src/app/dtos/plushtoy';
-import { AdminService } from 'src/app/services/admin.service';
 import { SearchService } from 'src/app/services/search.service';
+import { PlushtoyService } from 'src/app/services/plushtoy.service';
 
 @Component({
   selector: 'app-home',
@@ -21,8 +21,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private adminService: AdminService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private plushToyService: PlushtoyService,
   ) { }
 
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
 
   plushiesReload() {
     this.searchParams.name = this.searchTerm
-    this.adminService.search(this.searchParams)
+    this.plushToyService.search(this.searchParams)
       .subscribe({
         next: data => {
           this.plushies = data;
@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   }
 
   getAllPlushies() {
-    this.adminService.getAllPlushToys().subscribe(
+    this.plushToyService.getAllPlushToys().subscribe(
       {
         next: data => {
           this.plushies = data;

@@ -1,19 +1,21 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderItemMapper;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AuthRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.OrderItemRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.OrderRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AuthService;
-import at.ac.tuwien.sepr.groupphase.backend.service.impl.AuthServiceImplementation;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_NONCE;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_SIGNATURE;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.OrderTestData.ORDERS_BASE_URI;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,21 +35,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_NONCE;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.LoginTestData.TEST_SIGNATURE;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.OrderTestData.ORDERS_BASE_URI;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AuthRequestDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.AuthenticationCache;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AuthRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.AuthServiceImplementation;
 
 
 @ExtendWith(SpringExtension.class)
@@ -55,8 +52,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class UserEndpointTest implements UserTestData {
-    @Autowired
-    private AuthService authService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -76,15 +71,7 @@ public class UserEndpointTest implements UserTestData {
         return user;
     };
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private OrderItemRepository orderItemRepository;
-    @Autowired
     private AuthServiceImplementation authServiceImplementation;
-    @Autowired
-    private OrderItemMapper orderItemMapper;
-    @Autowired
-    private OrderMapper orderMapper;
 
     @BeforeEach
     public void beforeEach() {

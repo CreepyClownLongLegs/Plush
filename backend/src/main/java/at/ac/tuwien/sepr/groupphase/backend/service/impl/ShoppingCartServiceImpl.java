@@ -81,7 +81,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void deleteAllItemsByUserPublicKey(String publicKey) throws NotFoundException {
         LOGGER.debug("Deleting all items from cart for user with publicKey: {}", publicKey);
 
-        User user = userRepository.findUserByPublicKey(publicKey)
+        userRepository.findUserByPublicKey(publicKey)
                 .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
         List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserPublicKey(publicKey);
@@ -99,7 +99,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void decreaseAmount(String publicKey, Long itemId) throws NotFoundException {
         LOGGER.debug("Decreasing amount of items for shopping cart item: {}", itemId);
 
-        User user = userRepository.findUserByPublicKey(publicKey)
+        userRepository.findUserByPublicKey(publicKey)
                 .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
         ShoppingCartItem cartItem = shoppingCartItemRepository.findById(itemId)

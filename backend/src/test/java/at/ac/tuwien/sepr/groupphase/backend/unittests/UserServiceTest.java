@@ -4,7 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderItemListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OrderItem;
@@ -62,9 +61,6 @@ public class UserServiceTest implements UserTestData {
     private UserRepository userRepository;
     @Autowired
     private DeliveryStatusRepository deliveryStatusRepository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @BeforeEach
     public void beforeEach() {
