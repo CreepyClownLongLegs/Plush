@@ -2,10 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OrderMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -36,18 +33,12 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final UserService userService;
-    private final ShoppingCartService cartService;
-    private final OrderMapper orderMapper;
     private final UserMapper userMapper;
-    private final UserRepository userRepository;
 
     @Autowired
-    public UserEndpoint(UserService userService, OrderMapper orderMapper, UserMapper userMapper, UserRepository userRepository, ShoppingCartService shoppingCartService) {
+    public UserEndpoint(UserService userService, UserMapper userMapper) {
         this.userService = userService;
-        this.orderMapper = orderMapper;
         this.userMapper = userMapper;
-        this.userRepository = userRepository;
-        this.cartService = shoppingCartService;
     }
 
     @RolesAllowed({"USER", "ADMIN"})
