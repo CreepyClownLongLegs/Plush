@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from 'src/app/components/util/confirmation-dialog/confirmation-dialog.component';
 import { PlushToyListDto } from 'src/app/dtos/plushtoy';
 import { AdminService } from 'src/app/services/admin.service';
@@ -16,6 +17,7 @@ export class AdminPlushtoyOverviewComponent implements OnInit {
 
   constructor(
     private service: AdminService,
+    private notification: ToastrService
   ) { }
 
   ngOnInit() {
@@ -30,6 +32,7 @@ export class AdminPlushtoyOverviewComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching Plushtoys', error);
+          this.notification.error('An error occurred while fetching Plushtoys', 'Error fetching Plushtoys');
         }
       });
   }
@@ -39,9 +42,11 @@ export class AdminPlushtoyOverviewComponent implements OnInit {
       .subscribe({
         next: () => {
           this.plushtoys = this.plushtoys.filter(plustoy => plustoy.id !== id);
+          this.notification.success('Plushtoy deleted successfully');
         },
         error: error => {
           console.error('Error deleting Plushtoys', error);
+          this.notification.error('An error occurred while deleting Plushtoy', 'Error deleting Plushtoy');
         }
       });
   }

@@ -34,6 +34,7 @@ export class AdminCategoryOverviewComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching categories', error);
+          this.notification.error('An error occurred while fetching categories', 'Error fetching categories');
         }
       });
   }
@@ -46,8 +47,8 @@ export class AdminCategoryOverviewComponent implements OnInit {
           this.loadCategories();
         },
         error: error => {
-          this.notification.error('Error deleting category', error.error.message);
           console.error('Error deleting category', error);
+          this.notification.error('An error occurred while deleting the category', 'Error deleting category');
         }
       });
   }
