@@ -1,5 +1,5 @@
 <h1>Plush Toys</h1>
-<button class="btn btn-primary me-1 my-3" data-test="createButton" [routerLink]="['product', 'new']">Add a plush toy</button>
+<button class="btn navbutton-left btn-primary me-1 my-3" data-test="createButton" [routerLink]="['product', 'new']">Add a plush toy</button>
 <button class="btn btn-secondary" routerLink="categories">Manage Categories</button>
 <div *ngFor="let plushToy of plushtoys; let i = index" class="row" data-test="plushToyInfo">
   <div class="col-md-3 col-sm-6">
@@ -11,8 +11,8 @@
     <p>Price: {{ plushToy.price }} SOL</p>
   </div>
   <div class="col-md-3 col-sm-6">
-    <img [src]="'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'"
-      alt="{{ plushToy.name }}" />
+    <img src="{{plushToy.imageUrl ?? 'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'}}"
+      alt="{{ plushToy.name }}" class="product-image" />
   </div>
   <div class="col-md-3 col-sm-6 text-end">
     <a class="btn btn-sm responsive-warning-button" aria-label="Edit" data-test="editButton" [routerLink]="['product', plushToy.id, 'edit']">

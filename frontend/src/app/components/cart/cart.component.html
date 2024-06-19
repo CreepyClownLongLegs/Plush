@@ -4,7 +4,7 @@
     <div class="cart-items">
       <div *ngFor="let item of cartItems; let i = index" class="cart-item">
         <div class="item-image">
-          <img [src]="item.imageUrl" alt="{{item.name}}" />
+          <img src="{{item.imageUrl ?? 'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'}}" alt="{{item.name}}" />
           <span class="hp">{{item.hp}}HP</span>
           <button class="remove-btn" (click)="removeItem(item.id)">X</button>
         </div>
