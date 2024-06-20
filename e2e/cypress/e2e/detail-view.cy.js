@@ -18,7 +18,7 @@ context('detail-view', () => {
         cy.getBySel("plushToySize").should('contain', '0kg');
         cy.getBySel("plushToyStrength").should('contain', '0');
         cy.getBySel("plushToyHealth").should('contain', '100HP');
-        cy.getBySel("plushToyPrice").should('contain', '10 SOL');
+        cy.getBySel("plushToyPrice").should('contain', '0.01 SOL');
 
         cy.getBySel('buyNowButton').contains('BUY NOW!!!').should('be.visible').and('be.enabled');
         cy.getBySel('addToCartButton').contains('ADD TO BAG').should('be.visible').and('be.enabled');

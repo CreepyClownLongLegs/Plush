@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserDetailDto } from 'src/app/dtos/user';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { load } from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks";
 
 @Component({
   selector: 'app-cart',
@@ -23,21 +24,40 @@ import { Router } from '@angular/router';
 export class CartComponent implements OnInit {
   cartItems: PlushToyCartListDto[] = [];
   totalPrice: string;
-  selectedPaymentMethod: string;
-  publicKey = "";
-  balance = 0;
-  userDetail: UserDetailDto | null = null;
+  isCartEmpty: boolean = true;  //  track if the cart is empty
 
   constructor(
     private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService,
     public authService: AuthService,
-    private walletService: WalletService,
     private modalService: NgbModal,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private walletService: WalletService,
   ) {
+  }
+
+  ngOnInit(): void {
+    this.loadCart();
+  }
+
+  loadCart(): void {
+    this.shoppingCartService.getFullCart().subscribe({
+      next: (items: PlushToyCartListDto[]) => {
+        this.cartItems = items;
+        this.calculateTotalPrice();
+        this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
+      },
+      error: (error) => {
+        console.error('Error loading cart items', error);
+      }
+    });
+  }
+
+  calculateTotalPrice(): void {
+    const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
+    this.totalPrice = `${total} SOL`;
   }
 
   removeItem(itemId: number): void {
@@ -87,119 +107,53 @@ export class CartComponent implements OnInit {
         this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== itemId);
       }
       this.calculateTotalPrice();
+      this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
     }
   }
-
-
 
   finishPayment(): void {
-    if (this.cartItems.length === 0) {
-      console.error('Please add some items to Cart');
-      this.notification.error('You have no Items in your Cart to purchase :\')', 'Error');
-      return;
-    }
-
+    const total: number = this.cartItems.reduce((acc: number, item) => acc + item.price * item.amount, 0);
     if (this.authService.isLoggedIn()) {
-      //we are logged in, time to fetch user data and check if the address is set
-      if (this.checkIfAddressIsSet()) {
-        this.notification.success("You are the proud owner of a new plushie now!", "Congrats!!1!");
-        this.deleteAllItems();
-      } else {
-        this.notification.info("Please fill out the empty fields so we can deliver you your plushie(s) :) !", "Shipping Information incomplete");
-        return;
-      }
+      this.walletService.hasSufficientBalance(total).then(hasBalance => {
+        if (!hasBalance) {
+          this.notification.error('Insufficient balance to complete the transaction.', 'Error');
+          return;
+        }
 
-    } else {
-      this.notification.error('Please Log in with your wallet', 'Error');
+        this.userService.isProfileComplete().subscribe({
+          next: (isComplete) => {
+            if (!isComplete) {
+              this.notification.error('Please complete your profile before proceeding to payment.', 'Shipping Information incomplete');
+              this.router.navigate(['/register']);
+              return;
+            }
+
+            this.walletService.handleSignAndSendTransaction(total).subscribe({
+              next: () => {
+                this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
+                this.shoppingCartService.clearCart().subscribe({
+                  next: () => this.loadCart(),
+                  error: (error) => {
+                    console.error('Error while clearing the cart:', error);
+                    this.notification.error('Error while clearing the cart');
+                  }
+                });
+              },
+              error: (error) => {
+                console.error('Error during payment:', error);
+                this.notification.error('Payment failed', 'Error');
+              }
+            });
+          },
+          error: (error) => {
+            console.error('Error checking profile', error);
+            this.notification.error('Could not check profile', 'Error');
+          }
+        });
+      }).catch(error => {
+        console.error('Error checking balance', error);
+        this.notification.error('Error checking balance.', 'Error');
+      });
     }
   }
-
-  deleteAllItems() {
-    this.shoppingCartService.deleteAllItemsFromCart().subscribe({
-      next: () => {
-        console.log('All items deleted from cart.');
-        this.router.navigate(['./']);
-        // Optionally, navigate to another page or refresh the cart view
-      },
-      error: (err) => {
-        console.error('Error deleting items from cart:', err);
-      }
-    });
-  }
-
-  resetWalletConnection() {
-    this.walletService.disconnectWallet();
-    this.publicKey = "";
-    this.balance = 0;
-  }
-
-  ngOnInit(): void {
-    this.loadCart();
-    this.fetchUserDetails();
-  }
-
-  loadCart(): void {
-    this.shoppingCartService.getFullCart().subscribe({
-      next: (items: PlushToyCartListDto[]) => {
-        this.cartItems = items;
-        this.calculateTotalPrice();
-      },
-      error: (error) => {
-        console.error('Error loading cart items', error);
-      }
-    });
-  }
-
-  selectPaymentMethod(paymentMethod: string): void {
-    this.selectedPaymentMethod = paymentMethod;
-  }
-
-  calculateTotalPrice(): void {
-    const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
-    this.totalPrice = `${total} SOL`;
-  }
-
-  fetchUserDetails(): void {
-    this.userService.getUserByPublicKey().subscribe(
-      (data: UserDetailDto) => {
-        this.userDetail = data;
-      },
-      (error) => {
-        console.error('Error fetching user details', error);
-      }
-    );
-  }
-
-  checkIfAddressIsSet(): boolean {
-
-    if (!this.userDetail?.addressLine1) {
-      this.notification.error("No Address given", "Incomplete Address");
-      this.router.navigate(['/register']); // Reroute to the register component
-      return false;
-    } else if (this.userDetail!.addressLine1.trim() === "") {
-      this.notification.error("Address cannot consist of empty spaces", "Incomplete Address");
-      this.router.navigate(['/register']); // Reroute to the register component
-      return false;
-    } else if (!this.userDetail!.postalCode) {
-      this.notification.info("Postal Code is empty", "Postal Code Incomplete");
-      this.router.navigate(['/register']); // Reroute to the register component
-      return false;
-    } else if (this.userDetail!.postalCode.trim() === "") {
-      this.notification.info("Postal Code cannot consist of empty spaces", "Postal Code Incomplete");
-      this.router.navigate(['/register']); // Reroute to the register component
-      return false;
-    } else if (!this.userDetail!.country === null) {
-      this.notification.info("Country is empty", "Country Incomplete");
-      this.router.navigate(['/register']); // Reroute to the register component
-      return false;
-    } else if (this.userDetail!.country.trim() === "") {
-      this.notification.info("Country cannot consist of empty spaces", "Country Incomplete");
-      this.router.navigate(['/register']); // Reroute to the register component
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
 }

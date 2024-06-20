@@ -43,6 +43,15 @@ export class LoginComponent implements OnInit {
   ) {
   }
 
+  /* this promts the user to sign the login message every time the page is refreshed,
+   * which is not supposed to happen.
+   */
+  // ngOnInit() {
+  //   if (this.authService.isLoggedIn()) {
+  //     this.loginUser()
+  //   }
+  // }
+
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {

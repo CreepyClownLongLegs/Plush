@@ -19,21 +19,10 @@
         </div>
       </div>
     </div>
-    <hr />
-    <div class="payment-method">
-      <p>Select Payment Method:</p>
-      <label>
-        <input type="radio" name="payment" (change)="selectPaymentMethod('Credit Card')" />
-        Credit Card
-      </label>
-      <label>
-        <input type="radio" name="payment" (change)="selectPaymentMethod('Wallet')" />
-        Wallet
-      </label>
-    </div>
+    <hr/>
     <div class="total-price">
       <p>TOTAL PRICE: <span>{{totalPrice}}</span></p>
     </div>
-    <button (click)="finishPayment()" class="finish-payment">🔥Finish Payment🔥</button>
+    <button class="finish-payment" (click)="finishPayment()" [disabled]="isCartEmpty">🔥Finish Payment🔥</button>
   </div>
 </div>

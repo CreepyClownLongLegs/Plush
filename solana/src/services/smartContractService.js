@@ -41,10 +41,10 @@ const SmartContractService = {
         const wallet = ConnectionService.wallet();
         const umi = await ConnectionService.getUmi();
 
-        const initialMetadata = await fetchMetadataFromSeeds(umi, { mintPublicKey })
+        const initialMetadata = await fetchMetadataFromSeeds(umi, { mint: mintPublicKey })
         await updateV1(umi, {
-            mintPublicKey,
-            authority: wallet,
+            mint: mintPublicKey,
+            authority: wallet.publicKey,
             data: { ...initialMetadata, ...data },
         }).sendAndConfirm(umi)
 

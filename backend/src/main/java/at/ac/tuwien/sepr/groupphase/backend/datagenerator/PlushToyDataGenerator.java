@@ -37,7 +37,7 @@ public class PlushToyDataGenerator {
             for (int i = 0; i < NUMBER_TO_GENERATE; i++) {
                 PlushToy plushy = new PlushToy();
                 plushy.setName(TEST_NAME + " " + i);
-                plushy.setPrice(10.0);
+                plushy.setPrice(0.01);
                 plushy.setTaxClass(10.0f);
                 if (i % 2 == 0) {
                     plushy.setDescription("Feisty lil fella");
