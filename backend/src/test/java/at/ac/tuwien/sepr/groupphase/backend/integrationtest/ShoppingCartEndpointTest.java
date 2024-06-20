@@ -101,6 +101,7 @@ public class ShoppingCartEndpointTest implements TestData {
                 .andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(0, shoppingCartItemRepository.findAll().size());
     }
 
     @Test
@@ -121,7 +122,8 @@ public class ShoppingCartEndpointTest implements TestData {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
+                objectMapper.getTypeFactory().constructCollectionType(List.class,
+                        ShoppingCartItemDto.class));
 
         assertTrue(cartList.size() > 0);
     }
@@ -138,7 +140,8 @@ public class ShoppingCartEndpointTest implements TestData {
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         List<ShoppingCartItemDto> cartList = objectMapper.readValue(jsonResponse,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, ShoppingCartItemDto.class));
+                objectMapper.getTypeFactory().constructCollectionType(List.class,
+                        ShoppingCartItemDto.class));
 
         assertTrue(cartList.isEmpty());
     }
@@ -150,11 +153,11 @@ public class ShoppingCartEndpointTest implements TestData {
         item.setUser(testUser);
         item.setPlushToy(testPlushToy);
         item.setAmount(2); // Set amount to 2 for testing decrease
-        shoppingCartItemRepository.save(item);
+        item = shoppingCartItemRepository.save(item);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/cart/decrease")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(item.getId())))
+                .content(String.valueOf(testPlushToy.getId())))
                 .andDo(print())
                 .andReturn();
 
@@ -173,5 +176,37 @@ public class ShoppingCartEndpointTest implements TestData {
                 .andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    @WithMockUser(username = TEST_PUBKEY)
+    public void givenMultipleItemsInCart_whenClearCart_thenCartIsEmpty() throws Exception {
+        ShoppingCartItem item1 = new ShoppingCartItem();
+        item1.setUser(testUser);
+        item1.setPlushToy(testPlushToy);
+        item1.setAmount(1);
+        shoppingCartItemRepository.save(item1);
+
+        PlushToy anotherPlushToy = plushToyRepository.save(plushToySupplier.getPlushie());
+        ShoppingCartItem item2 = new ShoppingCartItem();
+        item2.setUser(testUser);
+        item2.setPlushToy(anotherPlushToy);
+        item2.setAmount(2);
+        shoppingCartItemRepository.save(item2);
+
+        PlushToy thirdPlushToy = plushToyRepository.save(plushToySupplier.getPlushie());
+        ShoppingCartItem item3 = new ShoppingCartItem();
+        item3.setUser(testUser);
+        item3.setPlushToy(thirdPlushToy);
+        item3.setAmount(3);
+        shoppingCartItemRepository.save(item3);
+
+        MvcResult mvcResult = mockMvc.perform(delete("/api/v1/cart/clear"))
+                .andDo(print())
+                .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(testUser.getId());
+        assertTrue(cartItems.isEmpty());
     }
 }

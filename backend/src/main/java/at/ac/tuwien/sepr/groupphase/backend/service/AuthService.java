@@ -25,4 +25,6 @@ public interface AuthService {
      * @return NonceDto The data transfer object containing the generated nonce.
      */
     NonceDto generateNonce(String publicKey);
+
+    
 }

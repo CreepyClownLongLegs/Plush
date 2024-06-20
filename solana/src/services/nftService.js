@@ -9,8 +9,7 @@ const NftService = {
         const mint = new PublicKey(mintToken)
         const umi = await ConnectionService.getUmi();
 
-        console.log("mint", mint.toBase58())
-        console.log(nftTransferRequest.publicKey)
+        console.log("mint and tranfer to:", nftTransferRequest.publicKey)
         const toAccountKey = new PublicKey(nftTransferRequest.publicKey)
 
         await mintV1(umi, {

@@ -1,0 +1,22 @@
+# Wipe DB and refill with generate data
+spring:
+  datasource:
+    url: jdbc:h2:file:./database/db;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: password
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+# H2 console enabled
+  h2:
+    console:
+      enabled: true
+
+# Custom solana settings for the test profile
+solana:
+  pod:
+    url: http://localhost:3000/

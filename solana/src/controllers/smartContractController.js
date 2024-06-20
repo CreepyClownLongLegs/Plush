@@ -26,9 +26,11 @@ const SmartContractController = {
     updateMintInfo: async (req, res) => {
         try {
             const mintToken = req.params.mintToken;
-            const response = await SmartContractService.updateMintInfo(mintToken, req.body);
+            console.log("body: ", req.body);
+            const response = await SmartContractService.updateSmartContractData(mintToken, req.body);
             replaceBigInt(response);
-            res.json(response);
+            console.log(response);
+            res.json(mintToken);
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: error.message });

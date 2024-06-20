@@ -1,3 +1,19 @@
+# IDE specific files
 .idea
+
+# node_modules directory
 node_modules
+
+# Cypress reports and results
 reports
+results
+
+# Cypress screenshots and videos
+screenshots
+cypress/screenshots
+videos
+cypress/videos
+cy.js.mp4
+
+# Mac specific files
+.DS_Store

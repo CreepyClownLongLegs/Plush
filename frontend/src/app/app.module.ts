@@ -17,9 +17,12 @@ import { httpInterceptorProviders } from './interceptors';
 import { CardComponent } from './components/card/card.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ItemComponent } from './components/profile/item/item.component';
-import {AdminPlushtoyCreateEditComponent} from "./components/admin/plushtoy/create-edit/create-edit.component";
-import {AdminComponent} from './components/admin/admin.component';
-import {AdminCreateAdminComponent} from './components/admin/create-admin/create-admin.component';
+import { AdminPlushtoyCreateEditComponent } from "./components/admin/plushtoy/create-edit/create-edit.component";
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminCreateAdminComponent } from './components/admin/create-admin/create-admin.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { ConfirmationDialogComponent } from './components/util/confirmation-dialog/confirmation-dialog.component';
+
 
 @NgModule({
   declarations: [
@@ -34,6 +37,7 @@ import {AdminCreateAdminComponent} from './components/admin/create-admin/create-
     ItemComponent,
     AdminComponent,
     AdminCreateAdminComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +50,7 @@ import {AdminCreateAdminComponent} from './components/admin/create-admin/create-
     //needed for Toastr
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    ConfirmationDialogComponent,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

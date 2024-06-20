@@ -1,9 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {PlushToyCartListDto, PlushToyListDto} from "../../dtos/plushtoy";
-import {PlushtoyService} from "../../services/plushtoy.service";
-import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ToastrService} from "ngx-toastr";
-import {NgForOf} from "@angular/common";
+import { Component, OnInit } from '@angular/core';
+import { PlushToyCartListDto, PlushToyListDto } from "../../dtos/plushtoy";
+import { PlushtoyService } from "../../services/plushtoy.service";
+import { ShoppingCartService } from "../../services/shopping-cart.service";
+import { ToastrService } from "ngx-toastr";
+import { NgForOf } from "@angular/common";
+import { AuthService } from 'src/app/services/auth.service';
+import { WalletService } from 'src/app/services/wallet.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserDetailDto } from 'src/app/dtos/user';
+import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
+import { load } from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks";
 
 @Component({
   selector: 'app-cart',
@@ -14,16 +21,43 @@ import {NgForOf} from "@angular/common";
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
-export class CartComponent implements OnInit{
+export class CartComponent implements OnInit {
   cartItems: PlushToyCartListDto[] = [];
   totalPrice: string;
-  selectedPaymentMethod: string;
+  isCartEmpty: boolean = true;  //  track if the cart is empty
 
   constructor(
     private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService,
+    public authService: AuthService,
+    private modalService: NgbModal,
+    private userService: UserService,
+    private router: Router,
+    private walletService: WalletService,
   ) {
+  }
+
+  ngOnInit(): void {
+    this.loadCart();
+  }
+
+  loadCart(): void {
+    this.shoppingCartService.getFullCart().subscribe({
+      next: (items: PlushToyCartListDto[]) => {
+        this.cartItems = items;
+        this.calculateTotalPrice();
+        this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
+      },
+      error: (error) => {
+        console.error('Error loading cart items', error);
+      }
+    });
+  }
+
+  calculateTotalPrice(): void {
+    const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
+    this.totalPrice = `${total} SOL`;
   }
 
   removeItem(itemId: number): void {
@@ -73,44 +107,53 @@ export class CartComponent implements OnInit{
         this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== itemId);
       }
       this.calculateTotalPrice();
+      this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
     }
   }
-
-
 
   finishPayment(): void {
-    if (!this.selectedPaymentMethod) {
-      console.error('Please select a payment method');
-      return;
+    const total: number = this.cartItems.reduce((acc: number, item) => acc + item.price * item.amount, 0);
+    if (this.authService.isLoggedIn()) {
+      this.walletService.hasSufficientBalance(total).then(hasBalance => {
+        if (!hasBalance) {
+          this.notification.error('Insufficient balance to complete the transaction.', 'Error');
+          return;
+        }
+
+        this.userService.isProfileComplete().subscribe({
+          next: (isComplete) => {
+            if (!isComplete) {
+              this.notification.error('Please complete your profile before proceeding to payment.', 'Shipping Information incomplete');
+              this.router.navigate(['/register']);
+              return;
+            }
+
+            this.walletService.handleSignAndSendTransaction(total).subscribe({
+              next: () => {
+                this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
+                this.shoppingCartService.clearCart().subscribe({
+                  next: () => this.loadCart(),
+                  error: (error) => {
+                    console.error('Error while clearing the cart:', error);
+                    this.notification.error('Error while clearing the cart');
+                  }
+                });
+              },
+              error: (error) => {
+                console.error('Error during payment:', error);
+                this.notification.error('Payment failed', 'Error');
+              }
+            });
+          },
+          error: (error) => {
+            console.error('Error checking profile', error);
+            this.notification.error('Could not check profile', 'Error');
+          }
+        });
+      }).catch(error => {
+        console.error('Error checking balance', error);
+        this.notification.error('Error checking balance.', 'Error');
+      });
     }
-
-    console.log('Finishing payment with method:', this.selectedPaymentMethod);
   }
-
-  ngOnInit(): void {
-    this.loadCart();
-  }
-
-  loadCart(): void {
-    this.shoppingCartService.getFullCart().subscribe({
-      next: (items: PlushToyCartListDto[]) => {
-        this.cartItems = items;
-        this.calculateTotalPrice();
-      },
-      error: (error) => {
-        console.error('Error loading cart items', error);
-      }
-    });
-  }
-
-  selectPaymentMethod(paymentMethod: string): void {
-    this.selectedPaymentMethod = paymentMethod;
-  }
-
-  calculateTotalPrice(): void {
-    const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
-    this.totalPrice = `${total} SOL`;
-  }
-
-
 }

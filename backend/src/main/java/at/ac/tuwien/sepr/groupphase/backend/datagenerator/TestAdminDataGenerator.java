@@ -17,7 +17,7 @@ import jakarta.annotation.PostConstruct;
  * Generates the admin users if no user with the public key exists.
  */
 @Component
-@Profile("generateData")
+@Profile({"generateData", "test"})
 public class TestAdminDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

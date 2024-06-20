@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -65,11 +67,14 @@ public class PlushToy {
     @OneToMany(mappedBy = "plushToy")
     private List<Nft> nfts;
 
-    @OneToMany(mappedBy = "plushToy", fetch = FetchType.EAGER)
-    private List<PlushToyAttributeDistribution> attributeDistributions;
+    @OneToMany(mappedBy = "plushToy", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<PlushToyAttributeDistribution> attributeDistributions = new ArrayList<>();
 
     @OneToMany(mappedBy = "plushToy", fetch = FetchType.EAGER)
     private List<SmartContract> smartContracts;
+
+    @OneToMany(mappedBy = "plushToy", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ShoppingCartItem> shoppingCartItems = new ArrayList<>();
 
     public PlushToy() {
     }
@@ -209,6 +214,7 @@ public class PlushToy {
     public List<PlushToyAttribute> getPlushToyAttributes() {
         return attributeDistributions.stream()
                 .map(PlushToyAttributeDistribution::getAttribute)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
@@ -219,6 +225,18 @@ public class PlushToy {
     public void addAttributeDistribution(PlushToyAttributeDistribution attributeDistribution) {
         attributeDistributions.add(attributeDistribution);
         attributeDistribution.setPlushToy(this);
+    }
+
+    public void setAttributeDistributions(List<PlushToyAttributeDistribution> attributeDistributions) {
+        this.attributeDistributions = attributeDistributions;
+    }
+
+    public List<ShoppingCartItem> getShoppingCartItems() {
+        return shoppingCartItems;
+    }
+
+    public void setShoppingCartItems(List<ShoppingCartItem> shoppingCartItems) {
+        this.shoppingCartItems = shoppingCartItems;
     }
 
 }

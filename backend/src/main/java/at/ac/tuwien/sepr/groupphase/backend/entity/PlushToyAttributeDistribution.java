@@ -33,6 +33,10 @@ public class PlushToyAttributeDistribution {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setPlushToy(PlushToy plushToy) {
         this.plushToy = plushToy;
     }

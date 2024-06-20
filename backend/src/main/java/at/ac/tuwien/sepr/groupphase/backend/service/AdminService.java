@@ -1,5 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import java.util.List;
+
+import org.springframework.lang.NonNull;
+
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
@@ -8,9 +12,6 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
 import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import org.springframework.lang.NonNull;
-
-import java.util.List;
 
 public interface AdminService {
 
@@ -40,9 +41,9 @@ public interface AdminService {
      * Add a new product.
      *
      * @param plushToy the product to add
-     * @return the ID of the added product
+     * @return the plush toy with ID
      */
-    PlushToyDetailDto addPlushToy(@NonNull PlushToy plushToy);
+    PlushToyDetailDto addPlushToy(@NonNull PlushToyDetailDto plushToy);
 
     /**
      * Add a new product category.
@@ -73,18 +74,22 @@ public interface AdminService {
      * @param id       the ID of the product to edit
      * @param plushToy the product to edit
      * @return the updated product
-     * @throws IllegalArgumentException if the given ID does not match the ID in the product
+     * @throws IllegalArgumentException if the given ID does not match the ID in the
+     *                                  product
      * @throws NotFoundException        if the product does not exist
      */
-    PlushToyDetailDto editPlushToy(@NonNull Long id, @NonNull PlushToyDetailDto plushToy) throws IllegalArgumentException, NotFoundException;
+    PlushToyDetailDto editPlushToy(@NonNull Long id, @NonNull PlushToyDetailDto plushToy)
+            throws IllegalArgumentException, NotFoundException;
 
     /**
      * Edits the categories of a plush toy.
      *
      * @param productId             The ID of the plush toy to edit.
-     * @param newProductCategoryIds A list of IDs representing the new categories to be associated with the plush toy.
+     * @param newProductCategoryIds A list of IDs representing the new categories to
+     *                              be associated with the plush toy.
      * @return A PlushToyDetailDto object representing the updated plush toy.
-     * @throws NotFoundException if the plush toy or any of the categories does not exist.
+     * @throws NotFoundException if the plush toy or any of the categories does not
+     *                           exist.
      */
     PlushToyDetailDto editPlushToyCategories(Long productId, List<Long> newProductCategoryIds) throws NotFoundException;
 

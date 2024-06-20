@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.service.PlushToyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 
 @RestController
@@ -40,5 +45,19 @@ public class PlushEndpoint {
         return plushToyMapper.entityToDetailDto(plushToyService.getById(id));
     }
 
+    @PermitAll
+    @GetMapping()
+    @Operation(summary = "Get all plush toys")
+    public List<PlushToyListDto> getAllPlushtoys() {
+        LOGGER.info("GET /api/v1/plush");
+        return plushToyMapper.entityToListDto(plushToyService.getAllPlushToys());
+    }
 
+    @PermitAll
+    @PostMapping(value = "/search")
+    @Operation(summary = "Search for plush toys")
+    public List<PlushToyListDto> search(@RequestBody SearchPlushToyDto searchParams) {
+        LOGGER.info("POST /api/v1/plush/search with body: {}", searchParams);
+        return plushToyMapper.entityToListDto(plushToyService.search(searchParams));
+    }
 }

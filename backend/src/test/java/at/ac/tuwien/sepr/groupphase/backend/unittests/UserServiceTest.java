@@ -4,7 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderItemListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OrderItem;
@@ -21,11 +20,14 @@ import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -60,18 +63,15 @@ public class UserServiceTest implements UserTestData {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private DeliveryStatusRepository deliveryStatusRepository;
 
     @Autowired
-    private UserMapper userMapper;
+    private DeliveryStatusRepository deliveryStatusRepository;
 
     @BeforeEach
     public void beforeEach() {
         orderItemRepository.deleteAll();
         orderRepository.deleteAll();
         deliveryStatusRepository.deleteAll();
-
         userRepository.deleteAll();
     }
 
@@ -208,5 +208,11 @@ public class UserServiceTest implements UserTestData {
     @Test
     public void givenInvalidPublicKey_whenGetOrderHistory_thenThrowNotFoundException() {
         assertThrows(NotFoundException.class, () -> userService.getOrderHistory(TEST_NONEXISTENT_PUBKEY));
+    }
+
+    @Test
+    public void givenInvalidTransactionSignature_whenIsValidTransaction_thenReturnFalse() {
+        boolean result = userService.isValidTransaction(TXN_TEST_SIGNATURE_INVALID);
+        assertFalse(result, "The transaction should be invalid");
     }
 }

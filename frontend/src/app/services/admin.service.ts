@@ -37,7 +37,7 @@ export class AdminService {
    * @returns all plush toys
    */
   getAllPlushToys(): Observable<PlushToyListDto[]> {
-    return this.httpClient.get<PlushToyListDto[]>(this.adminBaseUri + "/allProducts");
+    return this.httpClient.get<PlushToyListDto[]>(this.adminBaseUri + "/products");
   }
 
   /**
@@ -57,17 +57,6 @@ export class AdminService {
   edit(plushToy: PlushToy): Observable<PlushToy> {
     return this.httpClient.put<PlushToy>(`${this.adminBaseUri}/product/${plushToy.id}`, plushToy);
   }
-
-  /**
-   * Search for horses that match certain search parameters we transfer
-   *
-   * @param searchParams by which the list of existing horses will be filtered
-   * @returns a list of Observables that match the search criteria
-   */
-  search(searchParams: PlushToySearchDto): Observable<PlushToyListDto[]> {
-    return this.httpClient.post<PlushToyListDto[]>(this.adminBaseUri + "/products", searchParams);
-  }
-
 
   /**
    * Send a get request to the backend to get all categories
@@ -102,7 +91,7 @@ export class AdminService {
    * @returns all users
    */
   getAllUsers(): Observable<UserListDto[]> {
-    return this.httpClient.get<UserListDto[]>(this.adminBaseUri + '/allUsers');
+    return this.httpClient.get<UserListDto[]>(this.adminBaseUri + '/users');
   }
 
   /**

@@ -32,7 +32,7 @@ public interface UserService {
      *
      * @param publicKey is the public key of the user to be found
      * @return an object of type User
-     * @throws java.lang.ClassNotFoundException if a user cannot be found
+     * @throws NotFoundException if a user cannot be found
      */
     User findUserByPublicKey(@NonNull String publicKey) throws NotFoundException;
 
@@ -41,7 +41,15 @@ public interface UserService {
      *
      * @param publicKey is the key of the User to be updates
      * @return an object of type User
-     * @throws java.lang.ClassNotFoundException if a user cannot be found
+     * @throws NotFoundException if a user cannot be found
      */
     User updateUser(String publicKey, UserDetailDto userDetailDto) throws NotFoundException;
+
+    /**
+     * Validates a transaction by checking its signature.
+     *
+     * @param signature the signature of the transaction to be validated
+     * @return true if the transaction is valid, false otherwise
+     */
+    boolean isValidTransaction(String signature);
 }

@@ -39,26 +39,24 @@ img {
 
 /* table styles; temp to keep table layout */
 
-.table-fixed tbody {
-  display: block;
-  height: 240px; //4 * 60px row height
-  overflow: hidden;
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
 }
 
+.table-fixed {
+  width: 100%;
+}
+
+.table-fixed thead,
 .table-fixed tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
-  height: 60px; //fixed row height to keep table layout
 }
 
-.table-fixed thead, .table-fixed tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-
-.table-fixed th, .table-fixed td {
+.table-fixed th,
+.table-fixed td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -71,10 +69,15 @@ img {
 
 .pagination-controls {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-top: 10px;
 }
 
 .btn-spaced {
   margin-left: 5px;
+}
+
+.container {
+  max-width: 100%;
+  overflow-x: auto;
 }

@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
 import java.util.List;
+
+
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -34,7 +37,7 @@ public class AuthServiceImplementation implements AuthService {
 
     @Autowired
     public AuthServiceImplementation(UserRepository userRepository, AuthRepository authRepository,
-            JwtTokenizer jwtTokenizer) {
+                                     JwtTokenizer jwtTokenizer) {
         this.userRepository = userRepository;
         this.authRepository = authRepository;
         this.jwtTokenizer = jwtTokenizer;
@@ -61,7 +64,7 @@ public class AuthServiceImplementation implements AuthService {
         LOGGER.info("login {}", authRequestDto);
         String publicKey = authRequestDto.getPublicKey();
         AuthenticationCache authCache = authRepository.findAuthCacheByPublicKey(publicKey)
-                .orElseThrow(() -> new BadCredentialsException("No valid nonce found"));
+            .orElseThrow(() -> new BadCredentialsException("No valid nonce found"));
         authRepository.deleteById(authCache.getId());
 
         if (isValidSignature(publicKey, authCache.getNonce(), authRequestDto.getSignature())) {
@@ -91,4 +94,6 @@ public class AuthServiceImplementation implements AuthService {
         byte[] signatureBytes = Base58.decode(signature);
         return publicKey.verify(signatureBytes, messageBytes);
     }
+
+
 }

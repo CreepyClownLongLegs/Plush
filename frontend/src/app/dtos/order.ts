@@ -15,3 +15,16 @@ export class OrderItem {
   amount: number;
   imageUrl: string;
 }
+
+export class OrderDetailDto {
+  //IMPL
+  id: number;
+  totalPrice: number;
+  timestamp: Date;
+  totalTax: number;
+  orderItems: OrderItem[];
+}
+
+export class OrderCreateDto {
+  signature: string
+}
