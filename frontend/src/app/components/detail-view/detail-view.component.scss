@@ -136,3 +136,19 @@
 .health {
   color: darkred;
 }
+
+.star{
+  width: 15px;
+  height: 15px;
+  background-image: url("../../../images/Star.png");
+  background-size: cover;
+  margin-left: 3px;
+}
+
+
+
+.stat .star {
+  display: inline-block;
+}
+
+
