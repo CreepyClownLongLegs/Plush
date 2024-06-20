@@ -20,7 +20,7 @@ public class SmartContract {
     @Column(nullable = false, length = 44, unique = true)
     private String publicKey;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     private PlushToy plushToy;
 
     public SmartContract() {
