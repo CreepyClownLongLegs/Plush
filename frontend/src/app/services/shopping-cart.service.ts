@@ -45,8 +45,9 @@ export class ShoppingCartService {
   *
   *@returns Observable<void>
   */
-  deleteAllItemsFromCart(): Observable<void> {
-    return this.httpClient.delete<void>(this.cartBaseUri + '/emptyCart');
+  clearCart(): Observable<void> {
+    console.log('Clearing entire cart');
+    return this.httpClient.delete<void>(`${this.cartBaseUri}/clear`);
   }
 
 }

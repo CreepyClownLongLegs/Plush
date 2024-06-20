@@ -78,32 +78,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteAllItemsByUserPublicKey(String publicKey) throws NotFoundException {
-        LOGGER.debug("Deleting all items from cart for user with publicKey: {}", publicKey);
-
-        userRepository.findUserByPublicKey(publicKey)
-                .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
-
-        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserPublicKey(publicKey);
-
-        if (cartItems.isEmpty()) {
-            LOGGER.debug("No items found in the cart for user with publicKey: {}", publicKey);
-            return;
-        }
-
-        shoppingCartItemRepository.deleteAll(cartItems);
-        LOGGER.debug("Deleted {} items from the cart for user with publicKey: {}", cartItems.size(), publicKey);
-    }
-
-    @Override
     public void decreaseAmount(String publicKey, Long itemId) throws NotFoundException {
         LOGGER.debug("Decreasing amount of items for shopping cart item: {}", itemId);
 
-        userRepository.findUserByPublicKey(publicKey)
+        User user = userRepository.findUserByPublicKey(publicKey)
                 .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
-        ShoppingCartItem cartItem = shoppingCartItemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Item not found in cart with id: " + itemId));
+        PlushToy plushToy = plushToyRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
+
+        ShoppingCartItem cartItem = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user)
+                .orElseThrow(() -> new NotFoundException(
+                        "Item not found in cart, itemId: " + itemId + " publicKey: " + publicKey));
 
         if (cartItem.getAmount() > 1) {
             cartItem.setAmount(cartItem.getAmount() - 1);
@@ -138,5 +124,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void clearCart(String publicKey) {
+        LOGGER.debug("Clearing cart for user with publicKey: {}", publicKey);
+
+        User user = userRepository.findUserByPublicKey(publicKey)
+                .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
+
+        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(user.getId());
+
+        shoppingCartItemRepository.deleteAll(cartItems);
     }
 }

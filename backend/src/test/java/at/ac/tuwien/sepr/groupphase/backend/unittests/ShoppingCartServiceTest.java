@@ -150,7 +150,7 @@ public class ShoppingCartServiceTest implements TestData {
         item.setAmount(2); // Initial amount set to 2
         item = shoppingCartItemRepository.save(item);
 
-        shoppingCartService.decreaseAmount(publicKey, item.getId());
+        shoppingCartService.decreaseAmount(publicKey, plushToy.getId());
 
         ShoppingCartItem updatedItem = shoppingCartItemRepository.findById(item.getId())
                 .orElseThrow(() -> new NotFoundException("Item not found"));
@@ -168,6 +168,41 @@ public class ShoppingCartServiceTest implements TestData {
         long nonExistingItemId = 999L;
 
         assertThrows(NotFoundException.class, () -> shoppingCartService.decreaseAmount(publicKey, nonExistingItemId));
+    }
+
+    @Test
+    public void givenMultipleItemsInCart_whenClearCart_thenCartIsEmpty() {
+        String publicKey = TEST_PUBKEY;
+
+        User user = new User();
+        user.setPublicKey(publicKey);
+        userRepository.save(user);
+
+        PlushToy plushToy1 = plushToyRepository.save(plushySupplier.get());
+        ShoppingCartItem item1 = new ShoppingCartItem();
+        item1.setUser(user);
+        item1.setPlushToy(plushToy1);
+        item1.setAmount(1);
+        shoppingCartItemRepository.save(item1);
+
+        PlushToy plushToy2 = plushToyRepository.save(plushySupplier.get());
+        ShoppingCartItem item2 = new ShoppingCartItem();
+        item2.setUser(user);
+        item2.setPlushToy(plushToy2);
+        item2.setAmount(2);
+        shoppingCartItemRepository.save(item2);
+
+        PlushToy plushToy3 = plushToyRepository.save(plushySupplier.get());
+        ShoppingCartItem item3 = new ShoppingCartItem();
+        item3.setUser(user);
+        item3.setPlushToy(plushToy3);
+        item3.setAmount(3);
+        shoppingCartItemRepository.save(item3);
+
+        shoppingCartService.clearCart(publicKey);
+
+        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(user.getId());
+        assertTrue(cartItems.isEmpty());
     }
 
 }

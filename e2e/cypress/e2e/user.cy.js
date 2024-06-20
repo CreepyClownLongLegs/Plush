@@ -42,6 +42,7 @@ context('user', () => {
         cy.visit('/#/profile');
         cy.url().should('contain', '/#/profile');
         cy.getBySel('deleteButton').click();
+        cy.scrollTo('top');
         cy.getBySel('cancelDeleteButton').click();
         cy.url().should('contain', '/#/profile');
     });
@@ -52,6 +53,7 @@ context('user', () => {
         cy.visit('/#/profile');
         cy.url().should('contain', '/#/profile');
         cy.getBySel('deleteButton').click();
+        cy.scrollTo('top');
         cy.getBySel('confirmDeleteButton').click();
         cy.url().should('contain', '/#/');
 

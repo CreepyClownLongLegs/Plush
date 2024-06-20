@@ -1,14 +1,9 @@
 import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
-import { AuthRequest } from "../../dtos/auth-request";
-import { NonceRequest } from "../../dtos/nonce-request";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrService } from "ngx-toastr";
 import { WalletService } from "../../services/wallet.service";
-import { UserDetailDto } from "src/app/dtos/user";
 import { UserService } from "src/app/services/user.service";
-import { Router } from "@angular/router";
-
+import { ToastrService } from "ngx-toastr";
+import { UserDetailDto } from "src/app/dtos/user";
 
 @Component({
   selector: 'app-registration',
@@ -21,17 +16,14 @@ export class RegistrationComponent implements OnInit {
   error = false;
   errorMessage = "";
   publicKey = "";
-  balance = 0;
   userDetail: UserDetailDto | null = null;
 
   constructor(
     public authService: AuthService,
     private walletService: WalletService,
     private userService: UserService,
-    private modalService: NgbModal,
     private toastr: ToastrService,
     private notification: ToastrService,
-    private router: Router
   ) {
   }
 
@@ -47,8 +39,8 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  updateAddress(): void {
-    if (!this.checkIfAddressIsSet()) {
+  updateUserData(): void {
+    if (!this.checkUserData()) {
       return;
     }
 
@@ -57,7 +49,7 @@ export class RegistrationComponent implements OnInit {
         (updatedUser: UserDetailDto) => {
           this.userDetail = updatedUser;
           this.toastr.success('You can finish your payment now if you wish :3', 'Success');
-          this.router.navigate(['./cart']);
+          window.history.back();
         },
         (error) => {
           console.error('Error updating user', error);
@@ -78,25 +70,42 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  checkIfAddressIsSet(): boolean {
+  checkUserData(): boolean {
     if (!this.userDetail?.addressLine1) {
       this.notification.info("Address is empty", "Address Incomplete");
-      this.router.navigate(['/register']); // Reroute to the register component
       return false;
-    } else if (this.userDetail!.addressLine1.trim() === "") {
+    } else if (this.userDetail.addressLine1.trim() === "") {
       this.notification.info("Address cannot consist of empty spaces", "Address Incomplete");
       return false;
-    } else if (!this.userDetail!.postalCode) {
+    } else if (!this.userDetail.postalCode) {
       this.notification.info("Postal Code is empty", "Postal Code Incomplete");
       return false;
-    } else if (this.userDetail!.postalCode.trim() === "") {
+    } else if (this.userDetail.postalCode.trim() === "") {
       this.notification.info("Postal Code cannot consist of empty spaces", "Postal Code Incomplete");
       return false;
-    } else if (!this.userDetail!.country) {
+    } else if (!this.userDetail.country) {
       this.notification.info("Country is empty", "Country Incomplete");
       return false;
-    } else if (this.userDetail!.country.trim() === "") {
+    } else if (this.userDetail.country.trim() === "") {
       this.notification.info("Country cannot consist of empty spaces", "Country Incomplete");
+      return false;
+    } else if (!this.userDetail.firstname) {
+      this.notification.info("First name is empty", "First Name Incomplete");
+      return false;
+    } else if (this.userDetail.firstname.trim() === "") {
+      this.notification.info("First name cannot consist of empty spaces", "First Name Incomplete");
+      return false;
+    } else if (!this.userDetail.lastname) {
+      this.notification.info("Last name is empty", "Last Name Incomplete");
+      return false;
+    } else if (this.userDetail.lastname.trim() === "") {
+      this.notification.info("Last name cannot consist of empty spaces", "Last Name Incomplete");
+      return false;
+    } else if (!this.userDetail.emailAddress) {
+      this.notification.info("Email address is empty", "Email Address Incomplete");
+      return false;
+    } else if (this.userDetail.emailAddress.trim() === "") {
+      this.notification.info("Email address cannot consist of empty spaces", "Email Address Incomplete");
       return false;
     } else {
       return true;
@@ -107,4 +116,3 @@ export class RegistrationComponent implements OnInit {
     this.error = false;
   }
 }
-

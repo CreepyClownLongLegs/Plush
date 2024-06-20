@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
 
 @RestController
@@ -58,17 +55,6 @@ public class ShoppingCartEndpoint {
     }
 
     @RolesAllowed({ "USER", "ADMIN" })
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping(value = "/emptyCart")
-    @Operation(summary = "Delete all items from the shopping cart", description = "Deletes all items from the shopping cart of the logged in user", security = @SecurityRequirement(name = "apiKey"))
-    public void deleteAllItemsFromCart() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String publicKey = authentication.getName();
-        LOGGER.info("DELETE /api/v1/cart/emptyCart {}", publicKey);
-        shoppingCartService.deleteAllItemsByUserPublicKey(publicKey);
-    }
-
-    @RolesAllowed({ "USER", "ADMIN" })
     @GetMapping
     @Operation(summary = "Get the full cart for a user")
     public List<PlushToyCartListDto> getFullCart() {
@@ -86,6 +72,16 @@ public class ShoppingCartEndpoint {
         String publicKey = authentication.getName();
         LOGGER.info("POST /api/v1/cart/decrease - itemId: {}", itemId);
         shoppingCartService.decreaseAmount(publicKey, itemId);
+    }
+
+    @RolesAllowed({ "USER", "ADMIN" })
+    @DeleteMapping("/clear")
+    @Operation(summary = "Clear the shopping cart")
+    public void clearCart() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String publicKey = authentication.getName();
+        LOGGER.info("DELETE /api/v1/cart/clear - publicKey: {}", publicKey);
+        shoppingCartService.clearCart(publicKey);
     }
 
 }

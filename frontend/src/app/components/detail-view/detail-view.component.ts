@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlushtoyService } from '../../services/plushtoy.service';
 import { ShoppingCartService } from "../../services/shopping-cart.service";
 import { ToastrService } from "ngx-toastr";
 import { PlushToyColor, PlushToy, PlushToySize } from '../../dtos/plushtoy';
+import { WalletService } from "../../services/wallet.service";
+import { UserService } from "../../services/user.service";
+import {UserDetailDto} from "../../dtos/user";
 
 @Component({
   selector: 'app-detail-view',
@@ -20,8 +23,8 @@ export class DetailViewComponent implements OnInit {
     price: 0,
     description: "",
     taxClass: 0,
-    weight: 0,
     size: PlushToySize.SMALL,
+    weight: 0,
     color: PlushToyColor.RED,
     hp: 0,
     imageUrl: "",
@@ -33,9 +36,12 @@ export class DetailViewComponent implements OnInit {
 
   constructor(
     private service: PlushtoyService,
+    private walletService: WalletService,
     private route: ActivatedRoute,
     private notification: ToastrService,
     private shoppingCartService: ShoppingCartService,
+    private userService: UserService,
+    private router: Router,
   ) {
   }
 
@@ -53,7 +59,6 @@ export class DetailViewComponent implements OnInit {
   }
 
   addToCart() {
-
     this.shoppingCartService.addToCart(this.toy.id).subscribe({
       next: () => {
         console.log('Item added to cart successfully');
@@ -67,15 +72,44 @@ export class DetailViewComponent implements OnInit {
     });
   }
 
+
   buyNow() {
-    // Buy now logic
+    this.walletService.hasSufficientBalance(this.toy.price).then(hasBalance => {
+      if (!hasBalance) {
+        this.notification.error('Insufficient balance to complete the transaction.', 'Error');
+        return;
+      }
+
+      this.userService.isProfileComplete().subscribe({
+        next: (isComplete) => {
+          if (!isComplete) {
+            this.notification.error('Please complete your profile before proceeding to payment.', 'Profile Incomplete');
+            this.router.navigate(['/register']);
+            return;
+          }
+
+          this.walletService.handleSignAndSendTransaction(this.toy.price).subscribe({
+            next: () => {
+              this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
+            },
+            error: (error) => {
+              console.error('Error during payment:', error);
+              this.notification.error('Payment failed', 'Error');
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error checking profile', error);
+          this.notification.error('Could not check profile', 'Error');
+        }
+      });
+    }).catch(error => {
+      console.error('Error checking balance', error);
+      this.notification.error('Error checking balance.', 'Error');
+    });
   }
 
   goBack() {
     window.history.back();  // Use window.history.back() to navigate back
   }
 }
-
-
-
-

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana.CreateSmartContractDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana.NftPlushToyAttributeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana.PublicKeyDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana.UpdateSmartContractDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.NftPlushToyAttributeValueMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nft;
 import at.ac.tuwien.sepr.groupphase.backend.entity.NftPlushToyAttributeValue;
@@ -138,23 +135,9 @@ public class SolanaServiceImplementation implements SolanaService {
             }
         }
 
-        List<NftPlushToyAttributeDto> attributes = attributeValues.stream()
-                .map(nftPlushToyAttributeValueMapper::entityToDto)
-                .collect(Collectors.toList());
-
-        UpdateSmartContractDto updateRequest = new UpdateSmartContractDto(plushToy.getName(),
-                getTokenInfoUrl.apply(receiverPublicKey), plushToy.getDescription(),
-                plushToy.getImageUrl(),
-                attributes);
-
-        restRequestService.sendJsonRequest(client, HttpMethod.POST,
-                updateMintUrl.apply(smartContract.getPublicKey()),
-                updateRequest,
-                PublicKeyDto.class);
-
         PublicKeyDto request = new PublicKeyDto(receiverPublicKey);
         PublicKeyDto response = restRequestService.sendJsonRequest(client, HttpMethod.POST,
-                getMintNftUrl.apply(receiverPublicKey), request,
+                getMintNftUrl.apply(smartContract.getPublicKey()), request,
                 PublicKeyDto.class);
 
         Nft nft = new Nft();
@@ -162,7 +145,7 @@ public class SolanaServiceImplementation implements SolanaService {
         nft.setPlushToy(plushToy);
         nft.setTimestamp(LocalDateTime.now());
         nft.setOwnerId(receiverPublicKey);
-        nft.setPublicKey(response.getPublicKey());
+        nft.setPublicKey(smartContract.getPublicKey());
         nft.setDescription(plushToy.getDescription());
         nft.setName("NFT for " + plushToy.getName());
         nft = nftRepository.save(nft);

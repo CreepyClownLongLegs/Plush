@@ -82,14 +82,6 @@ hr {
   margin-bottom: 20px;
 }
 
-.payment-method {
-  margin-top: 40px;
-}
-
-.payment-method label {
-  margin-right: 10px;
-}
-
 .total-price {
   margin-top: 40px;
   font-size: 1.2em;
@@ -103,7 +95,7 @@ hr {
 
 .total-price span {
   color: red;
-  border: 1px solid black;
+  border: none;
   padding: 0 5px;
 }
 
@@ -116,10 +108,14 @@ hr {
   cursor: pointer;
   border-radius: 8px;
   margin-top: 20px;
-  display: inline-block; /* Ensure the button respects text alignment */
 }
 
-.finish-payment:hover {
+.finish-payment:disabled {
+  background-color: #ff9b85; /* visually differentiate disabled button */
+  cursor: not-allowed;
+}
+
+.finish-payment:hover:enabled {
   background-color: #c70039;
 }
 
