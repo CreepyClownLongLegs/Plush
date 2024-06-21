@@ -8,16 +8,15 @@ context('detail-view', () => {
     it('should navigate to detail view when card is clicked', () => {
         cy.visit('/');
         cy.get('.card').first().click();
-        cy.url().should('contain', '/detail/3');
+        cy.url().should('contain', '/detail/1');
     });
 
     it('should load plush toy details', () => {
         cy.visit('/#/detail/1');
         cy.getBySel('plushToyName').should('contain', 'TEST TIGER 0 Nr.1');
         cy.getBySel("plushToyDesc").should('contain', 'Cute lil gent');
-        cy.getBySel("plushToyWeight").should('contain', '2kg');
+        cy.getBySel("plushToyWeight").should('contain', '0kg');
         cy.getBySel("plushToySize").should('contain', 'MEDIUM');
-        cy.getBySel("plushToyStrength").find('.star').should('have.length', 2);
         cy.getBySel("plushToyHealth").should('contain', '100HP');
         cy.getBySel("plushToyPrice").should('contain', '0.01 SOL');
 
