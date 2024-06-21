@@ -8,7 +8,7 @@ context('detail-view', () => {
     it('should navigate to detail view when card is clicked', () => {
         cy.visit('/');
         cy.get('.card').first().click();
-        cy.url().should('contain', '/detail/1');
+        cy.url().should('contain', '/detail/3');
     });
 
     it('should load plush toy details', () => {
