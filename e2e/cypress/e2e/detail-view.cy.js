@@ -17,6 +17,7 @@ context('detail-view', () => {
         cy.getBySel("plushToyDesc").should('contain', 'Cute lil gent');
         cy.getBySel("plushToyWeight").should('contain', '2kg');
         cy.getBySel("plushToySize").should('contain', 'MEDIUM');
+        cy.getBySel("plushToyStrength").find('.star').should('have.length', 2);
         cy.getBySel("plushToyHealth").should('contain', '100HP');
         cy.getBySel("plushToyPrice").should('contain', '0.01 SOL');
 
