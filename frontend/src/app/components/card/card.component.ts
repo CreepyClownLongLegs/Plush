@@ -48,4 +48,8 @@ export class CardComponent implements OnInit {
     this.addToCart(plushieId);
   }
 
+  getStars(count: number): any[] {
+    return new Array(count);
+  }
+
 }
