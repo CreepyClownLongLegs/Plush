@@ -8,6 +8,7 @@ public class PlushToyListDto {
     private Double averageRating;
     private int hp;
     private String imageUrl;
+    private float strength;
 
     public PlushToyListDto() {
     }
@@ -66,6 +67,14 @@ public class PlushToyListDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public float getStrength() {
+        return strength;
+    }
+
+    public void setStrength(float strength) {
+        this.strength = strength;
     }
 
 }

@@ -10,15 +10,15 @@
           <h5 class="card-title m-0">{{ plushie.name }}</h5>
         </div>
         <div>
-          <span class="badge badge-primary">{{ plushie.hp }}</span>
+          <span class="badge badge-primary">{{ plushie.hp}}</span>
         </div>
       </div>
       <div class="card-content">
         <div class="strength d-flex align-items-center">
           <p class="card-text m-0">Strength:</p>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
+          <ng-container *ngFor="let star of getStars(plushie.strength)">
+            <div class="star"></div>
+          </ng-container>
         </div>
         <div class="card-price d-flex align-items-center">
           <p class="card-text m-0">
