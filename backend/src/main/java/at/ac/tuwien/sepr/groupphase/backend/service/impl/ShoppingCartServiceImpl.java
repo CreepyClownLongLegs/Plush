@@ -9,18 +9,24 @@ import java.util.stream.Collectors;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderItemListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.*;
-import at.ac.tuwien.sepr.groupphase.backend.repository.*;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OrderItem;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
+import at.ac.tuwien.sepr.groupphase.backend.entity.DeliveryStatus;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.DeliveryStatusRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
 
 @Service
@@ -32,14 +38,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final DeliveryStatusRepository deliveryStatusRepository;
 
     public ShoppingCartServiceImpl(PlushToyRepository plushToyRepository,
-                                   ShoppingCartItemRepository shoppingCartItemRepository, UserRepository userRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository1, OrderItemRepository orderItemRepository1) {
+                                   ShoppingCartItemRepository shoppingCartItemRepository, UserRepository userRepository, OrderRepository orderRepository,
+                                   OrderItemRepository orderItemRepository, DeliveryStatusRepository deliveryStatusRepository) {
         this.plushToyRepository = plushToyRepository;
         this.shoppingCartItemRepository = shoppingCartItemRepository;
         this.userRepository = userRepository;
-        this.orderRepository = orderRepository1;
-        this.orderItemRepository = orderItemRepository1;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.deliveryStatusRepository = deliveryStatusRepository;
     }
 
     @Override
@@ -100,9 +109,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new NotFoundException("Shopping cart is empty");
         }
 
+        DeliveryStatus pendingStatus = new DeliveryStatus(2, "pending");
+        deliveryStatusRepository.save(pendingStatus);
+
         Order order = new Order();
         order.setUser(user);
-        order.setDeliveryStatus(new DeliveryStatus(2, "pending"));
+        order.setDeliveryStatus(pendingStatus);
+
         order.setTimestamp(LocalDateTime.now());
 
         List<OrderItemListDto> orderItemsDto = new ArrayList<>();
