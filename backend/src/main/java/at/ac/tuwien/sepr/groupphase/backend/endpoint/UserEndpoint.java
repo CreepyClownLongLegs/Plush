@@ -114,11 +114,12 @@ public class UserEndpoint {
     public OrderDetailDto verifyAndCreateOrder(@Valid @RequestBody OrderCreateDto orderCreateDto) {
         LOGGER.info("POST /api/v1/user/orders {}", orderCreateDto);
 
+        OrderDetailDto orderDetail = new OrderDetailDto();
+
         if (userService.isValidTransaction(orderCreateDto.getSignature())) {
-            // IMPL add antons implementation for order creation
-            // IMPL call smart contract creation
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String publicKey = authentication.getName();
+            orderDetail = shoppingCartService.convertCartToOrder(publicKey);
             List<PlushToyCartListDto> cart = shoppingCartService.getFullCart(publicKey);
             for (PlushToyCartListDto item : cart) {
                 for (int i = 0; i < item.getAmount(); i++) {
@@ -130,8 +131,8 @@ public class UserEndpoint {
             placeholder.setTotalPrice(100.0);
             placeholder.setTotalTax(20.0);
             placeholder.setTimestamp(LocalDateTime.now());
-            return placeholder;
+            return orderDetail;
         }
-        return new OrderDetailDto();
+        return orderDetail;
     }
 }

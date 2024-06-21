@@ -1,30 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderItemListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.*;
+import at.ac.tuwien.sepr.groupphase.backend.repository.*;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderItemListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
-import at.ac.tuwien.sepr.groupphase.backend.entity.OrderItem;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Order;
-import at.ac.tuwien.sepr.groupphase.backend.entity.DeliveryStatus;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ShoppingCartService;
-
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -32,15 +29,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PlushToyRepository plushToyRepository;
     private final ShoppingCartItemRepository shoppingCartItemRepository;
-    private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
     public ShoppingCartServiceImpl(PlushToyRepository plushToyRepository,
-            ShoppingCartItemRepository shoppingCartItemRepository, UserRepository userRepository) {
+                                   ShoppingCartItemRepository shoppingCartItemRepository, UserRepository userRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository1, OrderItemRepository orderItemRepository1) {
         this.plushToyRepository = plushToyRepository;
         this.shoppingCartItemRepository = shoppingCartItemRepository;
-        this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository1;
+        this.orderItemRepository = orderItemRepository1;
     }
 
     @Override
@@ -69,7 +68,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartItemRepository.save(cartItem);
     }
 
-
     @Override
     public void deleteFromCart(String publicKey, long itemId) throws NotFoundException {
         LOGGER.debug("Deleting item from cart: {}", itemId);
@@ -89,10 +87,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
     @Override
-    public OrderListDto convertCartToOrder() throws NotFoundException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String publicKey = authentication.getName();
-
+    @Transactional
+    public OrderDetailDto convertCartToOrder(String publicKey) throws NotFoundException {
         LOGGER.debug("Creating an order from the shopping cart: {}", publicKey);
 
         User user = userRepository.findUserByPublicKey(publicKey)
@@ -113,12 +109,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         double totalPrice = 0;
         double totalTax = 0;
+        int i = 1;
 
         for (ShoppingCartItem cartItem : cartItems) {
+            i++;
             PlushToy plushToy = cartItem.getPlushToy();
             int amount = cartItem.getAmount();
             double pricePerPiece = plushToy.getPrice();
-            double taxClass = 0.20;
+            double taxClass = plushToy.getTaxClass();
             double taxAmount = pricePerPiece * taxClass * amount;
 
             totalPrice += pricePerPiece * amount;
@@ -132,9 +130,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             orderItem.setTaxClass((float) taxClass);
             orderItem.setPlushToy(plushToy);
             orderItem.setImageUrl(plushToy.getImageUrl());
-            orderItem.setOrder(order);
+            orderItem.setPosition(i);
 
+            orderItem.setOrder(order);
             order.addOrderItem(orderItem);
+            orderItemRepository.save(orderItem);
 
             OrderItemListDto orderItemDto = new OrderItemListDto();
             orderItemDto.setId(orderItem.getId());
@@ -152,19 +152,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         orderRepository.save(order);
         shoppingCartItemRepository.deleteAll(cartItems);
 
-        OrderListDto orderListDto = new OrderListDto();
-        orderListDto.setId(order.getId());
-        orderListDto.setTotalPrice(totalPrice);
-        orderListDto.setTimestamp(order.getTimestamp());
-        orderListDto.setTotalTax(totalTax);
-        orderListDto.setOrderItems(orderItemsDto);
-        orderListDto.setDeliveryStatus(order.getDeliveryStatus().getStatus());
+        OrderDetailDto orderDetailDto = new OrderDetailDto();
+        orderDetailDto.setId(order.getId());
+        orderDetailDto.setTotalPrice(totalPrice);
+        orderDetailDto.setTimestamp(order.getTimestamp());
+        orderDetailDto.setTotalTax(totalTax);
+        orderDetailDto.setOrderItems(orderItemsDto);
 
-        return orderListDto;
+        return orderDetailDto;
     }
-
-
-
 
 
     @Override

@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderDetailDto;
 import java.util.List;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-
 
 /**
  * Service interface for managing shopping cart operations.
@@ -18,7 +17,6 @@ public interface ShoppingCartService {
      * @param itemId    the ID of the item to be added
      */
     void addToCart(String publicKey, long itemId);
-
 
     /**
      * Deletes an item from the shopping cart.
@@ -56,9 +54,10 @@ public interface ShoppingCartService {
     /**
      * Converts the items in the shopping cart into an order.
      *
+     * @param publicKey The public key of the user whose shopping cart is being converted into an order.
      * @return OrderListDto representing the details of the created order
      * @throws NotFoundException if the user or items are not found
      */
-    OrderListDto convertCartToOrder() throws NotFoundException;
+    OrderDetailDto convertCartToOrder(String publicKey) throws NotFoundException;
 
 }

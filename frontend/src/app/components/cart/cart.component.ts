@@ -11,6 +11,7 @@ import { UserDetailDto } from 'src/app/dtos/user';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { load } from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks";
+import {OrderDetailDto} from "../../dtos/order";
 
 @Component({
   selector: 'app-cart',
@@ -129,7 +130,7 @@ export class CartComponent implements OnInit {
             }
 
             this.walletService.handleSignAndSendTransaction(total).subscribe({
-              next: () => {
+              next: (orderDetail: OrderDetailDto) => {
                 this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
                 this.shoppingCartService.clearCart().subscribe({
                   next: () => this.loadCart(),
@@ -138,6 +139,8 @@ export class CartComponent implements OnInit {
                     this.notification.error('Error while clearing the cart');
                   }
                 });
+                this.router.navigate(['/payment-confirmation'], { state: { orderDetail } });
+
               },
               error: (error) => {
                 console.error('Error during payment:', error);

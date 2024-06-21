@@ -16,6 +16,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { CartComponent } from "./components/cart/cart.component";
 import { RegistrationComponent } from './components/registration/registration.component';
+import { PaymentConfirmationComponent } from "./components/payment-confirmation/payment-confirmation.component";
 
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'detail/:id', component: DetailViewComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'cart', component: CartComponent },
+  { path: 'payment-confirmation', component: PaymentConfirmationComponent },
   { path: 'register', component: RegistrationComponent },
   {
     path: 'admin', canActivate: [AuthGuard], data: { role: 'ADMIN' }, children: [
