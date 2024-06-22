@@ -58,22 +58,14 @@
     margin-bottom: 20px;
 }
 
-input {
+input.form-control {
     border-radius: 0px;
     background: none;
     color: rgba(255, 255, 255, 0.7)
 }
 
-input :active {
-    color: #000000;
-}
-
-input:focus {
-    color: #000000;
-}
-
-input ::after {
-    color: #000000;
+input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 button {

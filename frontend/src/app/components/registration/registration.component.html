@@ -13,48 +13,48 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="m-3">Please update your location to proceed with the payment!</h3>
+            <h3 class="m-3">Please update your shipment information to proceed with the payment!</h3>
           </div>
 
           <div class="card-body" *ngIf="userDetail">
 
             <div class="form-group">
               <label for="firstname" class="mb-2">First Name</label>
-              <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.firstname"
+              <input data-test="firstName" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.firstname"
                      placeholder="Input Shipping Address">
             </div>
 
             <div class="form-group">
               <label for="lastname" class="mb-2">Last Name</label>
-              <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.lastname"
+              <input data-test="lastName" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.lastname"
                      placeholder="Input Shipping Address">
             </div>
 
             <div class="form-group">
               <label for="emailAddress" class="mb-2">Email Address</label>
-              <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.emailAddress"
+              <input data-test="emailAddress" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.emailAddress"
                      placeholder="Input Shipping Address">
             </div>
 
             <div class="form-group">
               <label for="inputAddress" class="mb-2">Shipping Address</label>
-              <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.addressLine1"
+              <input data-test="addressLine1" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.addressLine1"
                      placeholder="Input Shipping Address">
             </div>
 
             <div class="form-group">
               <label for="postalCode" class="mb-2">Postal Code </label>
-              <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.postalCode"
+              <input data-test="postalCode" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.postalCode"
                      placeholder="Input Postal Code">
             </div>
 
             <div class="form-group">
               <label for="country" class="mb-2">Country</label>
-              <input style="color: aliceblue;" type="text" [(ngModel)]="userDetail.country"
+              <input data-test="country" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.country"
                      placeholder="Input Country">
             </div>
 
-            <button (click)="updateUserData()" class="btn btn-success float-center"
+            <button data-test="updateButton" (click)="updateUserData()" class="btn btn-success w-100"
                     style="margin: auto;">Save Address</button>
 
           </div>
