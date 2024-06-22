@@ -22,7 +22,6 @@ export class RegistrationComponent implements OnInit {
     public authService: AuthService,
     private walletService: WalletService,
     private userService: UserService,
-    private toastr: ToastrService,
     private notification: ToastrService,
   ) {
   }
@@ -40,7 +39,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   updateUserData(): void {
-    if (!this.checkUserData()) {
+    if (!this.validateUserData()) {
       return;
     }
 
@@ -48,12 +47,12 @@ export class RegistrationComponent implements OnInit {
       this.userService.updateUser(this.userDetail).subscribe(
         (updatedUser: UserDetailDto) => {
           this.userDetail = updatedUser;
-          this.toastr.success('You can finish your payment now if you wish :3', 'Success');
+          this.notification.success('You can finish your payment now if you wish :3', 'Success');
           window.history.back();
         },
         (error) => {
           console.error('Error updating user', error);
-          this.toastr.error('Could not update user', 'Error');
+          this.notification.error('Invalid Input, could not update profile', 'Error');
         }
       );
     }
@@ -70,42 +69,51 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  checkUserData(): boolean {
+  validateUserData(): boolean {
+    const errors: string[] = [];
+    const nameRegex = /^[A-Za-z]+$/;
+    const numberRegex = /^[0-9]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const countryRegex = /^[A-Za-z0-9\s]+$/;
+
+    if (!this.userDetail?.firstname) {
+      errors.push("First name is empty");
+    } else if (this.userDetail?.firstname && (this.userDetail.firstname.trim() === "" || !nameRegex.test(this.userDetail.firstname) || this.userDetail.firstname.length > 255)) {
+      errors.push("First name is invalid");
+    }
+
+    if (!this.userDetail?.lastname) {
+      errors.push("Last name is empty");
+    } else if (this.userDetail?.lastname && (this.userDetail.lastname.trim() === "" || !nameRegex.test(this.userDetail.lastname) || this.userDetail.lastname.length > 255)) {
+      errors.push("Last name is invalid");
+    }
+
+    if (!this.userDetail?.emailAddress) {
+      errors.push("Email address is empty");
+    } else if (this.userDetail?.emailAddress && (this.userDetail.emailAddress.trim() === "" || !emailRegex.test(this.userDetail.emailAddress) || this.userDetail.emailAddress.length > 255)) {
+      errors.push("Email address is invalid");
+    }
+
     if (!this.userDetail?.addressLine1) {
-      this.notification.info("Address is empty", "Address Incomplete");
-      return false;
-    } else if (this.userDetail.addressLine1.trim() === "") {
-      this.notification.info("Address cannot consist of empty spaces", "Address Incomplete");
-      return false;
-    } else if (!this.userDetail.postalCode) {
-      this.notification.info("Postal Code is empty", "Postal Code Incomplete");
-      return false;
-    } else if (this.userDetail.postalCode.trim() === "") {
-      this.notification.info("Postal Code cannot consist of empty spaces", "Postal Code Incomplete");
-      return false;
-    } else if (!this.userDetail.country) {
-      this.notification.info("Country is empty", "Country Incomplete");
-      return false;
-    } else if (this.userDetail.country.trim() === "") {
-      this.notification.info("Country cannot consist of empty spaces", "Country Incomplete");
-      return false;
-    } else if (!this.userDetail.firstname) {
-      this.notification.info("First name is empty", "First Name Incomplete");
-      return false;
-    } else if (this.userDetail.firstname.trim() === "") {
-      this.notification.info("First name cannot consist of empty spaces", "First Name Incomplete");
-      return false;
-    } else if (!this.userDetail.lastname) {
-      this.notification.info("Last name is empty", "Last Name Incomplete");
-      return false;
-    } else if (this.userDetail.lastname.trim() === "") {
-      this.notification.info("Last name cannot consist of empty spaces", "Last Name Incomplete");
-      return false;
-    } else if (!this.userDetail.emailAddress) {
-      this.notification.info("Email address is empty", "Email Address Incomplete");
-      return false;
-    } else if (this.userDetail.emailAddress.trim() === "") {
-      this.notification.info("Email address cannot consist of empty spaces", "Email Address Incomplete");
+      errors.push("Address is empty");
+    } else if (this.userDetail?.addressLine1 && (this.userDetail.addressLine1.trim() === "" || this.userDetail.addressLine1.length > 255)) {
+      errors.push("Address is invalid");
+    }
+
+    if (!this.userDetail?.postalCode) {
+      errors.push("Postal Code is empty");
+    } else if (this.userDetail?.postalCode && (this.userDetail.postalCode.trim() === "" || !numberRegex.test(this.userDetail.postalCode) || this.userDetail.postalCode.length > 255)) {
+      errors.push("Postal Code is invalid");
+    }
+
+    if (!this.userDetail?.country) {
+      errors.push("Country is empty");
+    } else if (this.userDetail?.country && (this.userDetail.country.trim() === "" || !countryRegex.test(this.userDetail.country) || this.userDetail.country.length > 255)) {
+      errors.push("Country is invalid");
+    }
+
+    if (errors.length > 0) {
+      this.notification.info(errors.join("<br>"), "Registration Error", { enableHtml: true });
       return false;
     } else {
       return true;
