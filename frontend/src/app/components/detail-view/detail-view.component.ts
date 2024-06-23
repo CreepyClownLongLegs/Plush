@@ -112,7 +112,7 @@ export class DetailViewComponent implements OnInit {
   }
 
   goBack() {
-    window.history.back();  // Use window.history.back() to navigate back
+    window.history.back();
   }
 
   getStars(count: number): any[] {

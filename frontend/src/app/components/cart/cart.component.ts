@@ -25,14 +25,12 @@ import {OrderDetailDto} from "../../dtos/order";
 export class CartComponent implements OnInit {
   cartItems: PlushToyCartListDto[] = [];
   totalPrice: string;
-  isCartEmpty: boolean = true;  //  track if the cart is empty
+  isCartEmpty: boolean = true;
 
   constructor(
-    private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService,
     public authService: AuthService,
-    private modalService: NgbModal,
     private userService: UserService,
     private router: Router,
     private walletService: WalletService,
@@ -48,7 +46,7 @@ export class CartComponent implements OnInit {
       next: (items: PlushToyCartListDto[]) => {
         this.cartItems = items;
         this.calculateTotalPrice();
-        this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
+        this.isCartEmpty = this.cartItems.length === 0;
       },
       error: (error) => {
         console.error('Error loading cart items', error);
@@ -65,7 +63,7 @@ export class CartComponent implements OnInit {
     this.shoppingCartService.deleteFromCart(itemId).subscribe({
       next: () => {
         console.log('Item removed successfully');
-        this.loadCart(); // Reload the cart after successful removal
+        this.loadCart();
       },
       error: (error) => {
         console.error('Error occurred while removing item:', error);
@@ -108,7 +106,7 @@ export class CartComponent implements OnInit {
         this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== itemId);
       }
       this.calculateTotalPrice();
-      this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
+      this.isCartEmpty = this.cartItems.length === 0;
     }
   }
 

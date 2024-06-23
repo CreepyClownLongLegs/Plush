@@ -27,7 +27,7 @@ export class ShoppingCartService {
 
   deleteFromCart(plushToyId: number): Observable<void> {
     console.log('Deleting item from cart', plushToyId);
-    return this.httpClient.delete<void>(`${this.cartBaseUri}?itemId=${plushToyId}`);
+    return this.httpClient.delete<void>(`${this.cartBaseUri}?plushToyId=${plushToyId}`);
   }
 
   getFullCart(): Observable<PlushToyCartListDto[]> {
