@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ public class PlushToyAttribute {
     private String name;
 
     @OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<PlushToyAttributeDistribution> distributions;
+    private List<PlushToyAttributeDistribution> distributions = new ArrayList<>();
 
     public PlushToyAttribute(String name) {
         this.name = name;
