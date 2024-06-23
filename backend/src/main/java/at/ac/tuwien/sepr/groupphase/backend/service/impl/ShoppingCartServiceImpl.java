@@ -109,12 +109,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new NotFoundException("Shopping cart is empty");
         }
 
-        DeliveryStatus pendingStatus = new DeliveryStatus(2, "pending");
-        deliveryStatusRepository.save(pendingStatus);
+        DeliveryStatus deliveryStatus;
+
+        Optional<DeliveryStatus> pendingStatusOptional = deliveryStatusRepository.findByCode(2);
+        if (pendingStatusOptional.isEmpty()) {
+            deliveryStatus = new DeliveryStatus(2, "pending");
+            deliveryStatusRepository.save(deliveryStatus);
+        } else {
+            deliveryStatus = pendingStatusOptional.get();
+        }
 
         Order order = new Order();
         order.setUser(user);
-        order.setDeliveryStatus(pendingStatus);
+        order.setDeliveryStatus(deliveryStatus);
 
         order.setTimestamp(LocalDateTime.now());
 
@@ -129,7 +136,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             PlushToy plushToy = cartItem.getPlushToy();
             int amount = cartItem.getAmount();
             double pricePerPiece = plushToy.getPrice();
-            double taxClass = plushToy.getTaxClass();
+            float taxClass = plushToy.getTaxClass();
             double taxAmount = pricePerPiece * taxClass * amount;
 
             totalPrice += pricePerPiece * amount;
@@ -140,7 +147,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             orderItem.setName(plushToy.getName());
             orderItem.setPricePerPiece(pricePerPiece);
             orderItem.setTaxAmount(taxAmount);
-            orderItem.setTaxClass((float) taxClass);
+            orderItem.setTaxClass(taxClass);
             orderItem.setPlushToy(plushToy);
             orderItem.setImageUrl(plushToy.getImageUrl());
             orderItem.setPosition(i);

@@ -56,8 +56,9 @@ export class CartComponent implements OnInit {
 
   calculateTotalPrice(): void {
     const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
-    this.totalPrice = `${total} SOL`;
+    this.totalPrice = `${total.toFixed(2)} SOL`;
   }
+
 
   removeItem(itemId: number): void {
     this.shoppingCartService.deleteFromCart(itemId).subscribe({
