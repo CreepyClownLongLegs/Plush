@@ -73,42 +73,6 @@ export class DetailViewComponent implements OnInit {
   }
 
 
-  buyNow() {
-    this.walletService.hasSufficientBalance(this.toy.price).then(hasBalance => {
-      if (!hasBalance) {
-        this.notification.error('Insufficient balance to complete the transaction.', 'Error');
-        return;
-      }
-
-      this.userService.isProfileComplete().subscribe({
-        next: (isComplete) => {
-          if (!isComplete) {
-            this.notification.error('Please complete your profile before proceeding to payment.', 'Profile Incomplete');
-            this.router.navigate(['/register']);
-            return;
-          }
-
-          this.walletService.handleSignAndSendTransaction(this.toy.price).subscribe({
-            next: () => {
-              this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
-            },
-            error: (error) => {
-              console.error('Error during payment:', error);
-              this.notification.error('Payment failed', 'Error');
-            }
-          });
-        },
-        error: (error) => {
-          console.error('Error checking profile', error);
-          this.notification.error('Could not check profile', 'Error');
-        }
-      });
-    }).catch(error => {
-      console.error('Error checking balance', error);
-      this.notification.error('Error checking balance.', 'Error');
-    });
-  }
-
   goBack() {
     window.history.back();  // Use window.history.back() to navigate back
   }
