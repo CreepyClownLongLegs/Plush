@@ -37,21 +37,21 @@ public class ShoppingCartEndpoint {
     @RolesAllowed({ "USER", "ADMIN" })
     @PostMapping
     @Operation(summary = "Add an item to the shopping cart")
-    public void addToCart(@RequestBody long itemId) {
+    public void addToCart(@RequestBody long plushToyId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String publicKey = authentication.getName();
-        LOGGER.info("POST /api/v1/cart/ - {}", itemId);
-        shoppingCartService.addToCart(publicKey, itemId);
+        LOGGER.info("POST /api/v1/cart/ - {}", plushToyId);
+        shoppingCartService.addToCart(publicKey, plushToyId);
     }
 
     @RolesAllowed({ "USER", "ADMIN" })
     @DeleteMapping
     @Operation(summary = "Delete an item from the shopping cart")
-    public void deleteFromCart(@RequestParam("itemId") long itemId) {
+    public void deleteFromCart(@RequestParam("plushToyId") long plushToyId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String publicKey = authentication.getName();
-        LOGGER.info("DELETE /api/v1/cart/ - itemId: {}", itemId);
-        shoppingCartService.deleteFromCart(publicKey, itemId);
+        LOGGER.info("DELETE /api/v1/cart/ - itemId: {}", plushToyId);
+        shoppingCartService.deleteFromCart(publicKey, plushToyId);
     }
 
     @RolesAllowed({ "USER", "ADMIN" })
@@ -67,11 +67,11 @@ public class ShoppingCartEndpoint {
     @RolesAllowed({ "USER", "ADMIN" })
     @PostMapping("/decrease")
     @Operation(summary = "Decrease the amount of an item in the shopping cart")
-    public void decreaseAmount(@RequestBody long itemId) {
+    public void decreaseAmount(@RequestBody long plushToyId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String publicKey = authentication.getName();
-        LOGGER.info("POST /api/v1/cart/decrease - itemId: {}", itemId);
-        shoppingCartService.decreaseAmount(publicKey, itemId);
+        LOGGER.info("POST /api/v1/cart/decrease - itemId: {}", plushToyId);
+        shoppingCartService.decreaseAmount(publicKey, plushToyId);
     }
 
     @RolesAllowed({ "USER", "ADMIN" })

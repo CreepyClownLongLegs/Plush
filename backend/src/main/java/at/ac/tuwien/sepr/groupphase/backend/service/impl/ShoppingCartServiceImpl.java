@@ -52,14 +52,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void addToCart(String publicKey, long itemId) {
-        LOGGER.debug("Adding item to cart: itemId={}, publicKey={}", itemId, publicKey);
+    public void addToCart(String publicKey, long plushToyId) {
+        LOGGER.debug("Adding item to cart: itemId={}, publicKey={}", plushToyId, publicKey);
 
         User user = userRepository.findUserByPublicKey(publicKey)
                 .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
-        PlushToy plushToy = plushToyRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
+        PlushToy plushToy = plushToyRepository.findById(plushToyId)
+                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + plushToyId));
 
         Optional<ShoppingCartItem> itemOptional = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user);
 
@@ -78,18 +78,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteFromCart(String publicKey, long itemId) throws NotFoundException {
-        LOGGER.debug("Deleting item from cart: {}", itemId);
+    public void deleteFromCart(String publicKey, long plushToyId) throws NotFoundException {
+        LOGGER.debug("Deleting item from cart: {}", plushToyId);
 
         User user = userRepository.findUserByPublicKey(publicKey)
                 .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
-        PlushToy plushToy = plushToyRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
+        PlushToy plushToy = plushToyRepository.findById(plushToyId)
+                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + plushToyId));
 
         ShoppingCartItem cartItem = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user)
                 .orElseThrow(() -> new NotFoundException(
-                        "Item not found in cart, itemId: " + itemId + " publicKey: " + publicKey));
+                        "Item not found in cart, itemId: " + plushToyId + " publicKey: " + publicKey));
 
         shoppingCartItemRepository.delete(cartItem);
     }
@@ -177,24 +177,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
     @Override
-    public void decreaseAmount(String publicKey, Long itemId) throws NotFoundException {
-        LOGGER.debug("Decreasing amount of items for shopping cart item: {}", itemId);
+    public void decreaseAmount(String publicKey, Long plushToyId) throws NotFoundException {
+        LOGGER.debug("Decreasing amount of items for shopping cart item: {}", plushToyId);
 
         User user = userRepository.findUserByPublicKey(publicKey)
                 .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
-        PlushToy plushToy = plushToyRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
+        PlushToy plushToy = plushToyRepository.findById(plushToyId)
+                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + plushToyId));
 
         ShoppingCartItem cartItem = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user)
                 .orElseThrow(() -> new NotFoundException(
-                        "Item not found in cart, itemId: " + itemId + " publicKey: " + publicKey));
+                        "Item not found in cart, itemId: " + plushToyId + " publicKey: " + publicKey));
 
         if (cartItem.getAmount() > 1) {
             cartItem.setAmount(cartItem.getAmount() - 1);
             shoppingCartItemRepository.save(cartItem);
         } else if (cartItem.getAmount() == 1) {
-            deleteFromCart(publicKey, itemId);
+            deleteFromCart(publicKey, plushToyId);
         }
 
     }

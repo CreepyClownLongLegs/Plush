@@ -96,7 +96,7 @@ public class ShoppingCartEndpointTest implements TestData {
         shoppingCartItemRepository.save(item);
 
         MvcResult mvcResult = mockMvc.perform(delete("/api/v1/cart")
-                .param("itemId", String.valueOf(testPlushToy.getId())))
+                .param("plushToyId", String.valueOf(testPlushToy.getId())))
                 .andDo(print())
                 .andReturn();
 
