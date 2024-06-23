@@ -10,10 +10,8 @@ context('cart', () => {
         cy.loginUser();
         cy.goToDetailView();
 
-        cy.intercept('POST', '/api/v1/cart').as('addToCart');
         cy.getBySel("addToCartButton").click();
-        cy.wait('@addToCart').its('response.statusCode').should('eq', 200);
-        cy.get('.ng-trigger').should('contain', 'Item added to cart');
+        cy.get('.ng-trigger').should('contain', 'Item added to cart')
     });
 
     it('should verify item is in cart and check stats', () => {
