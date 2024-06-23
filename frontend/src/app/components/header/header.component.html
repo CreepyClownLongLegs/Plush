@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-style">
-  <a class="navbar-brand ml-lg-5 d-flex align-items-center" style="font-size: xx-large;" href="#">
+  <a class="navbar-brand ml-lg-5 d-flex align-items-center" style="font-size: xx-large;" (click)="navigateToHome()">
     <div class="bear-icon" style="width: 32px; height: 32px;"></div>
     <span class="ml-2">Plush</span>
   </a>
@@ -18,10 +18,9 @@
     <ul class="navbar-nav mr-3 search-nav" style="background-color: transparent;">
       <form class="form-inline position-relative" (submit)="onSearch()">
         <input class="form-control" type="search" name="search" id="search-field" placeholder="Search"
-               aria-label="Search" [(ngModel)]="searchTerm" style="font-size: small; padding-left: 40px;">
-
+               aria-label="Search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()"
+               style="font-size: small; padding-left: 40px;">
         <div class="search-icon" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%);"></div>
-        <!-- Placing searchIcon div inside input field -->
       </form>
     </ul>
 
