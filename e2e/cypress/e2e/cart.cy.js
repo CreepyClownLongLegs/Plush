@@ -8,18 +8,18 @@ context('cart', () => {
 
     it('should add item to cart', () => {
         cy.loginUser();
-        cy.visit('/#/detail/1');
+        cy.goToDetailView();
+
+        cy.intercept('POST', '/api/v1/cart').as('addToCart');
         cy.getBySel("addToCartButton").click();
-
-        // closing modals too fast without waiting
-        cy.wait(1000);
-        cy.get('.ng-trigger').should('contain', 'Item added to cart').click();
-
+        cy.wait('@addToCart').its('response.statusCode').should('eq', 200);
+        cy.get('.ng-trigger').should('contain', 'Item added to cart');
     });
 
     it('should verify item is in cart and check stats', () => {
         cy.loginUser();
-        cy.visit('/#/cart');
+        cy.goToCart();
+
         cy.get('.cart-item').should('exist');
         cy.get('.item-name'). should( 'contain', '#1 TEST TIGER 0');
         cy.get('.hp').should( 'contain', '100HP');
@@ -30,7 +30,8 @@ context('cart', () => {
 
     it('should remove item from cart and verify cart is empty', () => {
         cy.loginUser();
-        cy.visit('/#/cart');
+        cy.goToCart();
+
         cy.get('.cart-item').its('length').then ((num) => {
             cy.get('.remove-btn').last().click();
             cy.get('.cart-item') .should ('have.length', num - 1);

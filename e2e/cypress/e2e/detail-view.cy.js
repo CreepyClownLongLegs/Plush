@@ -12,7 +12,8 @@ context('detail-view', () => {
     });
 
     it('should load plush toy details', () => {
-        cy.visit('/#/detail/1');
+        cy.goToDetailView();
+
         cy.getBySel('plushToyName').should('contain', 'TEST TIGER 0 Nr.1');
         cy.getBySel("plushToyDesc").should('contain', 'Cute lil gent');
         cy.getBySel("plushToySize").should('contain', '0kg');

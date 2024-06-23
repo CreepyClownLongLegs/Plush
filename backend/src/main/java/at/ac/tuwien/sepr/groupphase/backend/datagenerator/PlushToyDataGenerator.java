@@ -14,7 +14,7 @@ import java.lang.invoke.MethodHandles;
 
 
 @Component
-@Profile({"generateData", "test"})
+@Profile({"generateData", "dev-clean"})
 public class PlushToyDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

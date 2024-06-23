@@ -63,6 +63,18 @@ Cypress.Commands.add("loginUser",
     },
 );
 
+/**
+ getBySel yields elements with a data-test attribute that match a specified selector.
+ */
+Cypress.Commands.add('getBySel', (selector, ...args) => {
+    return cy.get(`[data-test=${selector}]`, ...args)
+})
+/**
+ getBySelLike yields elements with a data-test attribute that contains a specified selector.
+ */
+Cypress.Commands.add('getBySelLike', (selector, ...args) => {
+    return cy.get(`[data-test*=${selector}]`, ...args)
+})
 
 Cypress.Commands.add('goToAdminOverview', (msg) => {
     cy.fixture('settings').then(settings => {
@@ -71,15 +83,37 @@ Cypress.Commands.add('goToAdminOverview', (msg) => {
     })
 })
 
-/**
-    getBySel yields elements with a data-test attribute that match a specified selector.
-*/
-Cypress.Commands.add('getBySel', (selector, ...args) => {
-    return cy.get(`[data-test=${selector}]`, ...args)
+Cypress.Commands.add('goToCategoryOverview', (msg) => {
+    cy.fixture('settings').then(settings => {
+        cy.visit(settings.categoryUrl);
+        cy.url().should('contain', settings.categoryUrl)
+    })
 })
-/**
-    getBySelLike yields elements with a data-test attribute that contains a specified selector.
-*/
-Cypress.Commands.add('getBySelLike', (selector, ...args) => {
-    return cy.get(`[data-test*=${selector}]`, ...args)
+
+Cypress.Commands.add('goToRegister', (msg) => {
+    cy.fixture('settings').then(settings => {
+        cy.visit(settings.registerUrl);
+        cy.url().should('contain', settings.registerUrl)
+    })
+})
+
+Cypress.Commands.add('goToProfile', (msg) => {
+    cy.fixture('settings').then(settings => {
+        cy.visit(settings.profileUrl);
+        cy.url().should('contain', settings.profileUrl)
+    })
+})
+
+Cypress.Commands.add('goToCart', (msg) => {
+    cy.fixture('settings').then(settings => {
+        cy.visit(settings.cartUrl);
+        cy.url().should('contain', settings.cartUrl)
+    })
+})
+
+Cypress.Commands.add('goToDetailView', (msg) => {
+    cy.fixture('settings').then(settings => {
+        cy.visit(settings.detailUrl);
+        cy.url().should('contain', settings.detailUrl)
+    })
 })
