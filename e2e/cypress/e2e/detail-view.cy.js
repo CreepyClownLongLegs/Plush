@@ -16,8 +16,8 @@ context('detail-view', () => {
 
         cy.getBySel('plushToyName').should('contain', 'TEST TIGER 0 Nr.1');
         cy.getBySel("plushToyDesc").should('contain', 'Cute lil gent');
-        cy.getBySel("plushToySize").should('contain', '0kg');
-        cy.getBySel("plushToyStrength").should('contain', '0');
+        cy.getBySel("plushToyWeight").should('contain', '0kg');
+        cy.getBySel("plushToySize").should('contain', 'MEDIUM');
         cy.getBySel("plushToyHealth").should('contain', '100HP');
         cy.getBySel("plushToyPrice").should('contain', '0.01 SOL');
 

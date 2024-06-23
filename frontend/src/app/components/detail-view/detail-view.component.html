@@ -15,14 +15,20 @@
         <!-- Stats in two columns -->
         <div class="stats-container">
           <div class="stats-column">
+            <div class="stat label">Weight</div>
+            <div class="stat weight" data-test="plushToyWeight">{{ toy.weight }}kg</div>
             <div class="stat label">Size</div>
-            <div class="stat" data-test="plushToySize">{{ toy.weight }}kg</div>
-            <div class="stat label">Health</div>
-            <div class="stat health" data-test="plushToyHealth">{{ toy.hp }}HP</div>
+            <div class="stat size" data-test="plushToySize">{{ toy.size }}</div>
           </div>
           <div class="stats-column">
             <div class="stat label">Strength</div>
-            <div class="stat" data-test="plushToyStrength">{{ toy.strength }}</div>
+            <div class="stat" data-test="plushToyStrength">
+              <ng-container *ngFor="let star of getStars(toy.strength)">
+                <div class="star"></div>
+              </ng-container>
+            </div>
+            <div class="stat label">Health</div>
+            <div class="stat health" data-test="plushToyHealth">{{ toy.hp }}HP</div>
           </div>
         </div>
 
