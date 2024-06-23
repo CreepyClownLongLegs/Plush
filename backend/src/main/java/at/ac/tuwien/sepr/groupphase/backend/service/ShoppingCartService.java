@@ -55,7 +55,7 @@ public interface ShoppingCartService {
      * Converts the items in the shopping cart into an order.
      *
      * @param publicKey The public key of the user whose shopping cart is being converted into an order.
-     * @return OrderListDto representing the details of the created order
+     * @return OrderDetailDto representing the details of the created order
      * @throws NotFoundException if the user or items are not found
      */
     OrderDetailDto convertCartToOrder(String publicKey) throws NotFoundException;
