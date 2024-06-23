@@ -2,8 +2,7 @@ context('user registration', () => {
 
     beforeEach(() => {
         cy.loginUser();
-        cy.visit('/#/register');
-        cy.url().should('contain', '/#/register');
+        cy.goToRegister();
     });
 
     it('should show errors for missing inputs', () => {
@@ -23,7 +22,6 @@ context('user registration', () => {
         cy.getBySel('addressLine1').type('    ');
         cy.getBySel('postalCode').type('abc123');
         cy.getBySel('country').type('C@nad@');
-
         cy.getBySel('updateButton').click();
 
         cy.get('.toast-message').should('contain', 'First name is invalid');

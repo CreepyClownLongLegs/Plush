@@ -1,10 +1,10 @@
 context('user', () => {
+    beforeEach(() => {
+        cy.loginUser();
+        cy.goToProfile();
+    });
 
     it('login and enter user details', () => {
-        cy.loginUser();
-
-        cy.visit('/#/profile');
-        cy.url().should('contain', '/#/profile');
         cy.getBySel('firstName').clear().type('John');
         cy.getBySel('lastName').clear().type('Doe');
         cy.getBySel('emailAddress').clear().type('john.doe@example.com');
@@ -18,10 +18,6 @@ context('user', () => {
     });
 
     it('login and edit user details', () => {
-        cy.loginUser();
-
-        cy.visit('/#/profile');
-        cy.url().should('contain', '/#/profile');
         cy.getBySel('firstName').clear().type('Jane');
         cy.getBySel('lastName').clear().type('Smith');
         cy.getBySel('emailAddress').clear().type('jane.smith@example.com');
@@ -35,24 +31,20 @@ context('user', () => {
     });
 
     it('login and delete user account and check for deletion (cancel)', () => {
-        cy.loginUser();
-
-        cy.visit('/#/profile');
-        cy.url().should('contain', '/#/profile');
+        cy.getBySel('firstName').should('have.value', 'Jane');
         cy.getBySel('deleteButton').click();
-        cy.scrollTo('top');
-        cy.getBySel('cancelDeleteButton').click();
+
+        cy.get('.modal').should('be.visible');
+        cy.getBySel('cancelDeleteButton').should('be.visible').click();
         cy.url().should('contain', '/#/profile');
     });
 
     it('login and delete user account and check for deletion (confirm)', () => {
-        cy.loginUser();
-
-        cy.visit('/#/profile');
-        cy.url().should('contain', '/#/profile');
+        cy.getBySel('firstName').should('have.value', 'Jane');
         cy.getBySel('deleteButton').click();
-        cy.scrollTo('top');
-        cy.getBySel('confirmDeleteButton').click();
+
+        cy.get('.modal').should('be.visible');
+        cy.getBySel('confirmDeleteButton').should('be.visible').click();
         cy.url().should('contain', '/#/');
 
         cy.get('.ng-trigger').should('contain', 'Your profile was successfully deleted').click();

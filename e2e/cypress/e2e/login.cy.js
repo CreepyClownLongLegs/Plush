@@ -16,7 +16,6 @@ context('login', () => {
 
             cy.loginUser();
             cy.getBySel("loggedIn").eq(0).click();
-
             cy.getBySel("walletModal").should('contain', 'Your Wallet');
             const formattedUserPublicKey = `${settings.userPublicKey.slice(0, 4)}...${settings.userPublicKey.slice(-4)}`;
             cy.getBySel("walletModal").should('contain', formattedUserPublicKey);
