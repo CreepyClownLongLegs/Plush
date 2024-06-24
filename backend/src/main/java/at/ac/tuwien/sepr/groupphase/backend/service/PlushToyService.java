@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ProductCategory;
 
 public interface PlushToyService {
 
@@ -22,10 +23,17 @@ public interface PlushToyService {
     List<PlushToy> getAllPlushToys();
 
     /**
-     * Get all plushtoys.
+     * Search plushtoys by either category or name.
      *
      * @return a list of all plushtoys
      */
     List<PlushToy> search(SearchPlushToyDto searchParams);
+
+    /**
+     * Get all product categories.
+     *
+     * @return a list of all product categories
+     */
+    List<ProductCategory> getAllProductCategories();
 
 }

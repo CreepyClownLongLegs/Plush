@@ -5,14 +5,17 @@ import {BehaviorSubject, Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  private searchTermSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  public searchTerm$: Observable<string> = this.searchTermSubject.asObservable();
-
-  setSearchTerm(searchTerm: string): void {
-    this.searchTermSubject.next(searchTerm);
-  }
-
-  clearSearchTerm(): void {
-    this.searchTermSubject.next('');
-  }
+    private searchTermSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    public searchTerm$: Observable<string> = this.searchTermSubject.asObservable();
+    public searchCategoryId: number = 0;
+  
+    setSearchTerm(searchTerm: string): void {
+      this.searchTermSubject.next(searchTerm);
+    }
+    setCategoryId(categoryId: number): void {
+      this.searchCategoryId = categoryId;
+    }
+    clearSearchTerm(): void {
+      this.searchTermSubject.next('');
+    }
 }

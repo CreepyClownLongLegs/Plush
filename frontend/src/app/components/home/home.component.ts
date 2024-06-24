@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {PlushToyListDto, PlushToySearchDto} from 'src/app/dtos/plushtoy';
@@ -13,7 +14,8 @@ import {Subscription} from "rxjs";
 export class HomeComponent implements OnInit, OnDestroy {
   plushies: PlushToyListDto[];
   searchParams: PlushToySearchDto = {
-    name: ''
+    name: '',
+    categoryId: 0
   };
 
   searchTerm: string = '';
@@ -25,8 +27,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     private searchService: SearchService,
     private plushToyService: PlushtoyService,
+    private router: Router
   ) {
-  }
+    // Reload plushies when route changes (e.g. from category search)
+    router.events.subscribe(() => {
+      this.plushiesReload();
+    });
+   }
 
   ngOnInit(): void {
     this.searchTermSubscription = this.searchService.searchTerm$.subscribe(searchTerm => {
@@ -44,6 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   plushiesReload() {
     this.searchParams.name = this.searchTerm
+    this.searchParams.categoryId = this.searchService.searchCategoryId;
     this.plushToyService.search(this.searchParams)
       .subscribe({
         next: data => {
