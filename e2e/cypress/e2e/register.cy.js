@@ -1,4 +1,4 @@
-context('user registration', () => {
+context('register', () => {
 
     beforeEach(() => {
         cy.loginUser();
@@ -33,12 +33,12 @@ context('user registration', () => {
     });
 
     it('should successfully update user details with valid inputs', () => {
-        cy.getBySel('firstName').type('John');
-        cy.getBySel('lastName').type('Doe');
-        cy.getBySel('emailAddress').type('john.doe@example.com');
-        cy.getBySel('addressLine1').type('123 Main St');
-        cy.getBySel('postalCode').type('12345');
-        cy.getBySel('country').type('USA');
+        cy.getBySel('firstName').type('Alice');
+        cy.getBySel('lastName').type('Johnson');
+        cy.getBySel('emailAddress').type('alice.johnson@example.com');
+        cy.getBySel('addressLine1').type('456 Maple Avenue');
+        cy.getBySel('postalCode').type('67890');
+        cy.getBySel('country').type('Canada');
 
         cy.getBySel('updateButton').click();
 

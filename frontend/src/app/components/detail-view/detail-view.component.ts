@@ -8,6 +8,7 @@ import { PlushToyColor, PlushToy, PlushToySize } from '../../dtos/plushtoy';
 import { WalletService } from "../../services/wallet.service";
 import { UserService } from "../../services/user.service";
 import {UserDetailDto} from "../../dtos/user";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-detail-view',
@@ -42,6 +43,7 @@ export class DetailViewComponent implements OnInit {
     private shoppingCartService: ShoppingCartService,
     private userService: UserService,
     private router: Router,
+    private authService: AuthService,
   ) {
   }
 
@@ -59,19 +61,22 @@ export class DetailViewComponent implements OnInit {
   }
 
   addToCart() {
+    if (!this.authService.isLoggedIn()) {
+      this.notification.info("Log in to use this button");
+      return;
+    }
+
     this.shoppingCartService.addToCart(this.toy.id).subscribe({
       next: () => {
         console.log('Item added to cart successfully');
-        this.notification.success("Item added to cart ", "Success");
+        this.notification.success("Item added to cart", "Success");
       },
       error: error => {
-        console.error('Error adding item to cart', error);
-        this.notification.info("Log in to use this button ");
-        this.error = false;
+        console.error('Error adding item to cart:', error);
+        this.notification.error("Error adding item to cart:", "Error");
       }
     });
   }
-
 
   goBack() {
     window.history.back();  // Use window.history.back() to navigate back

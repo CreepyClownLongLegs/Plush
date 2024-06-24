@@ -1,5 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
+import { PlushtoyService } from 'src/app/services/plushtoy.service';
+import { ProductCategoryDto } from 'src/app/dtos/plushtoy';
 import {AdminService} from 'src/app/services/admin.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {SearchService} from 'src/app/services/search.service';
@@ -15,12 +17,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isDropdownOpen = false;
   searchTerm: string = '';
+  categories: ProductCategoryDto[] = [];
   private searchTermSubscription: Subscription;
 
   constructor(
     public authService: AuthService,
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private plushtoyService: PlushtoyService,
   ) {
 
   }
@@ -43,11 +47,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  getCategories() {
+    this.categories = this.plushtoyService.categories
+    this.plushtoyService.getAllCategories().subscribe(categories => {
+      this.categories = categories;
+    });
+  }
+
+  searchByCategory(categoryId: number) {
+    this.searchTerm = '';
+    this.searchService.setSearchTerm(''); 
+    this.searchService.setCategoryId(categoryId);
+    this.router.navigate(['/']);
+  }
+
   navigateToCart() {
     this.router.navigate(['/cart']);
   }
 
   onSearch() {
+    this.searchService.setCategoryId(-1); // Fallback as searching by both name and category is not supported
     this.searchService.setSearchTerm(this.searchTerm);
     this.navigateToHome()
   }
@@ -57,6 +76,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown() {
+    this.getCategories();
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 

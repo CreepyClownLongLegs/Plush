@@ -8,9 +8,8 @@
     <div class="dropdown">
       <button class="btn btn-secondary" (click)="toggleDropdown()">Categories</button>
       <div class="dropdown-menu" [ngClass]="{ 'show': isDropdownOpen }" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">Big Ducks</a>
-        <a class="dropdown-item" href="#">Small Bears</a>
-        <a class="dropdown-item" href="#">Negative Nancys</a>
+        <a class="dropdown-item" (click)="searchByCategory(-1)">All plushies</a>
+        <a class="dropdown-item" *ngFor="let category of categories" (click)="searchByCategory(category.id)">{{category.name}}</a>
       </div>
     </div>
 

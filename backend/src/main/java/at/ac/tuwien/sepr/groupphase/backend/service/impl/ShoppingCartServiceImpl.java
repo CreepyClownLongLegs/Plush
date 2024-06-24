@@ -39,10 +39,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         LOGGER.debug("Adding item to cart: itemId={}, publicKey={}", itemId, publicKey);
 
         User user = userRepository.findUserByPublicKey(publicKey)
-                .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
+            .orElseThrow(() -> new NotFoundException("User not found with publicKey: " + publicKey));
 
         PlushToy plushToy = plushToyRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
+            .orElseThrow(() -> new NotFoundException("Plush toy not found with id: " + itemId));
 
         Optional<ShoppingCartItem> itemOptional = shoppingCartItemRepository.findByPlushToyAndUser(plushToy, user);
 

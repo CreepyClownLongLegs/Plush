@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Globals } from '../global/globals';
-import { Observable } from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import { PlushToyCartListDto, PlushToyListDto } from "../dtos/plushtoy";
 
 export interface ShoppingCartItemDto {

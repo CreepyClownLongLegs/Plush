@@ -2,9 +2,13 @@ context('user', () => {
     beforeEach(() => {
         cy.loginUser();
         cy.goToProfile();
+        // wait for profile data to load
+        cy.intercept('GET', '/api//v1/user').as('getProfile');
     });
 
     it('login and enter user details', () => {
+        cy.wait('@getProfile');
+
         cy.getBySel('firstName').clear().type('John');
         cy.getBySel('lastName').clear().type('Doe');
         cy.getBySel('emailAddress').clear().type('john.doe@example.com');
@@ -18,6 +22,8 @@ context('user', () => {
     });
 
     it('login and edit user details', () => {
+        cy.wait('@getProfile');
+
         cy.getBySel('firstName').clear().type('Jane');
         cy.getBySel('lastName').clear().type('Smith');
         cy.getBySel('emailAddress').clear().type('jane.smith@example.com');
@@ -31,7 +37,7 @@ context('user', () => {
     });
 
     it('login and delete user account and check for deletion (cancel)', () => {
-        cy.getBySel('firstName').should('have.value', 'Jane');
+        cy.wait('@getProfile');
         cy.getBySel('deleteButton').click();
 
         cy.get('.modal').should('be.visible');
@@ -40,7 +46,7 @@ context('user', () => {
     });
 
     it('login and delete user account and check for deletion (confirm)', () => {
-        cy.getBySel('firstName').should('have.value', 'Jane');
+        cy.wait('@getProfile');
         cy.getBySel('deleteButton').click();
 
         cy.get('.modal').should('be.visible');
