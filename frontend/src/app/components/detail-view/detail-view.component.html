@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-md-6 image-container">
         <!-- Plush image -->
-        <img src="{{toy.imageUrl ?? 'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'}}" alt="Big Image"
-             class="image-main">
+        <img src="{{toy.imageUrl ?? 'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'}}"
+          alt="Big Image" class="image-main">
       </div>
       <div class="col-md-6 details-container">
         <!-- Name and Id -->
@@ -13,22 +13,34 @@
         <p class="toy-description" data-test="plushToyDesc">{{ toy.description }}</p>
 
         <!-- Stats in two columns -->
-        <div class="stats-container">
-          <div class="stats-column">
-            <div class="stat label">Weight</div>
-            <div class="stat weight" data-test="plushToyWeight">{{ toy.weight }}kg</div>
-            <div class="stat label">Size</div>
-            <div class="stat size" data-test="plushToySize">{{ toy.size }}</div>
-          </div>
-          <div class="stats-column">
-            <div class="stat label">Strength</div>
-            <div class="stat" data-test="plushToyStrength">
-              <ng-container *ngFor="let star of getStars(toy.strength)">
-                <div class="star"></div>
-              </ng-container>
+        <div class="att-container">
+          <div class="stats-container">
+            <div class="stats-column">
+              <div class="stat label">Weight</div>
+              <div class="stat weight" data-test="plushToyWeight">{{ toy.weight }}kg</div>
+              <div class="stat label">Size</div>
+              <div class="stat size" data-test="plushToySize">{{ toy.size }}</div>
             </div>
-            <div class="stat label">Health</div>
-            <div class="stat health" data-test="plushToyHealth">{{ toy.hp }}HP</div>
+            <div class="stats-column">
+              <div class="stat label">Strength</div>
+              <div class="stat" data-test="plushToyStrength">
+                <ng-container *ngFor="let star of getStars(toy.strength)">
+                  <div class="star"></div>
+                </ng-container>
+              </div>
+              <div class="stat label">Health</div>
+              <div class="stat health" data-test="plushToyHealth">{{ toy.hp }}HP</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 stat label">
+              Attributes
+            </div>
+            <div class="col-6">
+              <div class="attribute row" *ngFor="let name of getAttributeNames()" data-test="plushToyAttribute">
+                {{ name }}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -39,7 +51,8 @@
 
         <!-- Buttons -->
         <div class="button-section">
-          <button class="btn btn-primary add-to-cart-btn" data-test="addToCartButton" (click)="addToCart()">ADD TO BAG</button>
+          <button class="btn btn-primary add-to-cart-btn" data-test="addToCartButton" (click)="addToCart()">ADD TO
+            BAG</button>
           <button class="btn btn-secondary go-back-btn" data-test="goBackButton" (click)="goBack()">GO BACK</button>
 
         </div>

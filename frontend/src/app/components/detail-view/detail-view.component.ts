@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PlushtoyService } from '../../services/plushtoy.service';
-import { ShoppingCartService } from "../../services/shopping-cart.service";
-import { ToastrService } from "ngx-toastr";
-import { PlushToyColor, PlushToy, PlushToySize } from '../../dtos/plushtoy';
-import { WalletService } from "../../services/wallet.service";
-import { UserService } from "../../services/user.service";
-import {UserDetailDto} from "../../dtos/user";
+import {Component, OnInit} from '@angular/core';
+import {NgForOf, NgIf} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PlushtoyService} from '../../services/plushtoy.service';
+import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {ToastrService} from "ngx-toastr";
+import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
+import {WalletService} from "../../services/wallet.service";
+import {UserService} from "../../services/user.service";
 import {OrderDetailDto} from "../../dtos/order";
 import {AuthService} from "../../services/auth.service";
 
@@ -98,7 +97,7 @@ export class DetailViewComponent implements OnInit {
           this.walletService.handleSignAndSendTransaction(this.toy.price).subscribe({
             next: (orderDetail: OrderDetailDto) => {
               this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
-              this.router.navigate(['/payment-confirmation'], { state: { orderDetail } });
+              this.router.navigate(['/payment-confirmation'], {state: {orderDetail}});
             },
             error: (error) => {
               console.error('Error during payment:', error);
@@ -123,6 +122,10 @@ export class DetailViewComponent implements OnInit {
 
   getStars(count: number): any[] {
     return new Array(count);
+  }
+
+  getAttributeNames(): string[] {
+    return this.toy.attributesDistributions.map(attr => attr.attribute.name);
   }
 
 }

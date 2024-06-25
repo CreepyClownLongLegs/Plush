@@ -48,6 +48,9 @@
 .stats-container {
   display: flex;
   justify-content: space-between;
+}
+
+.att-container {
   background-color: #768FC5;
   padding: 10px;
   border-radius: 5px;
@@ -137,7 +140,7 @@
   color: darkred;
 }
 
-.star{
+.star {
   width: 15px;
   height: 15px;
   background-image: url("../../../images/Star.png");
@@ -150,5 +153,3 @@
 .stat .star {
   display: inline-block;
 }
-
-
