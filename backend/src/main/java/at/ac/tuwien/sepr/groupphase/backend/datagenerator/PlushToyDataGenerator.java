@@ -33,7 +33,6 @@ public class PlushToyDataGenerator {
             LOGGER.debug("plushToy already generated");
         } else {
             LOGGER.debug("generating {} plushToy entries", NUMBER_TO_GENERATE);
-            //with name test tiger
             for (int i = 0; i < NUMBER_TO_GENERATE; i++) {
                 PlushToy plushy = new PlushToy();
                 plushy.setName(TEST_NAME + " " + i);

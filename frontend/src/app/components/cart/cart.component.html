@@ -4,16 +4,17 @@
     <div class="cart-items">
       <div *ngFor="let item of cartItems; let i = index" class="cart-item">
         <div class="item-image">
-          <img src="{{item.imageUrl ?? 'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'}}" alt="{{item.name}}" />
-          <span class="hp">{{item.hp}}HP</span>
+          <img src="{{item.imageUrl ?? 'https://th.bing.com/th/id/OIP.oKqusaK-O2O2QGxKogbHNwHaHa?rs=1&pid=ImgDetMain'}}"
+               alt="{{item.name}}"/>
+          <span class="hp">{{ item.hp }}HP</span>
           <button class="remove-btn" (click)="removeItem(item.id)">X</button>
         </div>
         <div class="item-details">
-          <p class="item-name">#{{item.id}} {{item.name}}</p>
-          <p class="item-price">PRICE: <span>{{item.price}} SOL</span></p>
+          <p class="item-name">#{{ item.id }} {{ item.name }}</p>
+          <p class="item-price">PRICE: <span>{{ item.price }} SOL</span></p>
           <div class="item-quantity">
             <button (click)="decreaseAmount(item.id)">-</button>
-            <span>{{item.amount}}</span>
+            <span>{{ item.amount }}</span>
             <button (click)="increaseAmount(item.id)">+</button>
           </div>
         </div>
@@ -21,8 +22,18 @@
     </div>
     <hr/>
     <div class="total-price">
-      <p>TOTAL PRICE: <span>{{totalPrice}}</span></p>
+      <p>TOTAL PRICE: <span>{{ totalPrice }}</span></p>
     </div>
-    <button class="finish-payment" (click)="finishPayment()" [disabled]="isCartEmpty">🔥Finish Payment🔥</button>
+    <button class="finish-payment" (click)="finishPayment()" [disabled]="isCartEmpty || isLoading">🔥Finish Payment🔥
+    </button>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="spinner-overlay">
+  <div class="spinner-border text-light" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="loading-message">
+    <span>{{ loadingMessage }}</span>
   </div>
 </div>

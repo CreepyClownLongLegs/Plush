@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node src/app.js",
-    "dev": "NODE_ENV=development WALLET_PRIVATE_KEY=3JtxPNNXz1CT97Q5NVGWQP1dMJ3fs9ErLT4U9WMjqtmoQzsVTkuyear5Qg9shTumaY1weAdZ5s3pTY5NfZn5vmjJ node src/app.js",
+    "start":  "cross-env NODE_ENV=production node src/app.js",
+    "dev": "cross-env NODE_ENV=development WALLET_PRIVATE_KEY=3JtxPNNXz1CT97Q5NVGWQP1dMJ3fs9ErLT4U9WMjqtmoQzsVTkuyear5Qg9shTumaY1weAdZ5s3pTY5NfZn5vmjJ node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": true,
@@ -18,5 +18,8 @@
     "@solana/spl-token": "^0.4.6",
     "bs58": "^5.0.0",
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
