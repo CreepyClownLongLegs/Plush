@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { PlushToyCartListDto, PlushToyListDto } from "../../dtos/plushtoy";
-import { PlushtoyService } from "../../services/plushtoy.service";
-import { ShoppingCartService } from "../../services/shopping-cart.service";
-import { ToastrService } from "ngx-toastr";
-import { NgForOf } from "@angular/common";
-import { AuthService } from 'src/app/services/auth.service';
-import { WalletService } from 'src/app/services/wallet.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserDetailDto } from 'src/app/dtos/user';
-import { UserService } from 'src/app/services/user.service';
-import { Router } from '@angular/router';
-import { load } from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks";
+import {Component, OnInit} from '@angular/core';
+import {PlushToyCartListDto, PlushToyListDto} from "../../dtos/plushtoy";
+import {PlushtoyService} from "../../services/plushtoy.service";
+import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {ToastrService} from "ngx-toastr";
+import {NgForOf, NgIf} from "@angular/common";
+import {AuthService} from 'src/app/services/auth.service';
+import {WalletService} from 'src/app/services/wallet.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {UserDetailDto} from 'src/app/dtos/user';
+import {UserService} from 'src/app/services/user.service';
+import {Router} from '@angular/router';
+import {load} from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks";
+import {OrderDetailDto} from "../../dtos/order";
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   imports: [
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
@@ -24,14 +26,14 @@ import { load } from "@angular-devkit/build-angular/src/utils/server-rendering/e
 export class CartComponent implements OnInit {
   cartItems: PlushToyCartListDto[] = [];
   totalPrice: string;
-  isCartEmpty: boolean = true;  //  track if the cart is empty
+  isCartEmpty: boolean = true;
+  isLoading: boolean = false;
+  loadingMessage: string = '';
 
   constructor(
-    private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService,
     public authService: AuthService,
-    private modalService: NgbModal,
     private userService: UserService,
     private router: Router,
     private walletService: WalletService,
@@ -47,7 +49,7 @@ export class CartComponent implements OnInit {
       next: (items: PlushToyCartListDto[]) => {
         this.cartItems = items;
         this.calculateTotalPrice();
-        this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
+        this.isCartEmpty = this.cartItems.length === 0;
       },
       error: (error) => {
         console.error('Error loading cart items', error);
@@ -64,7 +66,7 @@ export class CartComponent implements OnInit {
     this.shoppingCartService.deleteFromCart(itemId).subscribe({
       next: () => {
         console.log('Item removed successfully');
-        this.loadCart(); // Reload the cart after successful removal
+        this.loadCart();
       },
       error: (error) => {
         console.error('Error occurred while removing item:', error);
@@ -107,12 +109,13 @@ export class CartComponent implements OnInit {
         this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== itemId);
       }
       this.calculateTotalPrice();
-      this.isCartEmpty = this.cartItems.length === 0;  // update isCartEmpty
+      this.isCartEmpty = this.cartItems.length === 0;
     }
   }
 
   finishPayment(): void {
     const total: number = this.cartItems.reduce((acc: number, item) => acc + item.price * item.amount, 0);
+
     if (this.authService.isLoggedIn()) {
       this.walletService.hasSufficientBalance(total).then(hasBalance => {
         if (!hasBalance) {
@@ -127,31 +130,42 @@ export class CartComponent implements OnInit {
               this.router.navigate(['/register']);
               return;
             }
-            // amount need to be a big decimal and rounded to 2 decimal places or it will fail
-            this.walletService.handleSignAndSendTransaction(Math.round(total * 100) / 100).subscribe({
-              next: () => {
-                this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
+            this.isLoading = true;
+
+            this.loadingMessage = 'Processing your payment...'
+            this.walletService.handleSignAndSendTransaction(total).subscribe({
+              next: (orderDetail: OrderDetailDto) => {
+                this.isLoading = false;
+
+                this.notification.success('Order successful! Your NFT has been minted.', 'Success');
                 this.shoppingCartService.clearCart().subscribe({
                   next: () => this.loadCart(),
                   error: (error) => {
+                    this.isLoading = false;
                     console.error('Error while clearing the cart:', error);
                     this.notification.error('Error while clearing the cart');
                   }
                 });
+                this.isLoading = false;
+                this.router.navigate(['/payment-confirmation'], {state: {orderDetail}});
+
               },
               error: (error) => {
                 console.error('Error during payment:', error);
+                this.isLoading = false;
                 this.notification.error('Payment failed', 'Error');
               }
             });
           },
           error: (error) => {
             console.error('Error checking profile', error);
+            this.isLoading = false;
             this.notification.error('Could not check profile', 'Error');
           }
         });
       }).catch(error => {
         console.error('Error checking balance', error);
+        this.isLoading = false;
         this.notification.error('Error checking balance.', 'Error');
       });
     }

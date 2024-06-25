@@ -1,23 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana.CreateSmartContractDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.solana.PublicKeyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.NftPlushToyAttributeValueMapper;
@@ -35,6 +17,23 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SmartContractRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RestRequestService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SolanaService;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Function;
 
 /**
  * Implementation of the SolanaService.
@@ -52,7 +51,7 @@ public class SolanaServiceImplementation implements SolanaService {
     private Function<String, String> getMintNftUrl = (publicKey) -> solanaPodUrl + "nft/" + publicKey;
     private Function<String, String> updateMintUrl = (publicKey) -> solanaPodUrl + "smart-contract/" + publicKey;
     private Function<String, String> getTokenInfoUrl = (smartContractPublicKey) -> baseUrl + "t/"
-            + smartContractPublicKey;
+        + smartContractPublicKey;
     private SmartContractRepository smartContractRepository;
     private NftRepository nftRepository;
     private PlushToyRepository plushToyRepository;
@@ -63,10 +62,10 @@ public class SolanaServiceImplementation implements SolanaService {
 
     @Autowired
     public SolanaServiceImplementation(SmartContractRepository smartContractRepository,
-            PlushToyRepository plushToyRepository, NftRepository nftRepository,
-            NftPlushToyAttributeValueRepository nftPlushToyAttributeValueRepository,
-            NftPlushToyAttributeValueMapper nftPlushToyAttributeValueMapper,
-            RestRequestService restRequestService) {
+                                       PlushToyRepository plushToyRepository, NftRepository nftRepository,
+                                       NftPlushToyAttributeValueRepository nftPlushToyAttributeValueRepository,
+                                       NftPlushToyAttributeValueMapper nftPlushToyAttributeValueMapper,
+                                       RestRequestService restRequestService) {
         this.smartContractRepository = smartContractRepository;
         this.plushToyRepository = plushToyRepository;
         this.nftRepository = nftRepository;
@@ -79,23 +78,23 @@ public class SolanaServiceImplementation implements SolanaService {
     public void init() {
         this.createSmartContractUrl = solanaPodUrl + "smart-contract";
         this.client = WebClient.builder()
-                .baseUrl(solanaPodUrl)
-                .defaultCookie("cookieKey", "cookieValue")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+            .baseUrl(solanaPodUrl)
+            .defaultCookie("cookieKey", "cookieValue")
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
     }
 
     @Override
     public SmartContract createSmartContract(@NonNull Long plushToyId) {
         LOGGER.info("Creating a new smart contract");
         PlushToy plushToy = plushToyRepository.findById(plushToyId)
-                .orElseThrow(() -> new NotFoundException("PlushToy not found"));
+            .orElseThrow(() -> new NotFoundException("PlushToy not found"));
         CreateSmartContractDto createSmartContractDto = new CreateSmartContractDto(plushToy.getName(),
-                baseUrl);
+            baseUrl);
         PublicKeyDto response = restRequestService.sendJsonRequest(client, HttpMethod.POST,
-                createSmartContractUrl,
-                createSmartContractDto,
-                PublicKeyDto.class);
+            createSmartContractUrl,
+            createSmartContractDto,
+            PublicKeyDto.class);
         SmartContract smartContract = new SmartContract();
         smartContract.setPublicKey(response.getPublicKey());
         smartContract.setName(plushToy.getName());
@@ -107,7 +106,7 @@ public class SolanaServiceImplementation implements SolanaService {
     public Nft mintNft(@NonNull Long plushToyId, @NonNull String receiverPublicKey) {
         LOGGER.info("Minting a new NFT for {}", plushToyId);
         PlushToy plushToy = plushToyRepository.findById(plushToyId)
-                .orElseThrow(() -> new NotFoundException("PlushToy not found"));
+            .orElseThrow(() -> new NotFoundException("PlushToy not found"));
 
         SmartContract smartContract = createSmartContract(plushToyId);
 
@@ -121,7 +120,7 @@ public class SolanaServiceImplementation implements SolanaService {
             List<PlushToyAttributeDistribution> distributions = attribute.getDistributions();
             float choosen = random.nextFloat(100);
             distributions.sort(
-                    (a, b) -> Float.compare(a.getQuantityPercentage(), b.getQuantityPercentage()));
+                (a, b) -> Float.compare(a.getQuantityPercentage(), b.getQuantityPercentage()));
             float segStart = 0;
 
             for (PlushToyAttributeDistribution dis : distributions) {
@@ -137,8 +136,8 @@ public class SolanaServiceImplementation implements SolanaService {
 
         PublicKeyDto request = new PublicKeyDto(receiverPublicKey);
         PublicKeyDto response = restRequestService.sendJsonRequest(client, HttpMethod.POST,
-                getMintNftUrl.apply(smartContract.getPublicKey()), request,
-                PublicKeyDto.class);
+            getMintNftUrl.apply(smartContract.getPublicKey()), request,
+            PublicKeyDto.class);
 
         Nft nft = new Nft();
 

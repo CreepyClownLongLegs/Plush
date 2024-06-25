@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../services/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from "../../services/auth.service";
 
-import {OrderListDto} from "../../dtos/order";
-import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
-import {RouterLink} from "@angular/router";
-import {UserService} from "../../services/user.service";
-import {ToastrService} from "ngx-toastr";
+import { OrderListDto } from "../../dtos/order";
+import { CurrencyPipe, DatePipe, NgForOf, NgIf } from "@angular/common";
+import { RouterLink } from "@angular/router";
+import { UserService } from "../../services/user.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: 'app-order-history',

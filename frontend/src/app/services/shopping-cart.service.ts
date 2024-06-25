@@ -20,14 +20,14 @@ export class ShoppingCartService {
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
-  addToCart(itemId: number): Observable<void> {
-    console.log('Adding item to cart', itemId);
-    return this.httpClient.post<void>(`${this.cartBaseUri}`, itemId);
+  addToCart(plushToyId: number): Observable<void> {
+    console.log('Adding item to cart', plushToyId);
+    return this.httpClient.post<void>(`${this.cartBaseUri}`, plushToyId);
   }
 
-  deleteFromCart(itemId: number): Observable<void> {
-    console.log('Deleting item from cart', itemId);
-    return this.httpClient.delete<void>(`${this.cartBaseUri}?itemId=${itemId}`);
+  deleteFromCart(plushToyId: number): Observable<void> {
+    console.log('Deleting item from cart', plushToyId);
+    return this.httpClient.delete<void>(`${this.cartBaseUri}?plushToyId=${plushToyId}`);
   }
 
   getFullCart(): Observable<PlushToyCartListDto[]> {
@@ -35,9 +35,9 @@ export class ShoppingCartService {
     return this.httpClient.get<PlushToyCartListDto[]>(`${this.cartBaseUri}`);
   }
 
-  decreaseAmount(itemId: number): Observable<void> {
-    console.log('Decreasing amount of item in cart', itemId);
-    return this.httpClient.post<void>(`${this.cartBaseUri}/decrease`, itemId); // Send itemId directly
+  decreaseAmount(plushToyId: number): Observable<void> {
+    console.log('Decreasing amount of item in cart', plushToyId);
+    return this.httpClient.post<void>(`${this.cartBaseUri}/decrease`, plushToyId); // Send itemId directly
   }
 
   /**

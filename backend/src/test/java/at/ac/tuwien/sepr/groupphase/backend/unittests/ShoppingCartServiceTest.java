@@ -15,6 +15,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OrderDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.User;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
+import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OrderItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,18 +32,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyCartListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Color;
-import at.ac.tuwien.sepr.groupphase.backend.entity.PlushToy;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ShoppingCartItem;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Size;
-import at.ac.tuwien.sepr.groupphase.backend.entity.User;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PlushToyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ShoppingCartItemRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.ShoppingCartServiceImpl;
 
 @ExtendWith(SpringExtension.class)
@@ -53,6 +56,12 @@ public class ShoppingCartServiceTest implements TestData {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     private Supplier<PlushToy> plushySupplier = () -> {
         PlushToy plushy = new PlushToy();
         plushy.setName(TEST_PLUSHTOY_NAME);
@@ -66,6 +75,8 @@ public class ShoppingCartServiceTest implements TestData {
 
     @BeforeEach
     public void setUp() {
+        orderItemRepository.deleteAll();
+        orderRepository.deleteAll();
         shoppingCartItemRepository.deleteAll();
         plushToyRepository.deleteAll();
         userRepository.deleteAll();
@@ -204,5 +215,45 @@ public class ShoppingCartServiceTest implements TestData {
         List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByUserId(user.getId());
         assertTrue(cartItems.isEmpty());
     }
+
+    @Test
+    public void givenCartWithItems_whenConvertCartToOrder_thenOrderCreatedSuccessfully() {
+        String publicKey = TEST_PUBKEY;
+
+        User user = new User();
+        user.setPublicKey(publicKey);
+        userRepository.save(user);
+
+        PlushToy plushToy = plushySupplier.get();
+        plushToyRepository.save(plushToy);
+
+        ShoppingCartItem cartItem = new ShoppingCartItem();
+        cartItem.setUser(user);
+        cartItem.setPlushToy(plushToy);
+        cartItem.setAmount(2);
+        shoppingCartItemRepository.save(cartItem);
+
+        OrderDetailDto orderDetailDto = shoppingCartService.convertCartToOrder(publicKey);
+
+        assertEquals(1, orderDetailDto.getOrderItems().size());
+        assertEquals(2, orderDetailDto.getOrderItems().get(0).getAmount());
+        assertEquals(plushToy.getId(), orderDetailDto.getOrderItems().get(0).getPlushToyId());
+        assertEquals(plushToy.getPrice() * 2, orderDetailDto.getTotalPrice());
+        assertTrue(shoppingCartItemRepository.findByUserId(user.getId()).isEmpty());
+    }
+
+
+    @Test
+    public void givenEmptyCart_whenConvertCartToOrder_thenNotFoundExceptionThrown() {
+        String publicKey = TEST_PUBKEY;
+
+        User user = new User();
+        user.setPublicKey(publicKey);
+        userRepository.save(user);
+
+        assertThrows(NotFoundException.class, () -> shoppingCartService.convertCartToOrder(publicKey));
+    }
+
+
 
 }

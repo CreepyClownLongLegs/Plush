@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PlushtoyService } from '../../services/plushtoy.service';
-import { ShoppingCartService } from "../../services/shopping-cart.service";
-import { ToastrService } from "ngx-toastr";
-import { PlushToyColor, PlushToy, PlushToySize } from '../../dtos/plushtoy';
-import { WalletService } from "../../services/wallet.service";
-import { UserService } from "../../services/user.service";
-import { AuthService } from "../../services/auth.service";
+import {Component, OnInit} from '@angular/core';
+import {NgForOf, NgIf} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PlushtoyService} from '../../services/plushtoy.service';
+import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {ToastrService} from "ngx-toastr";
+import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
+import {WalletService} from "../../services/wallet.service";
+import {UserService} from "../../services/user.service";
+import {OrderDetailDto} from "../../dtos/order";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-detail-view',
@@ -77,8 +78,46 @@ export class DetailViewComponent implements OnInit {
     });
   }
 
+
+  buyNow() {
+    this.walletService.hasSufficientBalance(this.toy.price).then(hasBalance => {
+      if (!hasBalance) {
+        this.notification.error('Insufficient balance to complete the transaction.', 'Error');
+        return;
+      }
+
+      this.userService.isProfileComplete().subscribe({
+        next: (isComplete) => {
+          if (!isComplete) {
+            this.notification.error('Please complete your profile before proceeding to payment.', 'Profile Incomplete');
+            this.router.navigate(['/register']);
+            return;
+          }
+
+          this.walletService.handleSignAndSendTransaction(this.toy.price).subscribe({
+            next: (orderDetail: OrderDetailDto) => {
+              this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
+              this.router.navigate(['/payment-confirmation'], {state: {orderDetail}});
+            },
+            error: (error) => {
+              console.error('Error during payment:', error);
+              this.notification.error('Payment failed', 'Error');
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error checking profile', error);
+          this.notification.error('Could not check profile', 'Error');
+        }
+      });
+    }).catch(error => {
+      console.error('Error checking balance', error);
+      this.notification.error('Error checking balance.', 'Error');
+    });
+  }
+
   goBack() {
-    window.history.back();  // Use window.history.back() to navigate back
+    window.history.back();
   }
 
   getStars(count: number): any[] {

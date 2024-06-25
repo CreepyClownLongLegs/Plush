@@ -38,7 +38,7 @@ public class OrderItem {
     @ManyToOne
     private PlushToy plushToy;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Order order;
 
     public OrderItem() {
