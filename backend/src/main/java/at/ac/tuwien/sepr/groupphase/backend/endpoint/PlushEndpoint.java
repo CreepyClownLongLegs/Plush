@@ -3,8 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PlushToyListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ProductCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SearchPlushToyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PlushToyMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ProductCategoryMapper;
 import at.ac.tuwien.sepr.groupphase.backend.service.PlushToyService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.security.PermitAll;
@@ -30,11 +32,13 @@ public class PlushEndpoint {
 
     private final PlushToyService plushToyService;
     private final PlushToyMapper plushToyMapper;
+    private final ProductCategoryMapper productCategoryMapper;
 
     @Autowired
-    public PlushEndpoint(PlushToyService plushToyService, PlushToyMapper plushToyMapper) {
+    public PlushEndpoint(PlushToyService plushToyService, PlushToyMapper plushToyMapper, ProductCategoryMapper productCategoryMapper) {
         this.plushToyService = plushToyService;
         this.plushToyMapper = plushToyMapper;
+        this.productCategoryMapper = productCategoryMapper;
     }
 
     @PermitAll
@@ -59,5 +63,13 @@ public class PlushEndpoint {
     public List<PlushToyListDto> search(@RequestBody SearchPlushToyDto searchParams) {
         LOGGER.info("POST /api/v1/plush/search with body: {}", searchParams);
         return plushToyMapper.entityToListDto(plushToyService.search(searchParams));
+    }
+
+    @PermitAll
+    @GetMapping(value = "/categories")
+    @Operation(summary = "Get all plush toy categories")
+    public List<ProductCategoryDto> getAllCategories() {
+        LOGGER.info("GET /api/v1/plush/categories");
+        return productCategoryMapper.entityListToDtoList(plushToyService.getAllProductCategories());
     }
 }

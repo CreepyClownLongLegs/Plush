@@ -55,6 +55,7 @@ export class ProductCategoryDto {
 
 export class PlushToySearchDto {
   name: string;
+  categoryId: number;
 }
 
 export class PlushToyAttributeDistributionDto {
@@ -74,5 +75,3 @@ export class PlushToyAttributeDtoWithDistribution {
   name: string;
   distributions: PlushToyAttributeDistributionDto[];
 }
-
-

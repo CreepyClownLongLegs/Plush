@@ -12,13 +12,9 @@
       <div class="col-lg-3 row-of-text">
         <ul>
           Categories
-          <li><a href="#">Big Teddies</a></li>
-          <li><a href="#">Big Teddies</a></li>
-          <li><a href="#">Big Teddies</a></li>
-          <li><a href="#">Big Teddies</a></li>
-          <li><a href="#">Big Teddies</a></li>
-          <li><a href="#">Big Teddies</a></li>
-          <li><a href="#">Bob Ross</a></li>
+          <li><a (click)="searchByCategory(-1)">All plushies</a></li>
+          <li><a *ngIf="categories.length<1" (click)="getCategories()">Show all categories</a></li>
+          <li *ngFor="let category of categories"><a (click)="searchByCategory(category.id)">{{category.name}}</a></li>
         </ul>
       </div>
 

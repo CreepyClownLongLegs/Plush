@@ -141,7 +141,12 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
   }
 
   syncPlushToyAttributes(attribute: PlushToyAttributeDtoWithDistribution): void {
-    attribute.distributions.forEach(dist => dist.attribute = attribute);
+    attribute.distributions.forEach((dist) => {
+      const newAttribute = { ...attribute }
+      delete newAttribute.distributions;// remove cyclic reference
+      dist.attribute = newAttribute;
+    }
+    );
   }
 
   removeAttribute(attributeName: string): void {
