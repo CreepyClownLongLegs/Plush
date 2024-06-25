@@ -57,7 +57,7 @@ export class CartComponent implements OnInit {
 
   calculateTotalPrice(): void {
     const total = this.cartItems.reduce((acc, item) => acc + item.price * item.amount, 0);
-    this.totalPrice = `${total} SOL`;
+    this.totalPrice = `${Math.round(total * 100) / 100} SOL`;
   }
 
   removeItem(itemId: number): void {
@@ -127,8 +127,8 @@ export class CartComponent implements OnInit {
               this.router.navigate(['/register']);
               return;
             }
-
-            this.walletService.handleSignAndSendTransaction(total).subscribe({
+            // amount need to be a big decimal and rounded to 2 decimal places or it will fail
+            this.walletService.handleSignAndSendTransaction(Math.round(total * 100) / 100).subscribe({
               next: () => {
                 this.notification.success('Order successful! You will receive your NFT shortly.', 'Success');
                 this.shoppingCartService.clearCart().subscribe({

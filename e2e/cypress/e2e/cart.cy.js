@@ -17,7 +17,7 @@ context("cart", () => {
         cy.goToCart();
 
         cy.get(".cart-item").should("exist");
-        cy.get(".item-name").should("contain", "#1 TEST TIGER 0");
+        cy.get(".item-name").should("contain", "#1 Quaki");
         cy.get(".hp").should("contain", "100HP");
         cy.get(".item-price").should("contain", "0.01 SOL");
         cy.get(".total-price").should("contain", "0.01 SOL");
