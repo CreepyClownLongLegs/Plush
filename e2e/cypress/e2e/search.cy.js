@@ -1,7 +1,7 @@
 context('search', () => {
     it('should load plush toys on search', () => {
         cy.visit('/');
-        cy.get('#search-field').type('Tiger{enter}');
+        cy.get('#search-field').type('Quaki{enter}');
         cy.get('.card').should('have.length.greaterThan', 0);
     });
 

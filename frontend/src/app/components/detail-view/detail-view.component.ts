@@ -7,8 +7,7 @@ import { ToastrService } from "ngx-toastr";
 import { PlushToyColor, PlushToy, PlushToySize } from '../../dtos/plushtoy';
 import { WalletService } from "../../services/wallet.service";
 import { UserService } from "../../services/user.service";
-import {UserDetailDto} from "../../dtos/user";
-import {AuthService} from "../../services/auth.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: 'app-detail-view',
@@ -84,6 +83,10 @@ export class DetailViewComponent implements OnInit {
 
   getStars(count: number): any[] {
     return new Array(count);
+  }
+
+  getAttributeNames(): string[] {
+    return this.toy.attributesDistributions.map(attr => attr.attribute.name);
   }
 
 }

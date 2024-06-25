@@ -68,4 +68,14 @@ public class PlushToyAttributeDistribution {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "PlushToyAttributeDistribution{" + "id=" + id
+                + ", name='" + name + '\''
+                + ", quantityPercentage=" + quantityPercentage
+                + ", attribute=" + attribute
+                + ", plushToy=" + plushToy
+                + '}';
+    }
 }
