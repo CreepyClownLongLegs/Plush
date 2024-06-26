@@ -76,6 +76,10 @@ public class AdminServiceImplementation implements AdminService {
             orderItem.setPlushToy(null);
             orderItemRepository.save(orderItem);
         }
+        for (ProductCategory category : plushToy.getProductCategories()) {
+            category.getPlushToys().remove(plushToy);
+            productCategoryRepository.save(category);
+        }
         plushToyRepository.deleteById(productId);
     }
 
