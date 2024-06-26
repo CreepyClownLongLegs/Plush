@@ -44,7 +44,7 @@
                           </div>
                           <div class="col-6 text-end">
                             <p class="mb-0">
-                              <strong>{{ item.pricePerPiece | currency:'SOL ':true }}</strong>
+                              <strong>{{ item.pricePerPiece | currency:'SOL ' }}</strong>
                             </p>
                           </div>
                         </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-md-6 col-sm-12 text-end">
                   <h6>Total Tax <strong>SOL {{ order.totalTax }}</strong></h6>
-                  <h6>Total Price <strong>{{ order.totalPrice | currency:'SOL ':true }}</strong></h6>
+                  <h6>Total Price <strong>{{ order.totalPrice | currency:'SOL ' }}</strong></h6>
                 </div>
               </div>
             </div>

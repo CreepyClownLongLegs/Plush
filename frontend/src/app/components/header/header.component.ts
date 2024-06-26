@@ -32,6 +32,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.getCategories();
     this.searchTermSubscription = this.searchService.searchTerm$.subscribe(searchTerm => {
       this.searchTerm = searchTerm;
+      this.isNavbarCollapsed = true;
+
     });
   }
 
@@ -44,6 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.searchTermSubscription) {
       this.searchTermSubscription.unsubscribe();
+      this.isNavbarCollapsed = true;
     }
   }
 
@@ -60,11 +63,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   searchByCategory(categoryId: number) {
     this.searchTerm = '';
-    this.searchService.setSearchTerm('');
     this.searchService.setCategoryId(categoryId);
     this.toggleNavbar();
     this.router.navigate(['/']);
     this.isDropdownOpen = false;
+    this.isNavbarCollapsed = true;
+
   }
 
   navigateToCart() {
@@ -75,11 +79,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onSearch() {
     this.searchService.setCategoryId(-1);
     this.searchService.setSearchTerm(this.searchTerm);
+    this.isDropdownOpen = false;
+    this.isNavbarCollapsed = true;
     this.navigateToHome();
   }
 
   navigateToHome() {
     this.router.navigate(['/']);
+    this.isDropdownOpen = false;
     this.isNavbarCollapsed = true;
 
   }
@@ -89,6 +96,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.searchService.setSearchTerm('');
     this.onSearch();
     this.router.navigate(['/']);
+    this.isDropdownOpen = false;
+
     this.isNavbarCollapsed = true;
 
   }

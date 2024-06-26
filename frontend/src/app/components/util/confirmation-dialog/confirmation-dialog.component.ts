@@ -1,5 +1,6 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import * as bootstrap from 'bootstrap';
+
 @Component({
   standalone: true,
   selector: 'app-confirmation-dialog',
@@ -9,6 +10,8 @@ import * as bootstrap from 'bootstrap';
 export class ConfirmationDialogComponent {
   @Output() confirm = new EventEmitter<void>();
   @ViewChild('confirmationModal') private confirmationModal!: ElementRef;
+  @Input() dialogTitle: string;
+  @Input() message: string;
 
   confirmAction(): void {
     this.confirm.emit();

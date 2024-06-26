@@ -1,23 +1,24 @@
 <div class="container-fluid">
-    <div class="mx-4 my-5">
-      <h1 class="my-3">Categories</h1>
-      <button class="btn navbutton-left btn-primary me-1" routerLink="new" data-test="addCategoryButton">Add a category</button>
-      <button routerLink="../" class="btn btn-secondary">Back</button>
-      <div *ngFor="let category of categories; let i = index" class="row my-3" data-test="categoryInfo">
-        <div class="col-lg-6 col-md-3 col-sm-6">
-          <h5>{{ category.name }}</h5>
-          <p>{{category.plushToys.length}} assigned Plushtoys</p>
-        </div>
-
-        <div class="col-lg-6 col-md-3 col-sm-6 text-end ml-auto">
-          <a class="btn btn-sm responsive-warning-button" aria-label="Edit">
-            <i class="fas fa-pencil"></i>
-          </a>
-          <button type="button" class="btn btn-small btn-danger" data-test="deleteButton" (click)="selectForDeletion(category.id)">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
+  <div class="mx-4 my-5">
+    <h1 class="my-3">Categories</h1>
+    <button class="btn navbutton-left btn-primary me-1" routerLink="new" data-test="addCategoryButton">Add a category
+    </button>
+    <button routerLink="../" class="btn btn-secondary">Back</button>
+    <div *ngFor="let category of categories; let i = index" class="row my-3" data-test="categoryInfo">
+      <div class="col-lg-6 col-md-3 col-sm-6">
+        <h5>{{ category.name }}</h5>
+        <p>{{ category.plushToys.length }} assigned Plushtoys</p>
       </div>
-      <app-confirmation-dialog (confirm)="deleteCategory(selectedForDeleteId)"></app-confirmation-dialog>
+
+      <div class="col-lg-6 col-md-3 col-sm-6 text-end ml-auto">
+        <button type="button" class="btn btn-small btn-danger" data-test="deleteButton"
+                (click)="selectForDeletion(category.id)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
     </div>
+    <app-confirmation-dialog dialogTitle="Delete Category"
+                             message='Are you sure you want to delete this Category? This action cannot be undone.'
+                             (confirm)="deleteCategory(selectedForDeleteId)"></app-confirmation-dialog>
+  </div>
 </div>

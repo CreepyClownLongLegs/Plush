@@ -1,6 +1,6 @@
 <footer>
-  <div class="container-fluid">
-    <div class="row container">
+  <div class="container-fluid d-flex justify-content-center align-content-center">
+    <div class="row container my-3">
       <div class="col-lg-3 col-sm-12 ">
         <div class="logo">
         </div>
@@ -12,18 +12,18 @@
       <div class="col-lg-3 row-of-text">
         <ul>
           Categories
-          <li><a (click)="searchByCategory(-1)">All plushies</a></li>
-          <li><a *ngIf="categories.length<1" (click)="getCategories()">Show all categories</a></li>
-          <li *ngFor="let category of categories"><a (click)="searchByCategory(category.id)">{{category.name}}</a></li>
+          <li class="cursor-pointer"><a (click)="searchByCategory(-1)">All plushies</a></li>
+          <li class="cursor-pointer" *ngFor="let category of categories"><a
+            (click)="searchByCategory(category.id)">{{ category.name }}</a></li>
         </ul>
       </div>
 
       <div class="col-lg-3 row-of-text">
         <ul>
           Useful Links
-          <li><a routerLink="./">Home</a></li>
-          <li><a routerLink="/cart">Cart</a></li>
-          <li><a routerLink="/orders">Order History</a></li>
+          <li class="cursor-pointer"><a (click)="navigateToHome()">Home</a></li>
+          <li *ngIf="this.authService.isLoggedIn()"><a routerLink="/cart">Cart</a></li>
+          <li *ngIf="this.authService.isLoggedIn()"><a routerLink="/orders">Order History</a></li>
         </ul>
       </div>
 
@@ -34,8 +34,8 @@
           <li>ViennaStraße 172, Vienna, 1040</li>
           <li>E-mail:</li>
           <li>
-              <p>OurEmail&commat;yahoo.com</p>
-            </li>
+            <p>OurEmail&commat;yahoo.com</p>
+          </li>
           <li>Office Phone:</li>
           <li>+43 677 1234567</li>
         </ul>

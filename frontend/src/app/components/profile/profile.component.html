@@ -1,20 +1,23 @@
+<script src="../login/login.component.ts"></script>
 <div class="container-fluid padding">
   <div class="container">
-    <div class="container-fluid coverage">
-      <h1 class="title">Player Stats</h1>
+    <div #coverage class="container-fluid coverage">
+      <h1 class="title my-4">Player Stats</h1>
       <div class="row">
         <div class="col-lg-12 col-sm-12 info">
-          <h3 class="info-title">Player Info</h3>
 
+          <h3 class="info-title">Player Info</h3>
           <!--progress bar-->
-          <label class="d-flex justify-content-between">Level {{ level }}
-            <div class="mx-4" style="color: brown;">{{ xp }}/{{ maxXp }}XP
+          <label class="d-flex justify-content-between">
+            <div class="mx-3 my-2">Level {{ level }}</div>
+            <div class="mx-3 my-2" style="color: brown;">{{ xp }}/{{ maxXp }}XP
             </div>
           </label>
-          <div role="progressbar col-lg-12" [ngStyle]="{'width': calculateWidth()}" class="progressbar">
-            <div class="progressbar-fill col-lg-12"></div>
-          </div>
 
+          <div class="row d-flex col-5">
+            <div #progressBar class="progressbar" [ngStyle]="{'width': calculateWidth()}" class="progressbar"></div>
+            <div #progressBarFill [ngStyle]="{'width': progressBarFillWidth}" class="progressbar-fill"></div>
+          </div>
           <!--Row1: Name and Surname row-->
           <div class="info-row row">
             <div class="col-lg-6 col-sm-12">
@@ -22,7 +25,7 @@
                 <label>First Name</label>
                 <div class="stat-value">
                   <input type="text" data-test="firstName" [(ngModel)]="userDetail.firstname"
-                         placeholder="Maximillian">
+                         placeholder="Manu">
                 </div>
               </div>
             </div>
@@ -31,7 +34,7 @@
               <div class="stat">
                 <label for="lastname">Last Name</label>
                 <div class="stat-value">
-                  <input type="text" data-test="lastName" [(ngModel)]="userDetail.lastname" placeholder="Musterman">
+                  <input type="text" data-test="lastName" [(ngModel)]="userDetail.lastname" placeholder="Musterperson">
                 </div>
               </div>
             </div>
@@ -44,7 +47,7 @@
                 <label for="emailAddress">E-mail Address</label>
                 <div class="stat-value">
                   <input type="text" data-test="emailAddress" [(ngModel)]="userDetail.emailAddress"
-                         placeholder="musterman@gmail.com">
+                         placeholder="musterperson@email.com">
                 </div>
               </div>
             </div>
@@ -123,4 +126,7 @@
   </div>
 </div>
 
-<app-confirmation-dialog (confirm)="deleteUser()"></app-confirmation-dialog>
+<app-confirmation-dialog dialogTitle="Delete Profile"
+                         message='Are you sure you want to delete your Profile? This action cannot be undone.'
+
+                         (confirm)="deleteUser()"></app-confirmation-dialog>

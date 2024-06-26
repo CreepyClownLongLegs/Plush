@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from "@angular/core";
 import {AuthService} from "../../services/auth.service";
 import {AuthRequest} from "../../dtos/auth-request";
 import {NonceRequest} from "../../dtos/nonce-request";
@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   @Input() buttonClass: string;
   @Input() type: ButtonType;
   @Input() customLabel: string;
+  @Output() buttonClicked = new EventEmitter<boolean>();
 
   iconClass: string = '';
   label: string = '';
@@ -32,7 +33,6 @@ export class LoginComponent implements OnInit {
   errorMessage = "";
   publicKey = "";
   balance = 0;
-  isDropdownOpen = false;
 
   constructor(
     public authService: AuthService,
@@ -41,15 +41,6 @@ export class LoginComponent implements OnInit {
     private notification: NotificationService, private router: Router,
   ) {
   }
-
-  /* this promts the user to sign the login message every time the page is refreshed,
-   * which is not supposed to happen.
-   */
-  // ngOnInit() {
-  //   if (this.authService.isLoggedIn()) {
-  //     this.loginUser()
-  //   }
-  // }
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -77,28 +68,19 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Handles the button click event by opening the appropriate modal based on the user login status.
-   */
-  handleButtonClick() {
-    if (this.authService.isLoggedIn()) {
-      this.openWalletModal();
-    } else {
-      this.openConnectModal();
-    }
-  }
-
-  /**
    * Opens the Phantom Wallet website in a new tab and closes the current modal.
    */
   forwardToPhantom() {
     window.open('https://phantom.app/', '_blank');
     this.modalService.dismissAll();
+    this.buttonClicked.emit(true);
   }
 
   /**
    * Connects the wallet and tries to log in the user.
    */
   loginUser() {
+    this.buttonClicked.emit(true);
     this.walletService.connectWallet().then(async (publicKey: string) => {
       this.publicKey = publicKey;
       this.getNonce(publicKey);
@@ -186,6 +168,7 @@ export class LoginComponent implements OnInit {
    * Disconnects the wallet and logs out the user.
    */
   logoutUser() {
+    this.buttonClicked.emit(true);
     this.walletService.disconnectWallet().then(r => {
       this.resetWalletConnection();
       this.closeModal();
@@ -206,6 +189,7 @@ export class LoginComponent implements OnInit {
   }
 
   async openWalletModal() {
+    this.buttonClicked.emit(true);
     this.modalService.open(this.walletModal);
     this.balance = await this.walletService.getBalance(this.publicKey);
   }

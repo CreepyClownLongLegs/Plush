@@ -50,6 +50,7 @@ export class ProductCategoryCreationDto {
 
 export class ProductCategoryDto {
   id: number;
+  plushToys: number[];
   name: string;
 }
 

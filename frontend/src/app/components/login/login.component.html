@@ -1,3 +1,4 @@
+<script src="login.component.ts"></script>
 <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
   <strong>Authentication problems!</strong> {{ errorMessage }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
@@ -8,11 +9,11 @@
 
 <div class="header-container">
   <a *ngIf="!authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="connectWallet"
-    (click)="openConnectModal()"> {{ buttonLabel() }}
+     (click)="openConnectModal()"> {{ buttonLabel() }}
     <div [class]="iconClass"></div>
   </a>
   <a *ngIf="authService.isLoggedIn()" [class]="buttonClass" role="button" data-test="loggedIn"
-    (click)="openWalletModal()"> {{ buttonLabel() }}
+     (click)="openWalletModal()"> {{ buttonLabel() }}
     <div [class]="iconClass"></div>
   </a>
 </div>
@@ -29,10 +30,10 @@
       </div>
       <div class="modal-body">
         <button *ngIf="!walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2"
-          (click)="forwardToPhantom()">Install Phantom Wallet
+                (click)="forwardToPhantom()">Install Phantom Wallet
         </button>
         <button *ngIf="walletService.isWalletPresent()" class="btn btn-secondary btn-block mb-2" (click)="loginUser()"
-          data-test="logIn">
+                data-test="logIn">
           Connect Phantom Wallet
         </button>
       </div>
@@ -57,7 +58,7 @@
         </div>
         <button class="btn btn-secondary btn-block mb-2" routerLink="/profile" (click)="closeModal()">Profile</button>
         <button class="btn btn-secondary btn-block mb-2" *ngIf="authService.userIsAdmin()" [routerLink]="['/admin']"
-          (click)="closeModal()">Admin View
+                (click)="closeModal()">Admin View
         </button>
         <button class="btn btn-secondary btn-block mb-2" (click)="logoutUser()">Disconnect</button>
       </div>

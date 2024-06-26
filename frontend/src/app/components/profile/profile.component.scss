@@ -69,17 +69,20 @@ label {
 .progressbar-fill {
     background-image: url("../../../images/menu_xp.png");
     background-size: 100% 100%;
-    width: 800px;
-    margin-left: -15px;
     height: 40px;
-    padding: 5px;
+    margin-left:30px;
+    position:absolute;
+}
+
+.progressbar-holder{
+  position:relative;
 }
 
 .progressbar {
     background-color: brown;
-    margin-left: 20%;
     margin-top: 10px;
-    height: 40px;
+    height: 25px;
+    margin-left:35px;
 }
 
 
@@ -172,17 +175,10 @@ button:active {
         margin: auto;
     }
 
-    .progressbar-fill {
-        width: 300px;
-        margin-left: -6px;
-    }
-
-    .progressbar {
-        margin-left: 15px;
-    }
-
     button {
         height: max-content;
     }
 
+
 }
+
