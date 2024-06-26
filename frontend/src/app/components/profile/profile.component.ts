@@ -1,4 +1,4 @@
-import {Component, OnInit, HostListener, ViewChild} from '@angular/core';
+import {Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit, AfterViewChecked } from '@angular/core';
 import {UserDetailDto} from 'src/app/dtos/user';
 import {UserService} from 'src/app/services/user.service';
 import {AuthService} from 'src/app/services/auth.service';
@@ -14,16 +14,20 @@ import {ToastrService} from "ngx-toastr";
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild(ConfirmationDialogComponent) confirmationDialog!: ConfirmationDialogComponent;
+  @ViewChild('progressBar') progressBar!: ElementRef;
+  @ViewChild('progressBarFill') progressBarFill!: ElementRef;
+  @ViewChild('coverage') coverage!: ElementRef;
 
   userDetail: UserDetailDto = {} as UserDetailDto;
-  orders: OrderListDto[];
+  orders: OrderListDto[] = [];
   xp: number = 0;
   totalXp: number = 0;
   maxXp: number = 300;
-  maxWidth: number = 800;
+  maxWidth: number = 0;
   level: number = 0;
+  progressBarFillWidth: string = '0px';
 
   constructor(
     private userService: UserService,
@@ -40,38 +44,45 @@ export class ProfileComponent implements OnInit {
       this.router.navigate(['/']);
       return;
     } else {
+      this.setProgressBarFillWidth();
       this.fetchUserDetails();
       this.loadOrders();
-      this.updateMaxXp();
       this.calculateXP();
       this.calculateWidth();
     }
   }
 
+  ngAfterViewInit(): void {
+    // Ensure the calculation is deferred
+    setTimeout(() => {
+      this.setProgressBarFillWidth();
+      this.calculateWidth();
+    });
+  }
+
+  ngAfterViewChecked(): void {
+    setTimeout(() => {
+      this.setProgressBarFillWidth();
+      this.calculateWidth();
+    });
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
-    this.updateMaxXp();
+    this.setProgressBarFillWidth();
     this.calculateWidth();
   }
 
-  updateMaxXp(): void {
-    const screenWidth = window.innerWidth;
-    if (screenWidth > 1000) {
-      this.maxWidth = 790;
-    } else if (screenWidth < 900) {
-      this.maxWidth = 290;
-    }
-  }
-
-  loadOrders() {
+  loadOrders(): void {
     this.userService.getAllOrders()
       .subscribe({
         next: data => {
           this.orders = data;
+          this.calculateXP();
         },
         error: error => {
           console.error('Error fetching Orders', error);
-          this.notification.error('An error occurred while fetching Orders', 'Error fetching Orders')
+          this.notification.error('An error occurred while fetching Orders', 'Error fetching Orders');
         }
       });
   }
@@ -89,13 +100,23 @@ export class ProfileComponent implements OnInit {
 
   calculateWidth(): string {
     this.xp = this.totalXp % this.maxXp;
-    const percentage = (this.xp / this.maxXp) * 100;
-    const width = (percentage / 100) * this.maxWidth;
+    const width = (this.xp / this.maxXp) * this.maxWidth;
     return `${width}px`;
   }
 
   calculateLevel(): void {
     this.level = Math.floor(this.totalXp / this.maxXp);
+  }
+
+  setProgressBarFillWidth(): void {
+    if (this.progressBar && this.coverage.nativeElement) {
+      const progressBarWidth = this.coverage.nativeElement.offsetWidth;
+      const fillWidth = progressBarWidth * 0.9;
+      this.maxWidth = fillWidth - 20;
+      if (this.progressBarFillWidth !== `${fillWidth}px`) {
+        this.progressBarFillWidth = `${fillWidth}px`;
+      }
+    }
   }
 
   fetchUserDetails(): void {
@@ -187,12 +208,11 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-
   selectForDeletion(): void {
     this.confirmationDialog.showModal();
   }
 
-  deleteUser() {
+  deleteUser(): void {
     this.userService.deleteUser().subscribe({
       next: () => {
         this.authService.logoutUser();

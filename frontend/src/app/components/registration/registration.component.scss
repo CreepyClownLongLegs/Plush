@@ -1,67 +1,71 @@
 .container {
-    padding-top: 20vh;
+  padding-top: 20vh;
 }
 
 .container-fluid {
-    margin-top: 0px;
-    width: 100%;
-    height: 100%;
-    background-image: url("../../../images/sepr-background.gif");
-    background-size: cover;
+  margin-top: 0px;
+  width: 100%;
+  height: 100%;
+  background-image: url("../../../images/sepr-background.gif");
+  background-size: cover;
+}
+
+.padding {
+  padding-bottom: 140px;
 }
 
 .header-container {
-    margin-left: 10px;
-    margin-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .modal-header {
-    position: relative;
+  position: relative;
 }
 
 .close {
-    position: absolute;
-    right: 1em;
-    top: 0.5em;
-    border: none;
-    background: none;
-    color: inherit;
-    font-size: inherit;
+  position: absolute;
+  right: 1em;
+  top: 0.5em;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: inherit;
 }
 
 .modal-body {
-    .btn {
-        width: 100%;
-    }
+  .btn {
+    width: 100%;
+  }
 }
 
 .flex-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
 }
 
 .card {
-    color: whitesmoke;
-    background-color: rgba($color: #000000, $alpha: 0.5);
-    border: whitesmoke 1px solid;
-    border-radius: 0px;
+  color: whitesmoke;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+  border: whitesmoke 1px solid;
+  border-radius: 0px;
 }
 
 .card-header {
-    background-color: none;
-    border-bottom: 1px solid whitesmoke;
+  background-color: none;
+  border-bottom: 1px solid whitesmoke;
 }
 
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 input.form-control {
-    border-radius: 0px;
-    background: none;
-    color: rgba(255, 255, 255, 0.7)
+  border-radius: 0px;
+  background: none;
+  color: rgba(255, 255, 255, 0.7)
 }
 
 input::placeholder {
@@ -69,7 +73,7 @@ input::placeholder {
 }
 
 button {
-    border-radius: 0px;
-    background-color: rgba($color: #0D094F, $alpha: 1.0);
-    margin: auto;
+  border-radius: 0px;
+  background-color: rgba($color: #0D094F, $alpha: 1.0);
+  margin: auto;
 }

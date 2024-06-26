@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid padding">
   <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>Authentication problems!</strong> {{ errorMessage }}
     <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
@@ -6,7 +6,7 @@
     </button>
   </div>
 
-  <div class="container" style="height: 100vh;">
+  <div class="container">
     <div class="row">
       <div class="col-md-6 mx-auto">
         <span class="anchor" id="formLogin"></span>
@@ -20,42 +20,53 @@
 
             <div class="form-group">
               <label for="firstname" class="mb-2">First Name</label>
-              <input data-test="firstName" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.firstname"
-                     placeholder="Input Shipping Address">
+              <input data-test="firstName" style="color: aliceblue;" type="text" class="form-control"
+                     [(ngModel)]="userDetail.firstname"
+                     placeholder="Manu">
             </div>
 
             <div class="form-group">
               <label for="lastname" class="mb-2">Last Name</label>
-              <input data-test="lastName" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.lastname"
-                     placeholder="Input Shipping Address">
+              <input data-test="lastName" style="color: aliceblue;" type="text" class="form-control"
+                     [(ngModel)]="userDetail.lastname"
+                     placeholder="Musterperson">
             </div>
 
             <div class="form-group">
               <label for="emailAddress" class="mb-2">Email Address</label>
-              <input data-test="emailAddress" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.emailAddress"
-                     placeholder="Input Shipping Address">
+              <input data-test="emailAddress" style="color: aliceblue;" type="text" class="form-control"
+                     [(ngModel)]="userDetail.emailAddress"
+                     placeholder="musterperson@email.com">
             </div>
 
             <div class="form-group">
-              <label for="inputAddress" class="mb-2">Shipping Address</label>
-              <input data-test="addressLine1" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.addressLine1"
-                     placeholder="Input Shipping Address">
+              <label for="inputAddress" class="mb-2">Delivery Address</label>
+              <input data-test="addressLine1" style="color: aliceblue;" type="text" class="form-control"
+                     [(ngModel)]="userDetail.addressLine1"
+                     placeholder="My Street 12">
             </div>
-
+            <div class="form-group">
+              <label for="inputAddress" class="mb-2">Address Line 2</label>
+              <input style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.addressLine2"
+                     placeholder="Apartment 18">
+            </div>
             <div class="form-group">
               <label for="postalCode" class="mb-2">Postal Code </label>
-              <input data-test="postalCode" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.postalCode"
-                     placeholder="Input Postal Code">
+              <input data-test="postalCode" style="color: aliceblue;" type="text" class="form-control"
+                     [(ngModel)]="userDetail.postalCode"
+                     placeholder="1111">
             </div>
 
             <div class="form-group">
               <label for="country" class="mb-2">Country</label>
-              <input data-test="country" style="color: aliceblue;" type="text" class="form-control" [(ngModel)]="userDetail.country"
-                     placeholder="Input Country">
+              <input data-test="country" style="color: aliceblue;" type="text" class="form-control"
+                     [(ngModel)]="userDetail.country"
+                     placeholder="Austria">
             </div>
 
             <button data-test="updateButton" (click)="updateUserData()" class="btn btn-success w-100"
-                    style="margin: auto;">Save Address</button>
+                    style="margin: auto;">Save Address
+            </button>
 
           </div>
 
