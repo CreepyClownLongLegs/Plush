@@ -5,7 +5,7 @@
 
     <groupId>at.ac.tuwien.sepr.groupphase</groupId>
     <artifactId>backend</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <name>backend</name>
     <description>Backend for the Plush Online Shop</description>
 
