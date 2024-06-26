@@ -62,7 +62,7 @@ public class PlushToy {
     private float strength;
 
     @ManyToMany(mappedBy = "plushToys", fetch = FetchType.EAGER)
-    private List<ProductCategory> productCategories;
+    private List<ProductCategory> productCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "plushToy")
     private List<Nft> nfts;
