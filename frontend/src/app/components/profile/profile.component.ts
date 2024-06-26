@@ -1,13 +1,13 @@
-import { Component, OnInit, Renderer2, HostListener, ViewChild } from '@angular/core';
-import { UserDetailDto } from 'src/app/dtos/user';
-import { UserService } from 'src/app/services/user.service';
-import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/services/auth.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
-import { WalletService } from 'src/app/services/wallet.service';
-import { ConfirmationDialogComponent } from "../util/confirmation-dialog/confirmation-dialog.component";
-import { OrderListDto } from "../../dtos/order";
+import {Component, OnInit, HostListener, ViewChild} from '@angular/core';
+import {UserDetailDto} from 'src/app/dtos/user';
+import {UserService} from 'src/app/services/user.service';
+import {AuthService} from 'src/app/services/auth.service';
+import {Router} from '@angular/router';
+import {WalletService} from 'src/app/services/wallet.service';
+import {ConfirmationDialogComponent} from "../util/confirmation-dialog/confirmation-dialog.component";
+import {OrderListDto} from "../../dtos/order";
+import {NotificationService} from "../../services/notification.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-profile',
@@ -26,15 +26,14 @@ export class ProfileComponent implements OnInit {
   level: number = 0;
 
   constructor(
-    private renderer: Renderer2,
-    private modalService: NgbModal,
     private userService: UserService,
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService,
     private walletService: WalletService,
-    private notification: ToastrService,
-  ) {}
+    private notification: NotificationService,
+    private toastr: ToastrService
+  ) {
+  }
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
@@ -72,7 +71,7 @@ export class ProfileComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching Orders', error);
-          this.notification.error('Error fetching Orders', error)
+          this.notification.error('An error occurred while fetching Orders', 'Error fetching Orders')
         }
       });
   }
@@ -122,11 +121,11 @@ export class ProfileComponent implements OnInit {
       this.userService.updateUser(this.userDetail).subscribe(
         (updatedUser: UserDetailDto) => {
           this.userDetail = updatedUser;
-          this.toastr.success('Update successful', 'Success');
+          this.notification.success('Update successful', 'Success');
         },
         (error) => {
           console.error('Error updating user', error);
-          this.toastr.error('Could not update user', 'Error');
+          this.notification.error('Could not update user', 'Error');
         }
       );
     }
@@ -181,7 +180,7 @@ export class ProfileComponent implements OnInit {
     }
 
     if (errors.length > 0) {
-      this.toastr.info(errors.join("<br>"), "Update Error", { enableHtml: true });
+      this.toastr.error(errors.join("<br>"), "Update Error", {enableHtml: true, positionClass: 'toast-bottom-right'});
       return false;
     } else {
       return true;
@@ -199,12 +198,12 @@ export class ProfileComponent implements OnInit {
         this.authService.logoutUser();
         this.walletService.disconnectWallet();
         this.router.navigate(['/']).then(() => {
-          this.toastr.success("Your profile was successfully deleted", "Deletion successful");
+          this.notification.success("Your profile was successfully deleted", "Deletion successful");
         });
       },
       error: error => {
         console.error('Error deleting User', error);
-        this.toastr.error("Error deleting User", "Could not delete User");
+        this.notification.error("Error deleting User", "Could not delete User");
       }
     });
   }

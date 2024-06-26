@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { ConfirmationDialogComponent } from 'src/app/components/util/confirmation-dialog/confirmation-dialog.component';
-import { PlushToyListDto } from 'src/app/dtos/plushtoy';
-import { AdminService } from 'src/app/services/admin.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ConfirmationDialogComponent} from 'src/app/components/util/confirmation-dialog/confirmation-dialog.component';
+import {PlushToyListDto} from 'src/app/dtos/plushtoy';
+import {AdminService} from 'src/app/services/admin.service';
+import {NotificationService} from "../../../../services/notification.service";
 
 
 @Component({
@@ -17,8 +17,9 @@ export class AdminPlushtoyOverviewComponent implements OnInit {
 
   constructor(
     private service: AdminService,
-    private notification: ToastrService
-  ) { }
+    private notification: NotificationService
+  ) {
+  }
 
   ngOnInit() {
     this.loadPlushToys();

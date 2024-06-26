@@ -5,7 +5,7 @@ import {OrderListDto} from "../../dtos/order";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {UserService} from "../../services/user.service";
-import {ToastrService} from "ngx-toastr";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-order-history',
@@ -28,8 +28,7 @@ export class OrderHistoryComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private userService: UserService,
-    private notification: ToastrService,
-  ) {
+    private notification: NotificationService,) {
   }
 
   ngOnInit() {

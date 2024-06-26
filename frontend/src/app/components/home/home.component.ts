@@ -1,13 +1,13 @@
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {PlushToyListDto, PlushToySearchDto} from 'src/app/dtos/plushtoy';
 import {SearchService} from 'src/app/services/search.service';
 import {PlushtoyService} from 'src/app/services/plushtoy.service';
 import {Subscription} from "rxjs";
-import {TypewriterService } from '../../services/typewriter.service';
-import { AdminService } from 'src/app/services/admin.service';
-import {ToastrService} from "ngx-toastr";
+import {TypewriterService} from '../../services/typewriter.service';
+import {AdminService} from 'src/app/services/admin.service';
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,7 @@ import {ToastrService} from "ngx-toastr";
 })
 export class HomeComponent implements OnInit, OnDestroy {
   plushies: PlushToyListDto[];
-  notificationDisplayed:boolean = false;
+  notificationDisplayed: boolean = false;
   searchParams: PlushToySearchDto = {
     name: '',
     categoryId: 0
@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private typewriterService: TypewriterService, // Inject TypewriterService
     private searchService: SearchService,
     private plushToyService: PlushtoyService,
-    private notification: ToastrService,
+    private notification: NotificationService,
     private router: Router
   ) {
     // Reload plushies when route changes (e.g. from category search)

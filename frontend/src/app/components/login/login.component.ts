@@ -3,9 +3,9 @@ import {AuthService} from "../../services/auth.service";
 import {AuthRequest} from "../../dtos/auth-request";
 import {NonceRequest} from "../../dtos/nonce-request";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ToastrService} from "ngx-toastr";
 import {WalletService} from "../../services/wallet.service";
 import {Router} from "@angular/router";
+import {NotificationService} from "../../services/notification.service";
 
 export enum ButtonType {
   ConnectButton,
@@ -38,8 +38,7 @@ export class LoginComponent implements OnInit {
     public authService: AuthService,
     public walletService: WalletService,
     private modalService: NgbModal,
-    private notification: ToastrService,
-    private router: Router,
+    private notification: NotificationService, private router: Router,
   ) {
   }
 

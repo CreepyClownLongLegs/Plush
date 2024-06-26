@@ -1,17 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {PlushToyCartListDto, PlushToyListDto} from "../../dtos/plushtoy";
+import {PlushToyCartListDto} from "../../dtos/plushtoy";
 import {PlushtoyService} from "../../services/plushtoy.service";
 import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ToastrService} from "ngx-toastr";
 import {NgForOf, NgIf, CommonModule} from "@angular/common";
 import {AuthService} from 'src/app/services/auth.service';
 import {WalletService} from 'src/app/services/wallet.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {UserDetailDto} from 'src/app/dtos/user';
 import {UserService} from 'src/app/services/user.service';
 import {Router} from '@angular/router';
-import {load} from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks";
 import {OrderDetailDto} from "../../dtos/order";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-cart',
@@ -32,11 +30,9 @@ export class CartComponent implements OnInit {
   loadingMessage: string = '';
 
   constructor(
-    private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
-    private notification: ToastrService,
+    private notification: NotificationService,
     public authService: AuthService,
-    private modalService: NgbModal,
     private userService: UserService,
     private router: Router,
     private walletService: WalletService,
