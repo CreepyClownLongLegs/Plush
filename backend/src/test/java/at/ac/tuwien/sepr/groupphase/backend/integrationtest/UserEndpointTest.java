@@ -37,6 +37,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -267,5 +268,35 @@ public class UserEndpointTest implements UserTestData, LoginTestData {
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+
+    @Test
+    @WithMockUser(username = TEST_PUBKEY)
+    public void givenValidUser_whenGetUserByPublicKey_thenReturnUserDetails() throws Exception {
+        User user = new User();
+        user.setPublicKey(TEST_PUBKEY);
+        userRepository.save(user);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/user")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        UserDetailDto userDetailDto = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), UserDetailDto.class);
+        assertNotNull(userDetailDto);
+        assertEquals(TEST_PUBKEY, userDetailDto.getPublicKey());
+    }
+
+    @Test
+    @WithMockUser(username = TEST_NONEXISTENT_PUBKEY)
+    public void givenInvalidUser_whenGetUserByPublicKey_thenReturnNotFound() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/user")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 }
