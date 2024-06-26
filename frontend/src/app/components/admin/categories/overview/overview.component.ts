@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { ConfirmationDialogComponent } from 'src/app/components/util/confirmation-dialog/confirmation-dialog.component';
-import { ProductCategoryDto } from 'src/app/dtos/plushtoy';
-import { AdminService } from 'src/app/services/admin.service';
+import {CommonModule} from '@angular/common';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {RouterModule} from '@angular/router';
+import {ConfirmationDialogComponent} from 'src/app/components/util/confirmation-dialog/confirmation-dialog.component';
+import {ProductCategoryDto} from 'src/app/dtos/plushtoy';
+import {AdminService} from 'src/app/services/admin.service';
+import {NotificationService} from "../../../../services/notification.service";
 
 @Component({
   selector: 'app-admin-category-overview',
@@ -12,15 +12,18 @@ import { AdminService } from 'src/app/services/admin.service';
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
   imports: [CommonModule, RouterModule, ConfirmationDialogComponent],
+  providers: [NotificationService]
 })
 export class AdminCategoryOverviewComponent implements OnInit {
   categories: ProductCategoryDto[] = [];
   @ViewChild(ConfirmationDialogComponent) confirmationDialog!: ConfirmationDialogComponent;
   selectedForDeleteId: number | null = null;
+
   constructor(
     private service: AdminService,
-    private notification: ToastrService
-  ) { }
+    private notification: NotificationService
+  ) {
+  }
 
   ngOnInit() {
     this.loadCategories();

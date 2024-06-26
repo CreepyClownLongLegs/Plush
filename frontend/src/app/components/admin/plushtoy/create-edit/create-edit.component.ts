@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormsModule} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {
   PlushToyColor,
@@ -11,9 +11,9 @@ import {
   PlushToyAttributeDistributionDto,
   PlushToyAttributeDtoWithDistribution
 } from 'src/app/dtos/plushtoy';
-import { AdminService } from 'src/app/services/admin.service';
-import { PlushtoyService } from "../../../../services/plushtoy.service";
-import { ToastrService } from 'ngx-toastr';
+import {AdminService} from 'src/app/services/admin.service';
+import {PlushtoyService} from "../../../../services/plushtoy.service";
+import {NotificationService} from "../../../../services/notification.service";
 
 export enum PlushToyCreateEditMode {
   create,
@@ -23,7 +23,7 @@ export enum PlushToyCreateEditMode {
 @Component({
   selector: 'app-admin-plushtoy-create-edit',
   standalone: true,
-    imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './create-edit.component.html',
   styleUrl: './create-edit.component.scss',
 })
@@ -41,7 +41,7 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
     private plushtoyService: PlushtoyService,
     private router: Router,
     private route: ActivatedRoute,
-    private notification: ToastrService) {
+    private notification: NotificationService) {
     this.plushToy = new PlushToy();
   }
 
@@ -146,10 +146,10 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
 
   syncPlushToyAttributes(attribute: PlushToyAttributeDtoWithDistribution): void {
     attribute.distributions.forEach((dist) => {
-      const newAttribute = { ...attribute }
-      delete newAttribute.distributions;// remove cyclic reference
-      dist.attribute = newAttribute;
-    }
+        const newAttribute = {...attribute}
+        delete newAttribute.distributions;// remove cyclic reference
+        dist.attribute = newAttribute;
+      }
     );
   }
 
@@ -170,7 +170,7 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
     const uniqueAttributes = this.plushToy.attributesDistributions.reduce((uniqueAttributes: PlushToyAttributeDtoWithDistribution[], currentDistribution) => {
       const isDuplicate = uniqueAttributes.find(attr => (attr.id && attr.id == currentDistribution.attribute.id) || attr.name === currentDistribution.attribute.name);
       if (!isDuplicate) {
-        uniqueAttributes.push({ ...currentDistribution.attribute, distributions: [currentDistribution] });
+        uniqueAttributes.push({...currentDistribution.attribute, distributions: [currentDistribution]});
       } else {
         isDuplicate.distributions.push(currentDistribution);
       }

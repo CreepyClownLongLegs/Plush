@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { UserListDto } from 'src/app/dtos/user';
-import { ToastrService } from 'ngx-toastr';
-import { UserService } from "../../../services/user.service";
+import {Component, OnInit} from '@angular/core';
+import {UserListDto} from 'src/app/dtos/user';
 import {AdminService} from "../../../services/admin.service";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-admin-create-admin',
@@ -17,8 +16,8 @@ export class AdminCreateAdminComponent implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private notification: ToastrService
-  ) { }
+    private notification: NotificationService) {
+  }
 
   ngOnInit(): void {
     this.fetchUsers();

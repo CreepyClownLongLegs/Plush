@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ElementRef, Renderer2 } from '@angular/core';
-import { ShoppingCartService } from '../../services/shopping-cart.service';
-import { ToastrService } from 'ngx-toastr';
-import { PlushToyListDto } from '../../dtos/plushtoy';
-import { ButtonType } from '../login/login.component';
-import { AuthService } from '../../services/auth.service';
+import {Component, Input, OnInit, ElementRef, Renderer2} from '@angular/core';
+import {ShoppingCartService} from '../../services/shopping-cart.service';
+import {PlushToyListDto} from '../../dtos/plushtoy';
+import {ButtonType} from '../login/login.component';
+import {AuthService} from '../../services/auth.service';
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-card',
@@ -19,10 +19,11 @@ export class CardComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private shoppingCartService: ShoppingCartService,
-    private notification: ToastrService,
+    private notification: NotificationService,
     private renderer: Renderer2,
     private el: ElementRef
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.calculateRarity();

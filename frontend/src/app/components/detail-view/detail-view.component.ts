@@ -3,12 +3,12 @@ import {NgForOf, NgIf} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlushtoyService} from '../../services/plushtoy.service';
 import {ShoppingCartService} from "../../services/shopping-cart.service";
-import {ToastrService} from "ngx-toastr";
 import {PlushToyColor, PlushToy, PlushToySize} from '../../dtos/plushtoy';
 import {WalletService} from "../../services/wallet.service";
 import {UserService} from "../../services/user.service";
 import {OrderDetailDto} from "../../dtos/order";
 import {AuthService} from "../../services/auth.service";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-detail-view',
@@ -39,7 +39,7 @@ export class DetailViewComponent implements OnInit {
     private service: PlushtoyService,
     private walletService: WalletService,
     private route: ActivatedRoute,
-    private notification: ToastrService,
+    private notification: NotificationService,
     private shoppingCartService: ShoppingCartService,
     private userService: UserService,
     private router: Router,

@@ -1,10 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
-import { AuthService } from "../../services/auth.service";
-import { WalletService } from "../../services/wallet.service";
-import { UserService } from "src/app/services/user.service";
-import { ToastrService } from "ngx-toastr";
-import { UserDetailDto } from "src/app/dtos/user";
+import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {AuthService} from "../../services/auth.service";
+import {WalletService} from "../../services/wallet.service";
+import {UserService} from "src/app/services/user.service";
+import {ToastrService} from "ngx-toastr";
+import {UserDetailDto} from "src/app/dtos/user";
 import {Router} from "@angular/router";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-registration',
@@ -23,8 +24,9 @@ export class RegistrationComponent implements OnInit {
     public authService: AuthService,
     private walletService: WalletService,
     private userService: UserService,
-    private notification: ToastrService,
-    private router: Router
+    private notification: NotificationService,
+    private router: Router,
+    private toastr: ToastrService
   ) {
   }
 
@@ -119,7 +121,10 @@ export class RegistrationComponent implements OnInit {
     }
 
     if (errors.length > 0) {
-      this.notification.info(errors.join("<br>"), "Registration Error", { enableHtml: true });
+      this.toastr.error(errors.join("<br>"), "Registration Error", {
+        enableHtml: true,
+        positionClass: 'toast-bottom-right'
+      });
       return false;
     } else {
       return true;

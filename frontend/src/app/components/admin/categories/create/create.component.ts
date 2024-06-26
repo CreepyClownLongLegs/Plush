@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { ProductCategoryCreationDto, ProductCategoryDto } from 'src/app/dtos/plushtoy';
-import { AdminService } from 'src/app/services/admin.service';
+import {CommonModule} from '@angular/common';
+import {Component} from '@angular/core';
+import {FormBuilder, FormsModule} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {ProductCategoryCreationDto, ProductCategoryDto} from 'src/app/dtos/plushtoy';
+import {AdminService} from 'src/app/services/admin.service';
+import {NotificationService} from "../../../../services/notification.service";
 
 @Component({
   selector: 'app-create-category',
@@ -14,9 +14,9 @@ import { AdminService } from 'src/app/services/admin.service';
   styleUrl: './create.component.scss',
 })
 export class AdminCategoryCreateComponent {
-  category: ProductCategoryCreationDto;  
+  category: ProductCategoryCreationDto;
 
-  constructor(private fb: FormBuilder, private service: AdminService, private router: Router, private notification: ToastrService) {
+  constructor(private fb: FormBuilder, private service: AdminService, private router: Router, private notification: NotificationService) {
     this.category = new ProductCategoryCreationDto();
   }
 
