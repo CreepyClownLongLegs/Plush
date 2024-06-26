@@ -1,6 +1,10 @@
 <div class="container-fluid">
   <div class="cart">
     <h2 class="label">Your Cart</h2>
+    <!-- Display message when cart is empty -->
+    <div *ngIf="isCartEmpty" class="empty-cart-message">
+      <p>There are currently no items in your cart</p>
+    </div>
     <div class="cart-items">
       <div *ngFor="let item of cartItems; let i = index" class="cart-item">
         <div class="item-image">
@@ -21,8 +25,8 @@
       </div>
     </div>
     <hr/>
-    <div class="total-price">
-      <p>TOTAL PRICE: <span>{{ totalPrice }}</span></p>
+    <div class="total-price" *ngIf="!isCartEmpty">
+      <p>TOTAL PRICE: <span>{{totalPrice}}</span></p>
     </div>
     <button class="finish-payment" (click)="finishPayment()" [disabled]="isCartEmpty || isLoading">🔥Finish Payment🔥
     </button>

@@ -34,6 +34,7 @@ context("cart", () => {
                 cy.get(".cart-item").should("have.length", num - 1);
             });
         cy.get(".cart-item").should("not.exist");
-        cy.get(".total-price").should("contain", "0 SOL");
+        cy.get(".empty-cart-message").should("be.visible")
+            .and("contain", "There are currently no items in your cart");
     });
 });

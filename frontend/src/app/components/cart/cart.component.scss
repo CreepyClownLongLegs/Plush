@@ -1,8 +1,10 @@
 .container-fluid {
   background-image: url("../../../images/asset_background.png");
   background-size: cover;
-  padding-top: 100px;
+  padding-top: 180px;
   padding-bottom: 100px;
+  min-height:600px;
+  height:auto;
 }
 
 .cart {

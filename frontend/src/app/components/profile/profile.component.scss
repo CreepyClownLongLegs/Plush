@@ -1,19 +1,26 @@
 .container-fluid {
-    height: 100%;
+    height: max-content;
     width: 100%;
     background-image: url("../../../images/underwater.png");
     background-size: cover;
     image-rendering: pixelated;
     padding-top: 80px;
-    padding-bottom: 80px;
+    padding-bottom: 200px;
+    overflow: hidden;
+}
+
+.padding{
+  padding-top:140px;
 }
 
 .coverage {
     background: none;
+    padding-top: 0px;
+    padding-bottom: 200px;
 }
 
 .container {
-    height: 1000px;
+    height: auto;
     width: 100%;
     background-size: 100% 100%;
     background-image: url("../../../images/profileBox.png");
@@ -62,7 +69,7 @@ label {
 .progressbar-fill {
     background-image: url("../../../images/menu_xp.png");
     background-size: 100% 100%;
-    width: 570px;
+    width: 800px;
     margin-left: -15px;
     height: 40px;
     padding: 5px;
@@ -70,6 +77,7 @@ label {
 
 .progressbar {
     background-color: brown;
+    margin-left: 20%;
     margin-top: 10px;
     height: 40px;
 }
@@ -87,14 +95,15 @@ label {
 
 .inventory {
     padding-top: 40px;
-    height: 350px;
+    height: auto;
     width: 100%;
+    margin: auto;
 }
 
 .buttons {
-    padding: 100px;
-    padding-bottom: 20px;
-    padding-top: 20px;
+    margin-top: 30px;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 button {
@@ -105,7 +114,75 @@ button {
     box-shadow: -4px -4px 0px rgb(104, 104, 104);
 }
 
+.btn-nostyle{
+  font-size: medium;
+  border: none;
+  box-shadow: none;
+  border-radius: 0px;
+  background-color: #8064A2 !important;
+}
+
+.btn-danger{
+  font-size: medium;
+  border: none;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+input {
+    width: 100%;
+}
+
 button:active {
     background-color: brown;
     color: white;
+}
+
+@media (max-width: 992px) {
+    .container {
+        height: auto;
+        padding-top: 100px;
+        padding-bottom: 180px;
+    }
+
+    .title {
+        margin-top: 20px;
+    }
+
+    .info-row {
+        margin: auto;
+        padding-left: 0px;
+    }
+
+    .info {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .inventory-item {
+        width: min-content;
+        margin: auto;
+    }
+
+    app-item {
+        margin: auto;
+    }
+
+    .progressbar-fill {
+        width: 300px;
+        margin-left: -6px;
+    }
+
+    .progressbar {
+        margin-left: 15px;
+    }
+
+    button {
+        height: max-content;
+    }
+
 }

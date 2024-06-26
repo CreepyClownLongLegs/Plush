@@ -1,12 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import { PlushtoyService } from 'src/app/services/plushtoy.service';
-import { ProductCategoryDto } from 'src/app/dtos/plushtoy';
-import {AdminService} from 'src/app/services/admin.service';
-import {NavigationEnd, Router} from '@angular/router';
+import {PlushtoyService} from 'src/app/services/plushtoy.service';
+import {ProductCategoryDto} from 'src/app/dtos/plushtoy';
+import {Router} from '@angular/router';
 import {SearchService} from 'src/app/services/search.service';
 import {ButtonType} from "../login/login.component";
-import {filter, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -16,6 +15,7 @@ import {filter, Subscription} from "rxjs";
 export class HeaderComponent implements OnInit, OnDestroy {
 
   isDropdownOpen = false;
+  isNavbarCollapsed = false;
   searchTerm: string = '';
   categories: ProductCategoryDto[] = [];
   private searchTermSubscription: Subscription;
@@ -26,10 +26,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router,
     private plushtoyService: PlushtoyService,
   ) {
-
   }
 
   ngOnInit() {
+    this.getCategories();
     this.searchTermSubscription = this.searchService.searchTerm$.subscribe(searchTerm => {
       this.searchTerm = searchTerm;
     });
@@ -48,37 +48,60 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getCategories() {
-    this.categories = this.plushtoyService.categories
-    this.plushtoyService.getAllCategories().subscribe(categories => {
-      this.categories = categories;
+    this.plushtoyService.getAllCategories().subscribe({
+      next: (categories: ProductCategoryDto[]) => {
+        this.categories = categories;
+      },
+      error: (err) => {
+        console.error('Failed to fetch categories', err);
+      }
     });
   }
 
   searchByCategory(categoryId: number) {
     this.searchTerm = '';
-    this.searchService.setSearchTerm(''); 
+    this.searchService.setSearchTerm('');
     this.searchService.setCategoryId(categoryId);
+    this.toggleNavbar();
     this.router.navigate(['/']);
+    this.isDropdownOpen = false;
   }
 
   navigateToCart() {
+    this.toggleNavbar();
     this.router.navigate(['/cart']);
   }
 
   onSearch() {
-    this.searchService.setCategoryId(-1); // Fallback as searching by both name and category is not supported
+    this.searchService.setCategoryId(-1);
     this.searchService.setSearchTerm(this.searchTerm);
-    this.navigateToHome()
+    this.navigateToHome();
   }
 
   navigateToHome() {
     this.router.navigate(['/']);
+    this.isNavbarCollapsed = true;
+
+  }
+
+  clickOnLogo() {
+    this.searchTerm = '';
+    this.searchService.setSearchTerm('');
+    this.onSearch();
+    this.router.navigate(['/']);
+    this.isNavbarCollapsed = true;
+
   }
 
   toggleDropdown() {
-    this.getCategories();
     this.isDropdownOpen = !this.isDropdownOpen;
+    this.getCategories();
+  }
+
+  toggleNavbar() {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
   protected readonly ButtonType = ButtonType;
 }
+

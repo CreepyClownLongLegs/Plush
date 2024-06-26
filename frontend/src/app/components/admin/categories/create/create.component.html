@@ -1,13 +1,15 @@
-<h1>Add a new category</h1>
-<form #createForm="ngForm" (ngSubmit)="submitForm()" class="container">
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="category.name" class="form-control">
-        <div *ngIf="createForm.controls.name?.invalid && createForm.controls.name?.touched" class="error-message">
-            Name is required and must be less than 255 characters.
-        </div>
-    </div>
-    <br/>
-    <button type="submit" [disabled]="createForm.invalid" class="btn btn-primary me-1" data-test="createButton">Create</button>
-    <a routerLink="/admin/categories" class="btn btn-secondary">Back</a>
-</form>
+<div class="container-fluid">
+  <form #createForm="ngForm" (ngSubmit)="submitForm()" class="container my-5 mx-4">
+    <h1 class="my-5">Add a new category</h1>
+      <div class="form-group row">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required maxlength="255" [(ngModel)]="category.name" class="form-control">
+          <div *ngIf="createForm.controls.name?.invalid && createForm.controls.name?.touched" class="error-message">
+              Name is required and must be less than 255 characters.
+          </div>
+      </div>
+      <br/>
+      <button type="submit" [disabled]="createForm.invalid" class="btn btn-primary me-1" data-test="createButton">Create</button>
+      <a routerLink="/admin/categories" class="btn btn-secondary">Back</a>
+  </form>
+</div>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {
   PlushToyColor,
   PlushToySize,
@@ -23,7 +23,7 @@ export enum PlushToyCreateEditMode {
 @Component({
   selector: 'app-admin-plushtoy-create-edit',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './create-edit.component.html',
   styleUrl: './create-edit.component.scss',
 })
@@ -79,6 +79,10 @@ export class AdminPlushtoyCreateEditComponent implements OnInit {
         this.notification.error("Categories not found");
       }
     });
+  }
+
+  navigateBack() {
+    this.router.navigate(['/admin']);
   }
 
   public get submitButtonText(): string {

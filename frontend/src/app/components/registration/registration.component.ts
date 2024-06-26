@@ -4,6 +4,7 @@ import { WalletService } from "../../services/wallet.service";
 import { UserService } from "src/app/services/user.service";
 import { ToastrService } from "ngx-toastr";
 import { UserDetailDto } from "src/app/dtos/user";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-registration',
@@ -23,10 +24,15 @@ export class RegistrationComponent implements OnInit {
     private walletService: WalletService,
     private userService: UserService,
     private notification: ToastrService,
+    private router: Router
   ) {
   }
 
   ngOnInit() {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+      return; // Exit the method if the user is not logged in
+    }
     if (this.authService.isLoggedIn()) {
       this.walletService.connectWallet().then(async (publicKey: string) => {
         this.publicKey = publicKey;

@@ -44,6 +44,8 @@ context('login', () => {
         cy.getBySel("connectWallet").eq(0).click();
         cy.getBySel("logIn").eq(0).click();
         cy.get('.ng-trigger').should('contain', 'Error connecting wallet').click();
+
+        cy.getBySel("closeModal").click();
         cy.getBySel("connectWallet").should('be.visible');
     });
 
@@ -52,6 +54,8 @@ context('login', () => {
         cy.getBySel("loggedIn").click();
         cy.getBySel("walletModal").should('contain', 'Your Wallet');
         cy.getBySel("walletModal").find('button').contains('Disconnect').click();
+
+        cy.get('.ng-trigger').should('contain', 'Logout successful').click();
         cy.getBySel("connectWallet").should('be.visible');
     });
 

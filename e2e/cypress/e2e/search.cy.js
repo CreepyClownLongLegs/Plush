@@ -8,6 +8,6 @@ context('search', () => {
     it('should not load plush toys on search', () => {
         cy.visit('/');
         cy.get('#search-field').type('NonExistantToy{enter}');
-        cy.get('.card').should('have.length', 0);
+        cy.getBySel('404msg').should('be.visible');
     });
 });

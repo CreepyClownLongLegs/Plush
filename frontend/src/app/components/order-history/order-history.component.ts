@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from "../../services/auth.service";
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from "../../services/auth.service";
 
-import { OrderListDto } from "../../dtos/order";
-import { CurrencyPipe, DatePipe, NgForOf, NgIf } from "@angular/common";
-import { RouterLink } from "@angular/router";
-import { UserService } from "../../services/user.service";
-import { ToastrService } from "ngx-toastr";
+import {OrderListDto} from "../../dtos/order";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {RouterLink} from "@angular/router";
+import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-order-history',
@@ -41,7 +41,7 @@ export class OrderHistoryComponent implements OnInit {
   paginatedOrders(): OrderListDto[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-    return this.orders.slice(start, end);
+    return this.orders ? this.orders.slice(start, end) : [];
   }
 
   loadOrders() {
@@ -52,7 +52,7 @@ export class OrderHistoryComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching Orders', error);
-          this.notification.error('Error fetching Orders', error)
+          this.notification.error('An error occurred while fetching Orders', 'Error fetching Orders')
         }
       });
   }
