@@ -620,4 +620,66 @@ public class AdminEndpointTest implements PlushToyTestData, TestData, UserTestDa
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void givenValidProductIdAndCategoryIds_whenSetCategories_thenCategoriesSet() throws Exception {
+        PlushToy plushToy = plushToyRepository.save(plushySupplier.get());
+        ProductCategory category1 = productCategoryRepository.save(productCategorySupplier.get());
+        ProductCategory category2 = productCategoryRepository.save(productCategorySupplier.get());
+        List<Long> categoryIds = List.of(category1.getId(), category2.getId());
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product/" + plushToy.getId() + "/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(categoryIds)))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        PlushToyDetailDto plushToyDetailDto = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), PlushToyDetailDto.class);
+        assertNotNull(plushToyDetailDto);
+        assertEquals(2, plushToyDetailDto.getProductCategories().size());
+        assertTrue(plushToyDetailDto.getProductCategories().stream().anyMatch(category -> category.getId().equals(category1.getId())));
+        assertTrue(plushToyDetailDto.getProductCategories().stream().anyMatch(category -> category.getId().equals(category2.getId())));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void givenInvalidProductId_whenSetCategories_thenReturnNotFound() throws Exception {
+        List<Long> categoryIds = List.of(1L, 2L);
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/product/9999/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(categoryIds)))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void givenUsersExist_whenGetAllUsers_thenReturnAllUsers() throws Exception {
+        User user1 = new User();
+        user1.setPublicKey(TEST_PUBKEY);
+        user1.setFirstname("Thomas");
+        user1.setLastname("Schmidt");
+        userRepository.save(user1);
+
+        User user2 = new User();
+        user2.setPublicKey(TEST_PUBKEY_2);
+        user2.setFirstname("Franz");
+        user2.setLastname("Hintermeier");
+        userRepository.save(user2);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+
+        UserListDto[] users = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), UserListDto[].class);
+        assertEquals(2, users.length);
+    }
 }
