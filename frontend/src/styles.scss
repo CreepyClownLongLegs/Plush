@@ -1,5 +1,7 @@
 body {
   background-size: cover;
   font-family: 'Pixelify Sans', sans-serif;
-  image-rendering: pixelated
+  image-rendering: pixelated;
+  width: 100%;
+  overflow-x: hidden;
 }

@@ -24,10 +24,9 @@ Cypress.Commands.add("loginAdmin",
         cy.getBySel("connectWallet").eq(0).click();
         cy.getBySel("logIn").eq(0).should('be.visible');
         cy.getBySel("logIn").eq(0).click();
-        cy.getBySel("loggedIn").eq(0).should('be.visible');
-
         cy.url().should('contain', '/');
         cy.get('.ng-trigger').should('contain', 'Login successful').click();
+        cy.getBySel("loggedIn").eq(0).should('be.visible');
     },
 );
 
@@ -56,10 +55,9 @@ Cypress.Commands.add("loginUser",
         cy.getBySel("connectWallet").eq(0).click();
         cy.getBySel("logIn").eq(0).should('be.visible');
         cy.getBySel("logIn").eq(0).click();
-        cy.getBySel("loggedIn").eq(0).should('be.visible');
-
         cy.url().should('contain', '/');
         cy.get('.ng-trigger').should('contain', 'Login successful').click();
+        cy.getBySel("loggedIn").eq(0).should('be.visible');
     },
 );
 

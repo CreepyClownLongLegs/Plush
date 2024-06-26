@@ -41,25 +41,12 @@ export class PlushtoyService {
 
   /**
    * Send a get request to the backend to get all the categories, or provide cached categories if they are already loaded
-   * 
+   *
    * @returns all categories
    */
   getAllCategories(): Observable<ProductCategoryDto[]> {
-    if (this.categories.length === 0) {
-      this.httpClient.get<ProductCategoryDto[]>(this.plushToyBaseUri + "/categories").subscribe(
-        {
-          next: data => {
-            this.categories = data;
-          },
-          error: error => {
-            console.error('Error fetching categories', error);
-          }
-        });
-    } else {
-      return new Observable<ProductCategoryDto[]>(subscriber => {
-        subscriber.next(this.categories);
-      });
-    }
+    return this.httpClient.get<ProductCategoryDto[]>(this.plushToyBaseUri + "/categories");
   }
 
 }
+

@@ -64,7 +64,7 @@ public class OrderItemDataGenerator {
                     item2.setPosition(2);
                     item2.setOrder(order);
                     PlushToy plushToy2 = plushToyRepository.findById(3L).orElseThrow();
-                    item.setImageUrl(plushToy2.getImageUrl());
+                    item2.setImageUrl(plushToy2.getImageUrl());
                     item2.setTaxAmount(plushToy2.getTaxAmount());
                     item2.setTaxClass(plushToy2.getTaxClass());
                     item2.setName(plushToy2.getName());
@@ -77,10 +77,10 @@ public class OrderItemDataGenerator {
 
                     OrderItem item3 = new OrderItem();
                     item3.setAmount((int) (Math.random() * 10));
-                    item3.setPosition(2);
+                    item3.setPosition(3);
                     item3.setOrder(order);
                     PlushToy plushToy3 = plushToyRepository.findById(4L).orElseThrow();
-                    item.setImageUrl(plushToy3.getImageUrl());
+                    item3.setImageUrl(plushToy3.getImageUrl());
                     item3.setTaxAmount(plushToy3.getTaxAmount());
                     item3.setTaxClass(plushToy3.getTaxClass());
                     item3.setName(plushToy3.getName());

@@ -3,7 +3,7 @@ import {PlushToyCartListDto, PlushToyListDto} from "../../dtos/plushtoy";
 import {PlushtoyService} from "../../services/plushtoy.service";
 import {ShoppingCartService} from "../../services/shopping-cart.service";
 import {ToastrService} from "ngx-toastr";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, CommonModule} from "@angular/common";
 import {AuthService} from 'src/app/services/auth.service';
 import {WalletService} from 'src/app/services/wallet.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -18,7 +18,8 @@ import {OrderDetailDto} from "../../dtos/order";
   standalone: true,
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
+    CommonModule
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
@@ -31,9 +32,11 @@ export class CartComponent implements OnInit {
   loadingMessage: string = '';
 
   constructor(
+    private service: PlushtoyService,
     private shoppingCartService: ShoppingCartService,
     private notification: ToastrService,
     public authService: AuthService,
+    private modalService: NgbModal,
     private userService: UserService,
     private router: Router,
     private walletService: WalletService,

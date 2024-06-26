@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2, HostListener, ViewChild } from '@angular/core';
 import { UserDetailDto } from 'src/app/dtos/user';
 import { UserService } from 'src/app/services/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -6,38 +6,90 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { WalletService } from 'src/app/services/wallet.service';
+import { ConfirmationDialogComponent } from "../util/confirmation-dialog/confirmation-dialog.component";
+import { OrderListDto } from "../../dtos/order";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  @ViewChild('deleteModal') deleteModal: TemplateRef<any>;
+  @ViewChild(ConfirmationDialogComponent) confirmationDialog!: ConfirmationDialogComponent;
 
-  userDetail: UserDetailDto | null = null;
-  xp: number = 100;    // xp we have now till next level
-  totalXp: number = 500; // Total xp
-  maxXp: number = 140; // Example value for maximum XP
-  maxWidth: number = 540; // Mhow much xp is needed till next level
-  level: number = 1;
+  userDetail: UserDetailDto = {} as UserDetailDto;
+  orders: OrderListDto[];
+  xp: number = 0;
+  totalXp: number = 0;
+  maxXp: number = 300;
+  maxWidth: number = 800;
+  level: number = 0;
 
   constructor(
+    private renderer: Renderer2,
     private modalService: NgbModal,
     private userService: UserService,
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
     private walletService: WalletService,
-  ) {
-  }
+    private notification: ToastrService,
+  ) {}
 
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+      return;
+    } else {
+      this.fetchUserDetails();
+      this.loadOrders();
+      this.updateMaxXp();
+      this.calculateXP();
+      this.calculateWidth();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.updateMaxXp();
+    this.calculateWidth();
+  }
+
+  updateMaxXp(): void {
+    const screenWidth = window.innerWidth;
+    if (screenWidth > 1000) {
+      this.maxWidth = 790;
+    } else if (screenWidth < 900) {
+      this.maxWidth = 290;
+    }
+  }
+
+  loadOrders() {
+    this.userService.getAllOrders()
+      .subscribe({
+        next: data => {
+          this.orders = data;
+        },
+        error: error => {
+          console.error('Error fetching Orders', error);
+          this.notification.error('Error fetching Orders', error)
+        }
+      });
+  }
+
+  calculateXP(): void {
+    let totalPrice = 0;
+    if (this.orders && this.orders.length > 0) {
+      for (const order of this.orders) {
+        totalPrice += order.totalPrice;
+      }
+    }
+    this.totalXp = totalPrice;
     this.calculateLevel();
-    this.fetchUserDetails();
   }
 
   calculateWidth(): string {
+    this.xp = this.totalXp % this.maxXp;
     const percentage = (this.xp / this.maxXp) * 100;
     const width = (percentage / 100) * this.maxWidth;
     return `${width}px`;
@@ -63,6 +115,9 @@ export class ProfileComponent implements OnInit {
   }
 
   updateUserDetails(): void {
+    if (!this.validateUserData()) {
+      return;
+    }
     if (this.userDetail) {
       this.userService.updateUser(this.userDetail).subscribe(
         (updatedUser: UserDetailDto) => {
@@ -77,13 +132,72 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  validateUserData(): boolean {
+    const errors: string[] = [];
+    const nameRegex = /^[A-Za-z]+$/;
+    const numberRegex = /^[0-9]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const countryRegex = /^[A-Za-z ]+$/;
+    const addressRegex = /[A-Za-z]/; // At least one letter in address
+
+    if (!this.userDetail?.firstname) {
+    } else if ((this.userDetail.firstname.trim() === "" || !nameRegex.test(this.userDetail.firstname) || this.userDetail.firstname.length > 255)) {
+      errors.push("First name cannot consist of empty spaces, contain numbers, spaces or be longer than 255 letters");
+    }
+
+    if (!this.userDetail?.lastname) {
+    } else if ((this.userDetail.lastname.trim() === "" || !nameRegex.test(this.userDetail.lastname) || this.userDetail.lastname.length > 255)) {
+      errors.push("Last name cannot consist of empty spaces, contain numbers, spaces or be longer than 255 letters");
+    }
+
+    if (!this.userDetail?.emailAddress) {
+    } else if ((this.userDetail.emailAddress.trim() === "" || !emailRegex.test(this.userDetail.emailAddress) || this.userDetail.emailAddress.length > 255)) {
+      errors.push("Email cannot consist of empty spaces, it has to follow the form 'email@domain.com'");
+    }
+
+    if (!this.userDetail?.addressLine1) {
+    } else if ((this.userDetail.addressLine1.trim() === "" || !addressRegex.test(this.userDetail.addressLine1) || this.userDetail.addressLine1.length > 255)) {
+      errors.push("Delivery address cannot consist solely of numbers, empty spaces, or be longer than 255 letters");
+    }
+
+    if (!this.userDetail?.addressLine2) {
+    } else if ((this.userDetail.addressLine2.trim() === "" || !addressRegex.test(this.userDetail.addressLine2) || this.userDetail.addressLine2.length > 255)) {
+      errors.push("Optional address cannot consist solely of numbers, empty spaces, or be longer than 255 letters");
+    }
+
+    if (!this.userDetail?.postalCode) {
+    } else if ((this.userDetail.postalCode.trim() === "" || !numberRegex.test(this.userDetail.postalCode) || this.userDetail.postalCode.length > 255)) {
+      errors.push("Postal Code cannot consist of empty spaces, have symbols which are not number, or be longer than 255 letters");
+    }
+
+    if (!this.userDetail?.phoneNumber) {
+    } else if (!numberRegex.test(this.userDetail.phoneNumber.replace(/\s+/g, '')) || this.userDetail.phoneNumber.length > 255) {
+      errors.push("Phone number cannot consist of empty spaces, be longer than 255 letters, or contain letters and symbols which are not numbers");
+    }
+
+    if (!this.userDetail?.country) {
+    } else if (!countryRegex.test(this.userDetail.country) || this.userDetail.country.length > 255 || this.userDetail.country.trim() === "") {
+      errors.push("Country cannot consist solely of numbers, empty spaces, or be longer than 255 letters");
+    }
+
+    if (errors.length > 0) {
+      this.toastr.info(errors.join("<br>"), "Update Error", { enableHtml: true });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
+  selectForDeletion(): void {
+    this.confirmationDialog.showModal();
+  }
+
   deleteUser() {
     this.userService.deleteUser().subscribe({
       next: () => {
         this.authService.logoutUser();
         this.walletService.disconnectWallet();
-
-        // redirect to home page and add success notification
         this.router.navigate(['/']).then(() => {
           this.toastr.success("Your profile was successfully deleted", "Deletion successful");
         });
@@ -94,8 +208,5 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
-  openDeleteModal() {
-    this.modalService.open(this.deleteModal);
-  }
 }
+

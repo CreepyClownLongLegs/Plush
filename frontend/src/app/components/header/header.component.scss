@@ -1,10 +1,19 @@
 .navbar-style {
+  background-color: none;
   border-bottom: whitesmoke 1px solid;
   padding-left: 5vw;
   padding-right: 5vw;
-  position: relative;
   width: 100%;
   box-shadow: 2px 2px 0px 5px rgba(0, 0, 0, 0.693);
+  overflow: visible;
+  transition: max-height 0.3s ease; // Smooth transition for height changes
+  max-height: 700px;
+  align-items: flex-start; // Align items at the top
+  z-index:1000;
+}
+
+.navbar-style.expanded {
+  max-height: 500px; // Adjust based on the expected height with the dropdown open
 }
 
 .header-container {
@@ -17,13 +26,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-}
-
-.navbar-brand {
-  cursor: pointer;
-}
-
-.navbar {
+  overflow-x: visible;
   background-color: rgba(19, 19, 50, 0.9);
 }
 
@@ -35,7 +38,6 @@
 .form-control:focus {
   outline: none !important;
   box-shadow: none !important;
-  /* Remove any box shadow */
   background: none !important;
   color: whitesmoke !important;
 }
@@ -54,7 +56,6 @@ input {
 
 input::placeholder {
   color: #999;
-  /* Placeholder text color */
 }
 
 .search-nav {
@@ -62,32 +63,58 @@ input::placeholder {
   margin-left: auto;
 }
 
+.form-control {
+  background: none;
+  border-radius: 10px;
+  color: whitesmoke;
+  border: 1px solid whitesmoke;
+  position: relative; // Ensure input is relative for positioning the icon
+  padding-left: 40px; // Adjust padding to accommodate the icon
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px; // Adjust based on your design
+  transform: translateY(-50%);
+  height: 30px;
+  width: 30px;
+  background-image: url("../../../images/searchIcon.png");
+  background-size: contain;
+  cursor: pointer;
+}
+
+
 input .focused {
   outline: none;
-  border-color: transparent
+  border-color: transparent;
 }
 
 #search input[type="text"]:focus {
   width: 200px;
   outline: none;
+  background-color: rgba(19, 19, 50, 0.9);
 }
 
 .dropdown-menu {
   border-radius: 0px;
   background-color: rgba(19, 19, 50, 0.9);
   color: whitesmoke;
+  position: absolute; // Make the dropdown static inside the header
+  z-index:3000;
+  margin-top:40px;
 }
 
-.dropdown-menu {
-  a {
-    color: whitesmoke;
-  }
+.dropdown-menu.show {
+  display: block; // Show the dropdown when 'show' class is added
 }
 
-.dropdown-menu {
-  a:hover {
-    color: black;
-  }
+.dropdown-menu a {
+  color: whitesmoke;
+}
+
+.dropdown-menu a:hover {
+  color: black;
 }
 
 .login {
@@ -104,8 +131,8 @@ input .focused {
 }
 
 .bag-icon {
-  height: 30px;
-  width: 30px;
+  height: 25px;
+  width: 25px;
   background-image: url("../../../images/shoppingBag.png");
   background-size: contain;
 }
@@ -116,3 +143,71 @@ input .focused {
   background-image: url("../../../images/searchIcon.png");
   background-size: contain;
 }
+
+.navbar-toggler {
+  margin-left: auto;
+}
+
+.nav-item {
+  margin-left: 5px;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.navbar-nav {
+  margin-top:0px;
+}
+
+.navbar-brand {
+  cursor: pointer;
+}
+
+a{
+  cursor: pointer;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-input:focus:not(:placeholder-shown),
+.search-input:focus:not([data-empty]):not(:placeholder-shown) {
+  border-color: #ccc; /* Replace with the original color */
+  /* Other styles as needed */
+}
+
+
+@media (max-width: 992px) {
+  .navbar-brand {
+    margin-left: 0;
+  }
+
+  .navbar-collapse {
+    text-align: center;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    margin-top:10px;
+  }
+
+  .nav-item {
+    margin-bottom: 9px;
+  }
+
+  .search-form {
+    margin-top: 30px;
+  }
+
+  .dropdown-menu {
+    position: static; // Ensure the dropdown is positioned inside the header in mobile view
+    float: none;
+    width: 100%;
+    text-align: center;
+    margin-top:0px;
+  }
+}
+

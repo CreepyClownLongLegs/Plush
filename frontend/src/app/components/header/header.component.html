@@ -1,28 +1,29 @@
-<nav class="navbar navbar-expand-lg navbar-dark navbar-style">
-  <a class="navbar-brand ml-lg-5 d-flex align-items-center" style="font-size: xx-large;" (click)="navigateToHome()">
+<nav id="header" class="navbar navbar-expand-lg navbar-dark navbar-style fixed-header fixed-top" [ngClass]="{ 'expanded': isDropdownOpen }">
+  <a class="navbar-brand ml-lg-5 d-flex align-items-center" style="font-size: xx-large;" (click)="clickOnLogo()">
     <div class="bear-icon" style="width: 32px; height: 32px;"></div>
     <span class="ml-2">Plush</span>
   </a>
-  <div class="collapse navbar-collapse d-flex align-items-center" id="navbarSupportedContent">
-
-    <div class="dropdown">
-      <button class="btn btn-secondary" (click)="toggleDropdown()">Categories</button>
+  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': isNavbarCollapsed }" id="navbarSupportedContent">
+    <div class="dropdown navbar-nav">
+      <button class="btn btn-secondary dropdown-toggle" (click)="toggleDropdown()">Categories</button>
       <div class="dropdown-menu" [ngClass]="{ 'show': isDropdownOpen }" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" (click)="searchByCategory(-1)">All plushies</a>
         <a class="dropdown-item" *ngFor="let category of categories" (click)="searchByCategory(category.id)">{{category.name}}</a>
       </div>
     </div>
-
-
-    <ul class="navbar-nav mr-3 search-nav" style="background-color: transparent;">
-      <form class="form-inline position-relative" (submit)="onSearch()">
-        <input class="form-control" type="search" name="search" id="search-field" placeholder="Search"
-               aria-label="Search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()"
-               style="font-size: small; padding-left: 40px;">
-        <div class="search-icon" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%);"></div>
-      </form>
-    </ul>
-
+      <ul class="navbar-nav mr-3 search-nav">
+        <form class="form-inline position-relative" (submit)="onSearch()">
+          <div class="position-relative">
+            <input autocomplete="off" class="form-control search-input" type="search" name="search" id="search-field" placeholder="Search"
+                   aria-label="Search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()"
+                   style="font-size: small; padding-left: 40px;">
+            <div class="search-icon" (click)="onSearch()"></div>
+          </div>
+        </form>
+      </ul>
     <ul class="navbar-nav mr-3">
       <app-login
         buttonClass="btn btn-secondary"

@@ -1,5 +1,13 @@
-.container-fluid {
-  height: 60vh;
-  background-color: rgba(19, 19, 50, 0.95);
-  border-top: 2px dotted whitesmoke;
+.container-fluid{
+  padding-top:80px;
+  min-height:600px;
+  height:auto;
+}
+
+.form-group{
+  width: 80vw;
+}
+
+input{
+  width: 100%;
 }

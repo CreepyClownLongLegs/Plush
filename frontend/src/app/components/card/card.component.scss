@@ -1,51 +1,41 @@
-
 .card {
-    width: calc(18rem - 10px); /* Subtract 10 pixels for the border */
-    height: calc(400px - 15px); /* Subtract 15 pixels for the border */
+    width: calc(18rem - 10px);
+    /* Subtract 10 pixels for the border */
+    height: calc(400px - 15px);
+    /* Subtract 15 pixels for the border */
     border: 3px solid rgba(19, 19, 50, 0.9);
     background: none;
     border-radius: 10px;
     background-size: 100% 100%;
     background-position: center;
+    margin: auto;
 }
 
-.card-content {
-    height: 20%; /* Start with 0 height */
-    overflow: hidden; /* Hide overflow content */
-    transition: height 0.5s ease-in-out; /* Add transition effect */
-  }
 
-  .card:hover .card-content {
-    height: 60%; /* Set a large max-height on hover to reveal content */
-  }
+.card {
+    transition: background-size 1s ease-in-out;
+    /* Add transition effect */
+}
 
-  .card{
-    transition: background-size 1s ease-in-out; /* Add transition effect */
-  }
+.card:hover {
+    background-size: 110% 110%;
+}
 
-  .card:hover{
-      background-size: 105% 105%; 
-  }
 
-  .card:hover button{
-    display: block;
-  }
-
-  .card:hover .card-description{
-    display: block;
-  }
 
 .card-wrap {
-    width: 18rem;
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
     height: 400px;
     border-radius: 10px;
     background-color: azure;
-    margin: 50px;
+    margin-top: 50px;
+    margin-bottom: 50px;
     box-shadow: 10px 10px 0px 5px rgba(0, 0, 0, 0.7);
 }
 
 .card .icon {
-    background-color: aliceblue;
     border: 1px solid rgba(19, 19, 50, 0.9);
     border-radius: 30px;
     height: 30px;
@@ -53,11 +43,25 @@
 }
 
 .card .icon .icon-image {
-    background-image: url("../../../images/ducky.png");
-    background-size: 100% 100%;
-    background-position: center;
     height: 100%;
     width: 100%;
+}
+
+.card .icon .icon-image-low {
+  background-image: url("../../../images/Water.png");
+  background-size: 100% 100%;
+  background-position: center;
+}
+.card .icon .icon-image-medium {
+  background-image: url("../../../images/Ruby.png");
+  background-size: 100% 100%;
+  background-position: center;
+}
+.card .icon .icon-image-high {
+  background-image: url("../../../images/Crown.png");
+  background-size: 100% 100%;
+  background-position-y: -5px;
+  background-position-x: 1px;
 }
 
 .card .card-title {
@@ -80,11 +84,11 @@
     margin-top: auto;
     border-radius: 10px;
     border: 2px dotted black;
-    overflow-y : hidden;
+    overflow-y: hidden;
     text-overflow: wrap;
 }
 
-.card-description{
+.card-description {
     display: none;
     margin-top: 5px;
 }
@@ -97,7 +101,7 @@
     text-shadow: 1px 1px aliceblue;
 }
 
-.star{
+.star {
     width: 15px;
     height: 15px;
     background-image: url("../../../images/Star.png");
@@ -105,34 +109,53 @@
     margin-left: 3px;
 }
 
-button{
+button {
     margin-left: 18%;
     margin-top: 10px;
-    display:none;
+    z-index: 200;
     background-color: brown;
     color: whitesmoke;
     text-shadow: 2px 1px black;
     border: none;
     border-top: 2px black solid;
     border-right: 2px black solid;
-    box-shadow:inset -1px 1px 0px 1px white;
+    box-shadow: inset -1px 1px 0px 1px white;
 }
 
-.eth-price{
-    font-size: 20px; 
-    font-weight: 300; 
+.eth-price {
+    font-size: 20px;
+    font-weight: 300;
     margin-left: 5px;
     text-shadow: 1px 1px rgb(193, 193, 253);
 }
 
-.price-text{
+.price-text {
     color: rgba(0, 0, 0, 0.7)
 }
 
-button:active{
+button:active {
     background-color: rgba(19, 19, 50, 0.9);
-    box-shadow:inset 1px -1px 0px 1px white;
+    box-shadow: inset 1px -1px 0px 1px white;
     border: none;
     border-bottom: 2px black solid;
     border-left: 2px black solid;
+}
+
+.card-content {
+  height: 30%;
+}
+
+@media (max-width: 992px) {
+    button {
+        display: block;
+        margin: auto;
+    }
+
+  .card button {
+    display: block;
+  }
+
+    .card-content {
+        height: 30%;
+    }
 }

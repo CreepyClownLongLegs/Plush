@@ -48,6 +48,22 @@ img {
   width: 100%;
 }
 
+.publicKey{
+  width: 50%;
+}
+
+.name{
+  width: 20%;
+}
+
+.admin{
+  width: 15%;
+}
+
+.actions{
+  width: 15%;
+}
+
 .table-fixed thead,
 .table-fixed tbody tr {
   display: table;
@@ -78,6 +94,28 @@ img {
 }
 
 .container {
-  max-width: 100%;
+  max-width: 90%;
   overflow-x: auto;
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .publicKey{
+    width: 30%;
+  }
+
+  .name{
+    width: 20%;
+  }
+
+  .admin{
+    width: 20%;
+  }
+
+  .actions{
+    width: 30%;
+  }
 }

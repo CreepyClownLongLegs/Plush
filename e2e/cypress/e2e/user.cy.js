@@ -41,7 +41,7 @@ context('user', () => {
         cy.getBySel('deleteButton').click();
 
         cy.get('.modal').should('be.visible');
-        cy.getBySel('cancelDeleteButton').should('be.visible').click();
+        cy.getBySel('cancelModal').should('be.visible').click();
         cy.url().should('contain', '/#/profile');
     });
 
@@ -50,7 +50,7 @@ context('user', () => {
         cy.getBySel('deleteButton').click();
 
         cy.get('.modal').should('be.visible');
-        cy.getBySel('confirmDeleteButton').should('be.visible').click();
+        cy.getBySel('confirmModal').should('be.visible').click();
         cy.url().should('contain', '/#/');
 
         cy.get('.ng-trigger').should('contain', 'Your profile was successfully deleted').click();
